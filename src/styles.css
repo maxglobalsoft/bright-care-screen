@@ -142,3 +142,16 @@
     color: var(--color-foreground);
   }
 }
+
+@theme {
+  --color-wcc-green-primary: #2E6B53;
+  --color-wcc-green-deep: #1F4A3A;
+  --color-wcc-sage: #567257;
+  --color-wcc-green-soft: #EAF0EA;
+  --color-wcc-ink: #2A2420;
+  --color-wcc-slate: #6B7269;
+  --color-wcc-gold: #C9A24B;
+  --color-wcc-cream: #FBF7F1;
+  --font-sora: "Sora", "Poppins", sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
+}
