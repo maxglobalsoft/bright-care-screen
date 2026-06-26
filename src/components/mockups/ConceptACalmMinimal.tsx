@@ -1,4 +1,4 @@
-import { Bell, MapPin, Search, Star, ChevronRight } from "lucide-react";
+import { Bell, MapPin, Search, Star, ChevronRight, Clock } from "lucide-react";
 import {
   greeting,
   quickActions,
@@ -11,6 +11,7 @@ import {
   tabs,
 } from "./data";
 import { PhoneFrame } from "./PhoneFrame";
+import { LogoLockup } from "./LogoLockup";
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -56,27 +57,28 @@ export function ConceptACalmMinimal() {
       <div className="px-5 pb-6 pt-2">
         {/* Top bar */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={greeting.avatar} alt="" className="h-10 w-10 rounded-full object-cover" />
-            <div>
-              <p className="font-sora text-[15px] font-semibold text-wcc-ink">
-                Good morning,
-              </p>
-              <p className="font-sora text-[15px] font-semibold text-wcc-green-deep">
-                {greeting.name}
-              </p>
-            </div>
-          </div>
-          <button className="relative grid h-10 w-10 place-items-center rounded-full border border-wcc-green-soft">
-            <Bell size={16} className="text-wcc-ink" />
-            <span className="absolute -right-0.5 -top-0.5 grid h-4 w-4 place-items-center rounded-full bg-wcc-green-primary text-[9px] font-semibold text-white">
-              {greeting.notifications}
+          <LogoLockup size={28} />
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1 rounded-full border border-wcc-green-soft px-2 py-1 text-[10px] text-wcc-slate">
+              <MapPin size={10} /> {greeting.location}
             </span>
-          </button>
+            <button className="relative grid h-9 w-9 place-items-center rounded-full border border-wcc-green-soft">
+              <Bell size={14} className="text-wcc-ink" />
+              <span className="absolute -right-0.5 -top-0.5 grid h-4 w-4 place-items-center rounded-full bg-wcc-green-primary text-[9px] font-semibold text-white">
+                {greeting.notifications}
+              </span>
+            </button>
+            <img src={greeting.avatar} alt="" className="h-9 w-9 rounded-full object-cover" />
+          </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-1 text-[11px] text-wcc-slate">
-          <MapPin size={12} /> {greeting.location}
+        {/* Greeting */}
+        <div className="mt-5">
+          <p className="text-[12px] text-wcc-slate">Good morning,</p>
+          <h1 className="font-sora text-[22px] font-bold leading-tight text-wcc-green-deep">
+            {greeting.name}.
+          </h1>
+          <p className="mt-1 text-[11px] text-wcc-slate">{greeting.nudge}</p>
         </div>
 
         {/* Search */}
@@ -105,21 +107,25 @@ export function ConceptACalmMinimal() {
         </div>
 
         {/* Upcoming */}
-        <div className="mt-6 rounded-xl border border-wcc-green-soft p-4">
-          <p className="text-[10px] font-medium uppercase tracking-wide text-wcc-sage">
-            Upcoming
-          </p>
+        <div className="mt-6 rounded-xl border border-wcc-green-primary/40 bg-wcc-green-soft/40 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-wcc-green-primary">
+              Upcoming consult
+            </p>
+            <span className="flex items-center gap-1 text-[10px] text-wcc-green-deep">
+              <Clock size={10} /> {upcoming.countdown}
+            </span>
+          </div>
           <div className="mt-2 flex items-center gap-3">
             <img src={upcoming.avatar} alt="" className="h-12 w-12 rounded-full object-cover" />
             <div className="flex-1">
               <p className="font-sora text-[13px] font-semibold text-wcc-ink">
                 {upcoming.doctor}
               </p>
-              <p className="text-[11px] text-wcc-slate">
-                {upcoming.specialty} · {upcoming.when}
-              </p>
+              <p className="text-[11px] text-wcc-slate">{upcoming.specialty}</p>
+              <p className="text-[11px] font-semibold text-wcc-green-deep">{upcoming.when}</p>
             </div>
-            <button className="rounded-lg border border-wcc-green-primary px-3 py-1.5 text-[11px] font-semibold text-wcc-green-primary">
+            <button className="rounded-lg bg-wcc-green-primary px-3 py-1.5 text-[11px] font-semibold text-white">
               Join
             </button>
           </div>
@@ -129,14 +135,18 @@ export function ConceptACalmMinimal() {
         <div className="mt-6">
           <SectionHeader title="Browse by specialty" />
           <div className="flex gap-2 overflow-x-auto pb-1">
-            {specialties.map((s) => (
-              <span
-                key={s}
-                className="shrink-0 rounded-full border border-wcc-green-soft px-3 py-1.5 text-[11px] text-wcc-ink"
-              >
-                {s}
-              </span>
-            ))}
+            {specialties.map((s) => {
+              const Icon = s.icon;
+              return (
+                <span
+                  key={s.label}
+                  className="flex shrink-0 items-center gap-1 rounded-full border border-wcc-green-soft px-3 py-1.5 text-[11px] text-wcc-ink"
+                >
+                  <Icon size={11} className="text-wcc-green-primary" />
+                  {s.label}
+                </span>
+              );
+            })}
           </div>
         </div>
 
@@ -149,18 +159,14 @@ export function ConceptACalmMinimal() {
                 key={d.name}
                 className="w-44 shrink-0 rounded-xl border border-wcc-green-soft p-3"
               >
-                <img
-                  src={d.photo}
-                  alt=""
-                  className="h-24 w-full rounded-lg object-cover"
-                />
+                <img src={d.photo} alt="" className="h-24 w-full rounded-lg object-cover" />
                 <p className="mt-2 font-sora text-[12px] font-semibold text-wcc-ink">
                   {d.name}
                 </p>
                 <p className="text-[10px] text-wcc-slate">{d.specialty}</p>
                 <div className="mt-1 flex items-center gap-1 text-[10px] text-wcc-ink">
                   <Star size={10} className="fill-wcc-gold text-wcc-gold" />
-                  {d.rating} · {d.fee}
+                  {d.rating} ({d.reviews}) · {d.fee}
                 </div>
                 <button className="mt-2 w-full rounded-md border border-wcc-green-primary py-1 text-[10px] font-semibold text-wcc-green-primary">
                   Consult
@@ -170,7 +176,7 @@ export function ConceptACalmMinimal() {
           </div>
         </div>
 
-        {/* Pharmacy + Lab strips */}
+        {/* Pharmacy + Lab */}
         <div className="mt-6 space-y-3">
           {[pharmacy, lab].map((s) => (
             <div
@@ -179,12 +185,12 @@ export function ConceptACalmMinimal() {
             >
               <img src={s.image} alt="" className="h-14 w-14 rounded-lg object-cover" />
               <div className="flex-1">
-                <p className="font-sora text-[12px] font-semibold text-wcc-ink">
-                  {s.title}
-                </p>
+                <p className="font-sora text-[12px] font-semibold text-wcc-ink">{s.title}</p>
                 <p className="text-[10px] text-wcc-slate">{s.sub}</p>
               </div>
-              <ChevronRight size={14} className="text-wcc-slate" />
+              <button className="rounded-md border border-wcc-green-primary px-2.5 py-1 text-[10px] font-semibold text-wcc-green-primary">
+                {s.tag}
+              </button>
             </div>
           ))}
         </div>
@@ -199,7 +205,12 @@ export function ConceptACalmMinimal() {
                 className="w-44 shrink-0 overflow-hidden rounded-xl border border-wcc-green-soft"
               >
                 <img src={t.image} alt="" className="h-20 w-full object-cover" />
-                <p className="p-2 text-[11px] leading-tight text-wcc-ink">{t.title}</p>
+                <div className="p-2">
+                  <p className="text-[9px] font-semibold uppercase tracking-wide text-wcc-sage">
+                    {t.category} · {t.readTime}
+                  </p>
+                  <p className="mt-1 text-[11px] leading-tight text-wcc-ink">{t.title}</p>
+                </div>
               </div>
             ))}
           </div>
