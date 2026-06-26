@@ -29,12 +29,12 @@ export function PhoneFrame({
         </div>
 
         {/* Scroll area */}
+        <style>{`.wcc-scroll::-webkit-scrollbar{display:none}`}</style>
         <div
-          className="h-[calc(100%-36px-64px)] overflow-y-auto font-inter"
+          className="wcc-scroll h-[calc(100%-36px-64px)] overflow-y-auto font-inter"
           style={{ scrollbarWidth: "none" }}
         >
-          <style>{`.no-sb::-webkit-scrollbar{display:none}`}</style>
-          <div className="no-sb">{children}</div>
+          {children}
         </div>
       </div>
     </div>
