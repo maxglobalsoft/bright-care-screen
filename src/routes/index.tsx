@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div
-      className="flex min-h-screen items-center justify-center"
+      className="flex min-h-screen flex-col items-center justify-center gap-6"
       style={{ backgroundColor: "#fcfbf8" }}
     >
       <img
@@ -24,6 +24,12 @@ function Index() {
         src="https://cdn.gpteng.co/blank-app-v1.svg"
         alt="Your app will live here!"
       />
+      <a
+        href="/mockups"
+        className="rounded-full bg-[#2E6B53] px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[#1F4A3A]"
+      >
+        View mobile app mockups →
+      </a>
     </div>
   );
 }
