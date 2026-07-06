@@ -371,14 +371,13 @@ export function PharmacyScreen() {
                   <div className="mt-1 text-[12px]" style={{ color: "#6B7280" }}>
                     Order #WCC-{Math.floor(100000 + Math.random() * 899999)}
                   </div>
-                  <motion.button
-                    whileTap={reduce ? undefined : { scale: 0.97 }}
+                  <PedestalButton
+                    variant="orange"
                     onClick={closeSheet}
-                    className="mt-6 w-full rounded-2xl py-3 text-[14px] font-bold"
-                    style={{ backgroundColor: "#E8912D", color: "#FFFFFF" }}
+                    className="mt-6 h-12 w-full"
                   >
                     Continue Shopping
-                  </motion.button>
+                  </PedestalButton>
                 </div>
               )}
             </motion.div>
