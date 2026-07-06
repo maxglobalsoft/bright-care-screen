@@ -152,60 +152,73 @@ export function ProfileScreen() {
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
         {/* Stats row — floating 3D gradient cards */}
-        <div className="relative flex" style={{ margin: "-24px 16px 0", gap: 12, zIndex: 10, perspective: 800 }}>
+        <div className="relative flex" style={{ margin: "54px 16px 0", gap: 12, zIndex: 10, perspective: 1000 }}>
           {stats.map((s, i) => (
-            <motion.div
+            <motion.button
               key={s.label}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + i * 0.08, duration: 0.35, ease: "easeOut" }}
+              type="button"
+              initial={false}
               whileHover={
                 reduce
                   ? undefined
                   : {
-                      y: -6,
-                      rotateX: 6,
-                      rotateY: -4,
-                      scale: 1.03,
+                      y: -12,
+                      rotateX: 12,
+                      rotateY: i === 0 ? -8 : i === 2 ? 8 : 0,
+                      scale: 1.07,
                       boxShadow:
-                        "0 18px 32px -12px rgba(60,79,61,0.35), 0 4px 10px rgba(35,41,31,0.12)",
+                        "0 26px 36px -16px rgba(35,41,31,0.16), 0 12px 18px -12px rgba(232,145,45,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -10px 18px rgba(35,41,31,0.10)",
                     }
               }
               whileTap={
                 reduce
                   ? undefined
                   : {
-                      scale: 0.94,
-                      y: 2,
-                      rotateX: -4,
-                      boxShadow: "0 4px 10px rgba(35,41,31,0.18)",
+                      scale: 0.93,
+                      y: 4,
+                      rotateX: -10,
+                      boxShadow: "0 3px 8px rgba(35,41,31,0.16), inset 0 8px 14px rgba(35,41,31,0.10)",
                     }
               }
+              transition={{ type: "spring", stiffness: 420, damping: 18 }}
               onClick={() => {
                 if (s.label === "Appointments") navigate({ to: "/doctors" });
                 else if (s.label === "Orders") navigate({ to: "/pharmacy" });
                 else toast.info(s.label, { description: "Coming in development phase" });
               }}
-              className="flex flex-1 cursor-pointer flex-col items-center justify-center"
+              className="relative flex flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden"
               style={{
                 background:
-                  "linear-gradient(150deg,#FFFFFF 0%,#F7FAF6 55%,#E8EFE6 100%)",
+                  "linear-gradient(150deg,#FFFFFF 0%,#F3F6F2 48%,#FFFFFF 100%)",
                 borderRadius: 18,
-                padding: "18px 0",
-                border: "1px solid rgba(86,114,87,0.14)",
+                padding: "17px 0 16px",
+                border: "1px solid rgba(35,41,31,0.10)",
                 boxShadow:
-                  "0 8px 18px -8px rgba(35,41,31,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 4px rgba(60,79,61,0.08)",
+                  "0 12px 22px -12px rgba(35,41,31,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -6px 12px rgba(35,41,31,0.10)",
                 transformStyle: "preserve-3d",
               }}
             >
-              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{s.value}</div>
-              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500 }}>{s.label}</div>
-            </motion.div>
+              <motion.span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                initial={false}
+                whileHover={{ x: "70%", opacity: 1 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                style={{
+                  width: "70%",
+                  background: "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.75) 48%, transparent 100%)",
+                  opacity: 0.45,
+                  transform: "translateX(-80%) skewX(-16deg)",
+                }}
+              />
+              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1, transform: "translateZ(18px)" }}>{s.value}</div>
+              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500, transform: "translateZ(14px)" }}>{s.label}</div>
+            </motion.button>
           ))}
         </div>
 
         {/* Menu */}
-        <div className="mx-4 mt-5 overflow-hidden rounded-2xl" style={{ backgroundColor: "#FFFFFF" }}>
+        <div className="mx-4 mt-6 overflow-hidden rounded-2xl" style={{ backgroundColor: "#FFFFFF" }}>
           {menu.map((row, i) => {
             const Icon = row.icon;
             return (
@@ -224,8 +237,18 @@ export function ProfileScreen() {
                 </div>
                 <span className="flex-1 text-[13.5px] font-semibold" style={{ color: "#23291F" }}>{row.label}</span>
                 {row.action === "toggle" ? (
-                  <button
+                  <span
+                    role="switch"
+                    tabIndex={0}
+                    aria-checked={notif}
                     onClick={(e) => { e.stopPropagation(); setNotif((v) => !v); }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setNotif((v) => !v);
+                      }
+                    }}
                     aria-label="Toggle notifications"
                     className="relative h-6 w-11 rounded-full transition-colors"
                     style={{ backgroundColor: notif ? "#567257" : "#EEF1EE" }}
@@ -236,7 +259,7 @@ export function ProfileScreen() {
                       style={{ backgroundColor: "#FFFFFF", left: notif ? 22 : 2, boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }}
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
-                  </button>
+                  </span>
                 ) : (
                   <ChevronRight size={16} color="#6B7280" />
                 )}
