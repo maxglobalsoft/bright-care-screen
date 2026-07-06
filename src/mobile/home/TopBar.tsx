@@ -22,16 +22,16 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.img
           src={logoAsset.url}
           alt="Wellness Care Connect logo"
-          className="h-12 w-auto object-contain"
+          className="h-14 w-auto object-contain"
           animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.12, 0.97, 1.06, 1] }}
           transition={{ duration: 0.7 }}
           key={beat}
         />
         <div className="flex flex-col items-center justify-center">
-          <span className="font-sora text-[15px] font-bold leading-tight tracking-tight text-[#23291F]">
+          <span className="font-sora text-[17px] font-bold leading-tight tracking-tight text-[#23291F]">
             Wellness <span className="text-[#E8912D]">Care</span> Connect
           </span>
-          <span className="font-sora text-[10px] font-semibold leading-tight tracking-[0.12em] text-[#567257]">
+          <span className="font-sora text-[12px] font-bold leading-tight tracking-[0.14em] text-[#567257]">
             EVERY HEALTH MATTERS
           </span>
         </div>
