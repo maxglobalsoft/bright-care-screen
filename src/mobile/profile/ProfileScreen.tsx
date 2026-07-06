@@ -148,29 +148,33 @@ export function ProfileScreen() {
       </motion.div>
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
-        {/* Stats — floating card */}
-        <div className="-mt-10 px-4">
-          <div
-            className="grid grid-cols-3 overflow-hidden rounded-2xl"
-            style={{
-              backgroundColor: "#FFFFFF",
-              boxShadow: "0 12px 32px -14px rgba(35,41,31,0.28), 0 2px 6px -2px rgba(35,41,31,0.08)",
-            }}
-          >
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08, type: "spring", stiffness: 260, damping: 22 }}
-                className="px-3 py-3.5 text-center"
-                style={{ borderLeft: i === 0 ? "none" : "1px solid #EEF2EC" }}
-              >
-                <div className="text-[19px] font-bold leading-none" style={{ color: "#3C4F3D" }}>{s.value}</div>
-                <div className="mt-1 text-[10.5px] font-medium" style={{ color: "#6B7280" }}>{s.label}</div>
-              </motion.div>
-            ))}
-          </div>
+        {/* Stats row — overlapping cards */}
+        <div className="relative flex" style={{ margin: "-40px 16px 0", gap: 12, zIndex: 10 }}>
+          {stats.map((s, i) => (
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + i * 0.08, duration: 0.3, ease: "easeOut" }}
+              whileHover={reduce ? undefined : { y: -3, boxShadow: "0 8px 20px rgba(35,41,31,0.16)" }}
+              whileTap={reduce ? undefined : { scale: 0.95 }}
+              onClick={() => {
+                if (s.label === "Appointments") navigate({ to: "/doctors" });
+                else if (s.label === "Orders") navigate({ to: "/pharmacy" });
+                else toast.info(s.label, { description: "Coming in development phase" });
+              }}
+              className="flex flex-1 cursor-pointer flex-col items-center justify-center"
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: 16,
+                padding: "16px 0",
+                boxShadow: "0 4px 12px rgba(35,41,31,0.10)",
+              }}
+            >
+              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{s.value}</div>
+              <div style={{ marginTop: 2, color: "#6B7280", fontSize: 12, fontWeight: 400 }}>{s.label}</div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Menu */}
