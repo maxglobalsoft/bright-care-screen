@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export function PhoneViewport({ children }: { children: ReactNode }) {
+export function PhoneViewport({ children, hideNotch = false }: { children: ReactNode; hideNotch?: boolean }) {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-[#EFEFEC] p-6">
       <div
@@ -9,7 +9,9 @@ export function PhoneViewport({ children }: { children: ReactNode }) {
       >
         <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] bg-white">
           {/* status bar safe area (44px) - kept clean */}
-          <div className="pointer-events-none absolute left-1/2 top-2 z-30 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-neutral-900" />
+          {!hideNotch && (
+            <div className="pointer-events-none absolute left-1/2 top-2 z-30 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-neutral-900" />
+          )}
           {children}
           {/* home indicator */}
           <div className="pointer-events-none absolute bottom-2 left-1/2 z-30 h-[5px] w-[130px] -translate-x-1/2 rounded-full bg-neutral-900/80" />
