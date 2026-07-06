@@ -722,7 +722,7 @@ export function DoctorProfileScreen() {
         >
           <div className="flex items-center gap-3" style={{ perspective: 900 }}>
             <div className="flex shrink-0 flex-col justify-center leading-tight">
-              <span className="text-[11px]" style={{ color: MUTED }}>
+              <span className="text-[13px] font-bold" style={{ color: MUTED }}>
                 Total
               </span>
               <span className="text-[18px] font-bold" style={{ color: INK }}>
@@ -739,7 +739,7 @@ export function DoctorProfileScreen() {
               }
               whileTap={reduce || !canBook ? undefined : { scale: 0.97 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="wcc-3d wcc-conic-ring wcc-grad-anim group relative ml-auto inline-flex h-10 items-center justify-center overflow-hidden rounded-full px-5 text-[13px] font-bold"
+              className="wcc-3d wcc-conic-ring wcc-grad-anim group relative inline-flex h-11 flex-1 items-center justify-center overflow-hidden rounded-full px-6 text-[14px] font-bold"
               style={{
                 transformStyle: "preserve-3d",
                 background: canBook
