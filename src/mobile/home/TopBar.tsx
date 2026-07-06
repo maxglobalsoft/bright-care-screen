@@ -2,12 +2,14 @@ import { Bell } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 import { user } from "./data";
 import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
 import { Img } from "./Img";
 
 export function TopBar({ shadow }: { shadow: boolean }) {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   const [beat, setBeat] = useState(0);
   return (
     <div
@@ -66,7 +68,7 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.button
           type="button"
           aria-label="Profile"
-          onClick={() => toast.info("Profile coming soon", { description: "Manage your account, appointments, and settings." })}
+          onClick={() => navigate({ to: "/profile" })}
           whileHover={reduce ? undefined : { scale: 1.06 }}
           whileTap={reduce ? undefined : { scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}

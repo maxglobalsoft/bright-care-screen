@@ -9,10 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as MockupsRouteImport } from './routes/mockups'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as DoctorsRouteImport } from './routes/doctors'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
 import { Route as ConsultationIdRouteImport } from './routes/consultation.$id'
@@ -20,6 +23,16 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PharmacyRoute = PharmacyRouteImport.update({
+  id: '/pharmacy',
+  path: '/pharmacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MockupsRoute = MockupsRouteImport.update({
   id: '/mockups',
   path: '/mockups',
@@ -38,6 +51,11 @@ const HomeRoute = HomeRouteImport.update({
 const DoctorsRoute = DoctorsRouteImport.update({
   id: '/doctors',
   path: '/doctors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -76,10 +94,13 @@ const Char91DotmcpChar93InvokeToolToolRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/doctors': typeof DoctorsRoute
   '/home': typeof HomeRoute
   '/mcp': typeof McpRoute
   '/mockups': typeof MockupsRoute
+  '/pharmacy': typeof PharmacyRoute
+  '/profile': typeof ProfileRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/consultation/$id': typeof ConsultationIdRoute
@@ -88,10 +109,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/doctors': typeof DoctorsRoute
   '/home': typeof HomeRoute
   '/mcp': typeof McpRoute
   '/mockups': typeof MockupsRoute
+  '/pharmacy': typeof PharmacyRoute
+  '/profile': typeof ProfileRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/consultation/$id': typeof ConsultationIdRoute
@@ -101,10 +125,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/doctors': typeof DoctorsRoute
   '/home': typeof HomeRoute
   '/mcp': typeof McpRoute
   '/mockups': typeof MockupsRoute
+  '/pharmacy': typeof PharmacyRoute
+  '/profile': typeof ProfileRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/consultation/$id': typeof ConsultationIdRoute
@@ -115,10 +142,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/doctors'
     | '/home'
     | '/mcp'
     | '/mockups'
+    | '/pharmacy'
+    | '/profile'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/consultation/$id'
@@ -127,10 +157,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/doctors'
     | '/home'
     | '/mcp'
     | '/mockups'
+    | '/pharmacy'
+    | '/profile'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/consultation/$id'
@@ -139,10 +172,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/doctors'
     | '/home'
     | '/mcp'
     | '/mockups'
+    | '/pharmacy'
+    | '/profile'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/consultation/$id'
@@ -152,10 +188,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   DoctorsRoute: typeof DoctorsRoute
   HomeRoute: typeof HomeRoute
   McpRoute: typeof McpRoute
   MockupsRoute: typeof MockupsRoute
+  PharmacyRoute: typeof PharmacyRoute
+  ProfileRoute: typeof ProfileRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ConsultationIdRoute: typeof ConsultationIdRoute
@@ -165,6 +204,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pharmacy': {
+      id: '/pharmacy'
+      path: '/pharmacy'
+      fullPath: '/pharmacy'
+      preLoaderRoute: typeof PharmacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mockups': {
       id: '/mockups'
       path: '/mockups'
@@ -191,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/doctors'
       fullPath: '/doctors'
       preLoaderRoute: typeof DoctorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -240,10 +300,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   DoctorsRoute: DoctorsRoute,
   HomeRoute: HomeRoute,
   McpRoute: McpRoute,
   MockupsRoute: MockupsRoute,
+  PharmacyRoute: PharmacyRoute,
+  ProfileRoute: ProfileRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,

@@ -1,19 +1,22 @@
 import { ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 import { services } from "./data";
 import { Img } from "./Img";
 
 export function ServicesRow() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   return (
     <section className="grid grid-cols-2 gap-3 px-4 pt-5" data-reveal>
       {services.map((s) => (
         <motion.button
           key={s.key}
-          onClick={() =>
-            toast.info(`${s.title} coming soon`, { description: s.sub })
-          }
+          onClick={() => {
+            if (s.key === "pharmacy") navigate({ to: "/pharmacy" });
+            else toast.info(`${s.title} coming soon`, { description: s.sub });
+          }}
           initial="rest"
           animate="rest"
           whileHover={reduce ? undefined : "hover"}

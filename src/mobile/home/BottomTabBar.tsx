@@ -25,8 +25,8 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
     setTimeout(() => setTapKey(null), 460);
     if (key === "home") navigate({ to: "/home" });
     else if (key === "doctors") navigate({ to: "/doctors" });
-    else if (key === "pharmacy") toast.info("Pharmacy coming soon", { description: "Order medicines to your door — launching next release." });
-    else if (key === "profile") toast.info("Profile coming soon", { description: "Manage your account, appointments, and settings." });
+    else if (key === "pharmacy") navigate({ to: "/pharmacy" });
+    else if (key === "profile") navigate({ to: "/profile" });
   };
 
   return (
