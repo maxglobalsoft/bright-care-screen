@@ -762,14 +762,11 @@ export function DoctorProfileScreen() {
               </span>
             </div>
             <motion.button
-              disabled={!canBook}
-              onClick={handleConfirm}
-              whileHover={
-                reduce || !canBook
-                  ? undefined
-                  : { scale: 1.04, y: -2, rotateX: 8, rotateY: -6 }
-              }
-              whileTap={reduce || !canBook ? undefined : { scale: 0.97 }}
+              type="button"
+              aria-disabled={!canBook}
+              onClick={() => { if (canBook) handleConfirm(); }}
+              whileHover={reduce ? undefined : { scale: 1.04, y: -2, rotateX: 8, rotateY: -6 }}
+              whileTap={reduce ? undefined : { scale: 0.97 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
               className="wcc-cta-holo group relative inline-flex h-11 flex-1 items-center justify-center overflow-hidden rounded-full px-6 text-[14px] font-bold"
               style={{
