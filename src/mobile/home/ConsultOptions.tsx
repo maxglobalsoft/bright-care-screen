@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 import { consultOptions } from "./data";
 
 export function ConsultOptions() {
