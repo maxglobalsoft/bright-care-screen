@@ -28,21 +28,24 @@ export function PromoCard() {
         className="wcc-promo relative w-full cursor-pointer overflow-hidden rounded-[18px] p-4 text-left"
         style={{ background: "linear-gradient(135deg,#567257 0%,#3C4F3D 100%)", color: "#FFFFFF" }}
       >
-        <div className="pr-[120px]">
-          <div className="text-[11px] font-medium uppercase tracking-wider" style={{ color: "#FFFFFF", opacity: 0.85 }}>
+        <div className="pr-[104px]">
+          <div className="text-[11px] font-medium uppercase tracking-wider" style={{ color: "#FFFFFF", opacity: 0.9 }}>
             {promo.eyebrow}
           </div>
-          <div className="mt-1 text-[15px] font-semibold leading-snug" style={{ color: "#FFFFFF" }}>
-            New here? Enjoy 20 percent off your first online consultation.
+          <div className="mt-1 text-[14px] font-semibold leading-snug" style={{ color: "#FFFFFF" }}>
+            Enjoy 20% off your first online consult.
           </div>
-          <div
+          <motion.span
+            whileHover={reduce ? undefined : { scale: 1.06, y: -1, boxShadow: "0 8px 18px -6px rgba(232,145,45,0.6)" }}
+            whileTap={reduce ? undefined : { scale: 0.94 }}
+            transition={{ type: "spring", stiffness: 320, damping: 14 }}
             className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold tracking-wide shadow-sm"
             style={{ backgroundColor: "#E8912D", color: "#FFFFFF" }}
           >
             <Sparkles size={12} /> {promo.code}
-          </div>
+          </motion.span>
         </div>
-        <div className="pointer-events-none absolute right-2 top-2 bottom-2 w-[110px] overflow-hidden rounded-2xl">
+        <div className="pointer-events-none absolute right-2 top-2 bottom-2 w-[96px] overflow-hidden rounded-2xl">
           <Img src={promo.image} alt="" wrapperClassName="absolute inset-0" rounded="rounded-2xl" />
           <div
             className="absolute inset-0"
@@ -50,7 +53,7 @@ export function PromoCard() {
           />
         </div>
         <div className="wcc-sparkle-fly pointer-events-none absolute left-0 top-0 h-6 w-6">
-          <Sparkles size={16} style={{ color: "#FFFFFF", opacity: 0.85 }} />
+          <Sparkles size={16} style={{ color: "#FFFFFF", opacity: 0.9 }} />
         </div>
       </motion.button>
     </div>
