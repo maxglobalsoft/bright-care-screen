@@ -113,9 +113,41 @@ export function DoctorProfileScreen() {
               -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
             }
             .wcc-conic-ring:hover::before { opacity: 1; animation: wcc-conic-spin 1.6s linear infinite; }
-            @media (prefers-reduced-motion: reduce) {
-              .wcc-3d:hover::after, .wcc-grad-anim:hover, .wcc-conic-ring:hover::before, .wcc-3d:active, .wcc-3d-red:active { animation: none !important; }
+            /* UNIQUE Confirm Booking button — holographic prismatic 3D */
+            @keyframes wcc-cta-holo {
+              0% { background-position: 0% 50%, 0% 50%; }
+              50% { background-position: 100% 50%, 100% 50%; }
+              100% { background-position: 0% 50%, 0% 50%; }
             }
+            @keyframes wcc-cta-orbit {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            @keyframes wcc-cta-float {
+              0%,100% { transform: translateY(0) scale(1); }
+              50% { transform: translateY(-1px) scale(1.005); }
+            }
+            .wcc-cta-holo { cursor: pointer !important; position: relative; isolation: isolate; background-size: 300% 300%, 200% 200% !important; animation: wcc-cta-float 3.2s ease-in-out infinite; }
+            .wcc-cta-holo:hover { animation: wcc-cta-holo 2.4s ease-in-out infinite, wcc-cta-float 3.2s ease-in-out infinite; }
+            .wcc-cta-holo::before {
+              content:''; position:absolute; inset:-3px; border-radius: inherit; z-index:0;
+              background: conic-gradient(from 0deg, #C9A24B, #E8912D, #2E6B53, #1F4A3A, #C9A24B);
+              opacity: 0; transition: opacity 220ms ease; filter: blur(6px);
+            }
+            .wcc-cta-holo:hover::before { opacity: 0.9; animation: wcc-cta-orbit 2.6s linear infinite; }
+            .wcc-cta-holo::after {
+              content:''; position:absolute; inset:0; border-radius: inherit; pointer-events:none; z-index:5;
+              background:
+                radial-gradient(120% 60% at 20% 0%, rgba(255,255,255,0.55), transparent 55%),
+                radial-gradient(80% 80% at 80% 120%, rgba(0,0,0,0.28), transparent 60%);
+              mix-blend-mode: overlay;
+            }
+            .wcc-cta-holo > .wcc-cta-inner { position:relative; z-index:2; border-radius: inherit; }
+            @media (prefers-reduced-motion: reduce) {
+              .wcc-3d:hover::after, .wcc-grad-anim:hover, .wcc-conic-ring:hover::before, .wcc-3d:active, .wcc-3d-red:active,
+              .wcc-cta-holo, .wcc-cta-holo:hover, .wcc-cta-holo:hover::before { animation: none !important; }
+            }
+
           `}</style>
 
           {/* HERO */}
