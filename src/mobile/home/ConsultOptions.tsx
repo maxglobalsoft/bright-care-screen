@@ -28,6 +28,7 @@ export function ConsultOptions() {
           return (
             <motion.button
               key={o.key}
+              onClick={() => navigate({ to: "/doctors" })}
               initial={reduce ? false : { opacity: 0, y: 24 }}
               animate={reduce ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.07, ease: "easeOut" }}
