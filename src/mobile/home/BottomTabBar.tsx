@@ -107,6 +107,7 @@ function TabButton({
   return (
     <motion.button
       type="button"
+      aria-label={t.label}
       onClick={() => onTap(t.key)}
       whileHover={reduce ? undefined : { y: -2 }}
       whileTap={reduce ? undefined : { scale: 0.92 }}
