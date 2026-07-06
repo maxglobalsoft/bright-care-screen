@@ -770,14 +770,9 @@ function ActionCircle({
   reduce: boolean;
 }) {
   const [hover, setHover] = useState(false);
-  const styledIcon =
-    (icon as React.ReactElement<{ color?: string }>) &&
-    typeof icon === "object"
-      ? (require("react") as typeof import("react")).cloneElement(
-          icon as React.ReactElement<{ color?: string }>,
-          { color: hover ? "#FFFFFF" : SAGE },
-        )
-      : icon;
+  const styledIcon = isValidElement<{ color?: string }>(icon)
+    ? cloneElement(icon, { color: hover ? "#FFFFFF" : SAGE })
+    : icon;
   return (
     <motion.button
       whileHover={reduce ? undefined : { scale: 1.1, y: -3, rotateX: 10, rotateY: -10 }}
