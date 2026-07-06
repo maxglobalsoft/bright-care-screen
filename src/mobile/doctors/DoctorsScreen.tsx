@@ -507,38 +507,70 @@ function BookButton({
         setTap((n) => n + 1);
         onClick(e);
       }}
-      whileTap={reduce ? undefined : { scale: 0.94 }}
-      className="relative overflow-hidden rounded-full px-4 py-2 text-[12.5px] font-bold"
+      whileHover={
+        reduce
+          ? undefined
+          : { scale: 1.06, y: -2, rotateX: 8, rotateY: -8 }
+      }
+      whileTap={reduce ? undefined : { scale: 0.94, rotateX: 0, rotateY: 0 }}
+      transition={{ type: "spring", stiffness: 350, damping: 18 }}
+      className="group relative inline-flex items-center justify-center overflow-hidden rounded-full px-5 py-2 text-[12.5px] font-bold"
       style={{
-        backgroundColor: SAGE,
         color: "#FFFFFF",
-        boxShadow: "0 6px 14px -8px rgba(86,114,87,0.6)",
+        background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 55%, ${SAGE} 100%)`,
+        backgroundSize: "200% 200%",
+        backgroundPosition: "0% 50%",
+        boxShadow:
+          "0 8px 18px -8px rgba(86,114,87,0.65), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)",
+        transformStyle: "preserve-3d",
+        transition: "background-position 600ms ease, box-shadow 300ms ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundPosition = "100% 50%";
+        e.currentTarget.style.boxShadow =
+          "0 14px 28px -10px rgba(86,114,87,0.75), 0 0 0 3px rgba(232,145,45,0.25), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 4px rgba(0,0,0,0.18)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundPosition = "0% 50%";
+        e.currentTarget.style.boxShadow =
+          "0 8px 18px -8px rgba(86,114,87,0.65), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)";
       }}
     >
-      <motion.span
-        key={tap}
-        initial={{ backgroundColor: SAGE }}
-        animate={{ backgroundColor: tap > 0 ? [SAGE, DEEP, SAGE] : SAGE }}
-        transition={{ duration: 0.5 }}
-        className="absolute inset-0"
+      {/* Glossy highlight */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-1 top-0.5 h-1/2 rounded-full opacity-70"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0))",
+        }}
       />
+      {/* Hover sheen sweep */}
+      {!reduce && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-20deg] opacity-0 transition-all duration-700 ease-out group-hover:left-[120%] group-hover:opacity-100"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)",
+          }}
+        />
+      )}
+      {/* Tap ripple */}
       <AnimatePresence>
         {!reduce && tap > 0 && (
           <motion.span
-            key={`sheen-${tap}`}
-            initial={{ x: "-120%" }}
-            animate={{ x: "120%" }}
+            key={`ripple-${tap}`}
+            initial={{ scale: 0, opacity: 0.5 }}
+            animate={{ scale: 3, opacity: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="pointer-events-none absolute inset-y-0 w-1/2 skew-x-[-20deg]"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)",
-            }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="pointer-events-none absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{ backgroundColor: "rgba(255,255,255,0.45)" }}
           />
         )}
       </AnimatePresence>
-      <span className="relative">Book</span>
+      <span className="relative leading-none">Book</span>
     </motion.button>
   );
 }
