@@ -825,36 +825,41 @@ export function DoctorProfileScreen() {
             <motion.button
               type="button"
               aria-disabled={!canBook}
-              onClick={() => { if (canBook) handleConfirm(); }}
-              whileHover={reduce ? undefined : { scale: 1.04, y: -2, rotateX: 8, rotateY: -6 }}
-              whileTap={reduce ? undefined : { scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="wcc-cta-holo group relative inline-flex h-11 flex-1 items-center justify-center overflow-hidden rounded-full px-6 text-[14px] font-bold"
-              style={{
-                transformStyle: "preserve-3d",
-                background: canBook
-                  ? `linear-gradient(115deg, ${DEEP} 0%, ${SAGE} 22%, #C9A24B 48%, ${SAGE} 74%, ${DEEP} 100%), radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,0.35), transparent 60%)`
-                  : `linear-gradient(115deg, #A9B3A9 0%, #C6CEC6 50%, #A9B3A9 100%)`,
-                backgroundBlendMode: "normal, overlay",
-                color: "#FFFFFF",
-                boxShadow: canBook
-                  ? "0 14px 28px -12px rgba(31,74,58,0.65), 0 4px 10px -4px rgba(201,162,75,0.45), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -2px 0 rgba(0,0,0,0.18)"
-                  : "0 6px 14px -8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.12)",
-                cursor: "pointer",
+              onPointerDown={(e) => {
+                const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const id = Date.now() + Math.random();
+                setRipples((prev) => [...prev, { id, x, y }]);
+                setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 650);
               }}
+              onClick={() => { if (canBook) handleConfirm(); }}
+              whileTap={reduce ? undefined : { scale: 0.985 }}
+              transition={{ type: "spring", stiffness: 500, damping: 26 }}
+              className="wcc-cta-pedestal group relative inline-flex h-12 flex-1 items-stretch justify-stretch rounded-full"
+              style={{ cursor: "pointer" }}
             >
-              <span className="wcc-cta-inner relative z-10 inline-flex items-center justify-center">Confirm Booking</span>
-              {!reduce && (
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-20deg] opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)",
-                  }}
-                />
-              )}
+              <span
+                className="wcc-cta-top text-[14px] font-bold tracking-wide"
+                style={{
+                  color: "#FFFFFF",
+                  textShadow: "0 1px 0 rgba(0,0,0,0.28), 0 0 12px rgba(201,162,75,0.35)",
+                  filter: canBook ? undefined : "grayscale(0.55) brightness(0.92)",
+                }}
+              >
+                <span className="wcc-cta-shine" aria-hidden />
+                <span className="relative z-10">Confirm Booking</span>
+                {ripples.map((r) => (
+                  <span
+                    key={r.id}
+                    className="wcc-cta-ripple"
+                    style={{ ["--rx" as string]: `${r.x}px`, ["--ry" as string]: `${r.y}px` }}
+                    aria-hidden
+                  />
+                ))}
+              </span>
             </motion.button>
+
 
           </div>
         </div>
