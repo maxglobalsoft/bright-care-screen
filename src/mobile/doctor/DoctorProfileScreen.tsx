@@ -55,9 +55,11 @@ export function DoctorProfileScreen() {
   const [fav, setFav] = useState(false);
   const [favTap, setFavTap] = useState(0);
   const [tab, setTab] = useState<TabKey>("experience");
-  const [type, setType] = useState<ConsultKey | null>(null);
-  const [date, setDate] = useState<string | null>(null);
-  const [slot, setSlot] = useState<string | null>(null);
+  const [type, setType] = useState<ConsultKey | null>("video");
+  const [date, setDate] = useState<string | null>(dates[0]?.key ?? null);
+  const [slot, setSlot] = useState<string | null>(
+    defaultTimeSlots.find((_, index) => !disabledSlotIndices.includes(index)) ?? defaultTimeSlots[0] ?? null,
+  );
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
 

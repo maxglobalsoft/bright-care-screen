@@ -3,10 +3,16 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "@tanstack/react-router";
 import { doctors } from "./data";
 import { Img } from "./Img";
+import { allDoctors } from "@/mobile/doctors/data";
 
 export function DoctorsRail() {
   const reduce = useReducedMotion();
   const navigate = useNavigate();
+  const openDoctor = (name: string) => {
+    const doctorId = allDoctors.find((doctor) => doctor.name === name)?.id ?? allDoctors[0]?.id ?? "1";
+    navigate({ to: "/doctor/$id", params: { id: doctorId } });
+  };
+
   return (
     <section className="pt-5" data-reveal>
       <div className="flex items-center justify-between px-4">
@@ -19,6 +25,13 @@ export function DoctorsRail() {
             key={d.name}
             role="button"
             tabIndex={0}
+            onClick={() => openDoctor(d.name)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openDoctor(d.name);
+              }
+            }}
             initial="rest"
             animate="rest"
             whileHover={reduce ? undefined : "active"}
@@ -66,6 +79,11 @@ export function DoctorsRail() {
                 CA${d.priceCad}
               </span>
               <motion.button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openDoctor(d.name);
+                }}
                 className="relative overflow-hidden rounded-full px-4 py-1.5 text-[13px] font-bold shadow-sm"
                 variants={{
                   rest: { backgroundColor: "#567257" },
