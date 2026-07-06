@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingCart, Search, Plus, Minus, Trash2, Check, Truck } fr
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { BottomTabBar } from "@/mobile/home/BottomTabBar";
+import { PedestalButton } from "@/mobile/components/PedestalButton";
 import { categories, products, type Category, type Product } from "./data";
 
 type CartMap = Record<string, number>;
