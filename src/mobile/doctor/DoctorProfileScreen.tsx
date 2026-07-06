@@ -113,40 +113,100 @@ export function DoctorProfileScreen() {
               -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
             }
             .wcc-conic-ring:hover::before { opacity: 1; animation: wcc-conic-spin 1.6s linear infinite; }
-            /* UNIQUE Confirm Booking button — holographic prismatic 3D */
-            @keyframes wcc-cta-holo {
-              0% { background-position: 0% 50%, 0% 50%; }
-              50% { background-position: 100% 50%, 100% 50%; }
-              100% { background-position: 0% 50%, 0% 50%; }
+            /* UNIQUE Confirm Booking — tactile 3D pedestal button */
+            @keyframes wcc-cta-liquid {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
             }
-            @keyframes wcc-cta-orbit {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
+            @keyframes wcc-cta-glow-pulse {
+              0%,100% { opacity: 0.55; transform: scale(1); }
+              50% { opacity: 1; transform: scale(1.06); }
             }
-            @keyframes wcc-cta-float {
-              0%,100% { transform: translateY(0) scale(1); }
-              50% { transform: translateY(-1px) scale(1.005); }
+            @keyframes wcc-cta-shine {
+              0% { transform: translateX(-140%) skewX(-22deg); }
+              100% { transform: translateX(260%) skewX(-22deg); }
             }
-            .wcc-cta-holo { cursor: pointer !important; position: relative; isolation: isolate; background-size: 300% 300%, 200% 200% !important; animation: wcc-cta-float 3.2s ease-in-out infinite; }
-            .wcc-cta-holo:hover { animation: wcc-cta-holo 2.4s ease-in-out infinite, wcc-cta-float 3.2s ease-in-out infinite; }
-            .wcc-cta-holo::before {
-              content:''; position:absolute; inset:-3px; border-radius: inherit; z-index:0;
-              background: conic-gradient(from 0deg, #C9A24B, #E8912D, #2E6B53, #1F4A3A, #C9A24B);
-              opacity: 0; transition: opacity 220ms ease; filter: blur(6px);
+            @keyframes wcc-cta-ripple {
+              0% { transform: translate(-50%,-50%) scale(0); opacity: 0.55; }
+              100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
             }
-            .wcc-cta-holo:hover::before { opacity: 0.9; animation: wcc-cta-orbit 2.6s linear infinite; }
-            .wcc-cta-holo::after {
-              content:''; position:absolute; inset:0; border-radius: inherit; pointer-events:none; z-index:5;
+            .wcc-cta-pedestal { position: relative; perspective: 900px; border-radius: 9999px; isolation: isolate; }
+            .wcc-cta-pedestal::before {
+              content:''; position:absolute; inset: 4px 0 -6px 0; border-radius: inherit; z-index: 0;
+              background: linear-gradient(180deg, #123326 0%, #0B2119 100%);
+              box-shadow: 0 10px 22px -10px rgba(11,33,25,0.75);
+            }
+            .wcc-cta-pedestal::after {
+              content:''; position:absolute; inset:-4px; border-radius: inherit; z-index:-1; pointer-events:none;
+              background: radial-gradient(60% 80% at 50% 50%, rgba(201,162,75,0.55), rgba(46,107,83,0.35) 55%, transparent 75%);
+              filter: blur(10px); opacity: 0; transition: opacity 260ms ease;
+            }
+            .wcc-cta-pedestal:hover::after { opacity: 1; animation: wcc-cta-glow-pulse 2.2s ease-in-out infinite; }
+            .wcc-cta-top {
+              position: relative; z-index: 1; display: inline-flex; width: 100%; height: 100%;
+              align-items: center; justify-content: center; border-radius: inherit;
               background:
-                radial-gradient(120% 60% at 20% 0%, rgba(255,255,255,0.55), transparent 55%),
-                radial-gradient(80% 80% at 80% 120%, rgba(0,0,0,0.28), transparent 60%);
-              mix-blend-mode: overlay;
+                linear-gradient(115deg, #1F4A3A 0%, #2E6B53 28%, #C9A24B 52%, #2E6B53 76%, #1F4A3A 100%);
+              background-size: 260% 260%;
+              background-position: 0% 50%;
+              box-shadow:
+                inset 0 1.5px 0 rgba(255,255,255,0.55),
+                inset 0 -3px 0 rgba(0,0,0,0.28),
+                inset 0 0 0 1px rgba(255,255,255,0.12),
+                0 6px 0 #0B2119,
+                0 10px 18px -6px rgba(11,33,25,0.55);
+              transform: translateY(0);
+              transition: transform 140ms cubic-bezier(.2,.9,.25,1.2), box-shadow 140ms ease, background-position 600ms ease;
+              overflow: hidden;
+              cursor: pointer;
             }
-            .wcc-cta-holo > .wcc-cta-inner { position:relative; z-index:2; border-radius: inherit; }
+            .wcc-cta-pedestal:hover .wcc-cta-top {
+              background-position: 100% 50%;
+              animation: wcc-cta-liquid 3s ease-in-out infinite;
+              transform: translateY(-1px);
+              box-shadow:
+                inset 0 1.5px 0 rgba(255,255,255,0.6),
+                inset 0 -3px 0 rgba(0,0,0,0.28),
+                inset 0 0 0 1px rgba(255,255,255,0.18),
+                0 7px 0 #0B2119,
+                0 14px 22px -6px rgba(11,33,25,0.6);
+            }
+            .wcc-cta-pedestal:active .wcc-cta-top,
+            .wcc-cta-pressed .wcc-cta-top {
+              transform: translateY(5px);
+              box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.35),
+                inset 0 -1px 0 rgba(0,0,0,0.35),
+                inset 0 0 0 1px rgba(255,255,255,0.1),
+                0 1px 0 #0B2119,
+                0 3px 6px -3px rgba(11,33,25,0.6);
+            }
+            .wcc-cta-top::before {
+              content:''; position:absolute; inset:1px 1px 45% 1px; border-radius: 9999px; pointer-events:none;
+              background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 100%);
+              opacity: 0.9;
+            }
+            .wcc-cta-top .wcc-cta-shine {
+              content:''; position:absolute; top:0; bottom:0; left:0; width:38%; pointer-events:none;
+              background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+              transform: translateX(-140%) skewX(-22deg); opacity: 0;
+            }
+            .wcc-cta-pedestal:hover .wcc-cta-top .wcc-cta-shine { opacity: 1; animation: wcc-cta-shine 1.6s ease-in-out infinite; }
+            .wcc-cta-ripple {
+              position:absolute; width: 220px; height: 220px; border-radius: 9999px; pointer-events:none;
+              left: var(--rx, 50%); top: var(--ry, 50%);
+              transform: translate(-50%,-50%) scale(0);
+              background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.25) 40%, transparent 70%);
+              animation: wcc-cta-ripple 620ms ease-out forwards;
+              mix-blend-mode: screen;
+            }
             @media (prefers-reduced-motion: reduce) {
               .wcc-3d:hover::after, .wcc-grad-anim:hover, .wcc-conic-ring:hover::before, .wcc-3d:active, .wcc-3d-red:active,
-              .wcc-cta-holo, .wcc-cta-holo:hover, .wcc-cta-holo:hover::before { animation: none !important; }
+              .wcc-cta-pedestal:hover::after, .wcc-cta-pedestal:hover .wcc-cta-top,
+              .wcc-cta-pedestal:hover .wcc-cta-top .wcc-cta-shine, .wcc-cta-ripple { animation: none !important; }
             }
+
 
           `}</style>
 
