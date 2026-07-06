@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { cloneElement, isValidElement, useMemo, useState } from "react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -31,6 +31,8 @@ import {
 const SAGE = "#567257";
 const DEEP = "#3C4F3D";
 const ORANGE = "#E8912D";
+const RED = "#EF4444";
+const RED_DEEP = "#B91C1C";
 const MIST = "#F3F6F2";
 const INK = "#23291F";
 const MUTED = "#6B7280";
@@ -171,36 +173,55 @@ export function DoctorProfileScreen() {
           </div>
 
           {/* Action row */}
-          <div className="mt-4 flex items-center justify-center gap-3 px-4">
-            <ActionCircle icon={<MessageCircle size={18} color={SAGE} />} label="Chat" reduce={!!reduce} />
-            <ActionCircle icon={<Phone size={18} color={SAGE} />} label="Audio" reduce={!!reduce} />
+          <div className="mt-4 flex items-center justify-center gap-3 px-4" style={{ perspective: 600 }}>
+            <ActionCircle icon={<MessageCircle size={18} />} label="Chat" reduce={!!reduce} />
+            <ActionCircle icon={<Phone size={18} />} label="Audio" reduce={!!reduce} />
             <motion.button
               onClick={() => {
                 setFav((v) => !v);
                 setFavTap((n) => n + 1);
               }}
+              whileHover={reduce ? undefined : { scale: 1.1, y: -3, rotateX: 10, rotateY: -10 }}
               whileTap={reduce ? undefined : { scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 320, damping: 18 }}
               aria-label="Favourite"
-              className="relative grid h-11 w-11 place-items-center rounded-full"
+              className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
               style={{
-                border: `1.5px solid ${fav ? ORANGE : SAGE}`,
-                backgroundColor: fav ? "rgba(232,145,45,0.10)" : "#FFFFFF",
+                transformStyle: "preserve-3d",
+                border: `1.5px solid ${fav ? RED : SAGE}`,
+                background: fav
+                  ? `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)`
+                  : "linear-gradient(135deg, #FFFFFF 0%, #F6F8F6 100%)",
+                boxShadow: fav
+                  ? "0 10px 20px -8px rgba(239,68,68,0.55), inset 0 1px 0 rgba(255,255,255,0.35)"
+                  : "0 4px 10px -6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)",
               }}
             >
               <motion.span
                 key={favTap}
-                animate={reduce || favTap === 0 ? undefined : { scale: [1, 1.4, 1] }}
-                transition={{ duration: 0.35 }}
-                className="grid place-items-center"
+                animate={reduce || favTap === 0 ? undefined : { scale: [1, 1.5, 1] }}
+                transition={{ duration: 0.4 }}
+                className="relative z-10 grid place-items-center"
               >
                 <Heart
                   size={18}
-                  color={fav ? ORANGE : SAGE}
-                  fill={fav ? ORANGE : "transparent"}
+                  color={fav ? "#FFFFFF" : SAGE}
+                  fill={fav ? "#FFFFFF" : "transparent"}
                 />
               </motion.span>
+              {fav && !reduce && (
+                <motion.span
+                  key={`ripple-${favTap}`}
+                  initial={{ scale: 0, opacity: 0.6 }}
+                  animate={{ scale: 2.4, opacity: 0 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  className="pointer-events-none absolute inset-0 rounded-full"
+                  style={{ background: "radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 60%)" }}
+                />
+              )}
             </motion.button>
           </div>
+
 
           {/* ABOUT */}
           <div className="mt-5 px-4">
@@ -241,9 +262,11 @@ export function DoctorProfileScreen() {
                     <motion.button
                       key={k}
                       onClick={() => setTab(k)}
+                      whileHover={reduce || active ? undefined : { scale: 1.04, y: -1, rotateX: 6 }}
                       whileTap={reduce ? undefined : { scale: 0.96 }}
-                      className="relative flex-1 rounded-full py-2 text-[12.5px] font-semibold"
-                      style={{ color: active ? "#FFFFFF" : INK }}
+                      transition={{ type: "spring", stiffness: 320, damping: 20 }}
+                      className="group relative flex-1 overflow-hidden rounded-full py-2 text-[12.5px] font-semibold"
+                      style={{ color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                     >
                       {active && (
                         <motion.span
@@ -252,7 +275,16 @@ export function DoctorProfileScreen() {
                           className="absolute inset-0 rounded-full"
                           style={{
                             background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
-                            boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55)",
+                            boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.25)",
+                          }}
+                        />
+                      )}
+                      {!active && (
+                        <span
+                          className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{
+                            background: `linear-gradient(135deg, rgba(86,114,87,0.14) 0%, rgba(60,79,61,0.10) 100%)`,
+                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
                           }}
                         />
                       )}
@@ -408,19 +440,42 @@ export function DoctorProfileScreen() {
                           opacity="0.4"
                         />
                       </svg>
-                      <motion.div
+                      <motion.button
                         initial={reduce ? false : { scale: 0, y: -6 }}
-                        animate={reduce ? undefined : { scale: 1, y: 0 }}
-                        transition={{ type: "spring", stiffness: 350, damping: 16, delay: 0.15 }}
-                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full"
+                        animate={
+                          reduce
+                            ? undefined
+                            : { scale: 1, y: [0, -4, 0] }
+                        }
+                        transition={{
+                          scale: { type: "spring", stiffness: 350, damping: 16, delay: 0.15 },
+                          y: { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 },
+                        }}
+                        whileHover={reduce ? undefined : { scale: 1.2, rotateX: 12, rotateY: -12 }}
+                        whileTap={reduce ? undefined : { scale: 0.92 }}
+                        aria-label={extras.clinic.name}
+                        className="group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full"
+                        style={{ transformStyle: "preserve-3d", perspective: 600 }}
                       >
+                        <span
+                          aria-hidden
+                          className="absolute left-1/2 top-1/2 -z-10 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                          style={{
+                            background: `radial-gradient(circle, ${SAGE}55 0%, transparent 70%)`,
+                            animation: reduce ? undefined : "wcc-pin-pulse 1.8s ease-out infinite",
+                          }}
+                        />
                         <div
-                          className="grid h-9 w-9 place-items-center rounded-full"
-                          style={{ backgroundColor: SAGE, boxShadow: "0 6px 14px -4px rgba(86,114,87,0.6)" }}
+                          className="grid h-9 w-9 place-items-center rounded-full transition-shadow duration-300 group-hover:shadow-[0_14px_28px_-8px_rgba(86,114,87,0.75)]"
+                          style={{
+                            background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
+                            boxShadow: "0 6px 14px -4px rgba(86,114,87,0.6), inset 0 1px 0 rgba(255,255,255,0.35)",
+                          }}
                         >
                           <MapPin size={18} color="#FFFFFF" />
                         </div>
-                      </motion.div>
+                      </motion.button>
+                      <style>{`@keyframes wcc-pin-pulse{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.8}100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}}`}</style>
                     </div>
                     <div className="text-[13.5px] font-semibold" style={{ color: INK }}>
                       {extras.clinic.name}
@@ -448,7 +503,7 @@ export function DoctorProfileScreen() {
             </div>
 
             {/* Consult type */}
-            <div className="mt-3 grid grid-cols-3 gap-2">
+            <div className="mt-3 grid grid-cols-3 items-stretch gap-2" style={{ perspective: 800 }}>
               {consultTypes.map((c) => {
                 const active = type === c.key;
                 const Icon = c.key === "chat" ? MessageCircle : c.key === "audio" ? Phone : Video;
@@ -456,16 +511,28 @@ export function DoctorProfileScreen() {
                   <motion.button
                     key={c.key}
                     onClick={() => setType(c.key)}
-                    whileHover={reduce ? undefined : { y: -2 }}
+                    whileHover={reduce ? undefined : { y: -3, scale: 1.04, rotateX: 8, rotateY: -6 }}
                     whileTap={reduce ? undefined : { scale: 0.96 }}
-                    className="relative flex flex-col items-center gap-1.5 overflow-hidden rounded-2xl px-2 py-3"
+                    transition={{ type: "spring", stiffness: 320, damping: 20 }}
+                    className="group relative flex h-full min-h-[86px] flex-col items-center justify-center gap-1.5 overflow-hidden rounded-2xl px-2 py-3"
                     style={{
-                      backgroundColor: active ? "rgba(86,114,87,0.08)" : MIST,
+                      transformStyle: "preserve-3d",
+                      background: active
+                        ? `linear-gradient(135deg, rgba(86,114,87,0.14) 0%, rgba(60,79,61,0.10) 100%)`
+                        : `linear-gradient(135deg, ${MIST} 0%, #E9EEE9 100%)`,
                       border: active ? `2px solid ${SAGE}` : "2px solid transparent",
-                      boxShadow: active ? "0 8px 18px -10px rgba(86,114,87,0.55)" : "none",
-                      transition: "background-color 200ms, border-color 200ms, box-shadow 200ms",
+                      boxShadow: active
+                        ? "0 10px 22px -10px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.6)"
+                        : "0 4px 10px -8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)",
                     }}
                   >
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      style={{
+                        background: `linear-gradient(135deg, ${SAGE}22 0%, ${DEEP}18 100%)`,
+                      }}
+                    />
                     {active && !reduce && (
                       <motion.span
                         aria-hidden
@@ -483,11 +550,11 @@ export function DoctorProfileScreen() {
                         }}
                       />
                     )}
-                    <Icon size={18} color={active ? SAGE : INK} />
-                    <div className="text-[12px] font-semibold" style={{ color: INK }}>
+                    <Icon size={18} color={active ? SAGE : INK} className="relative z-10" />
+                    <div className="relative z-10 text-[12px] font-semibold" style={{ color: INK }}>
                       {c.label}
                     </div>
-                    <div className="text-[11px] font-bold" style={{ color: SAGE }}>
+                    <div className="relative z-10 text-[11px] font-bold" style={{ color: SAGE }}>
                       CA${c.priceCad}
                     </div>
                   </motion.button>
@@ -495,22 +562,25 @@ export function DoctorProfileScreen() {
               })}
             </div>
 
+
             {/* Date strip */}
             <div className="mt-4">
               <div className="mb-2 text-[13px] font-semibold" style={{ color: INK }}>
                 Select date
               </div>
               <LayoutGroup id="wcc-date-strip">
-                <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+                <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]" style={{ perspective: 800 }}>
                   {dates.map((d) => {
                     const active = date === d.key;
                     return (
                       <motion.button
                         key={d.key}
                         onClick={() => setDate(d.key)}
+                        whileHover={reduce || active ? undefined : { y: -3, scale: 1.06, rotateX: 8 }}
                         whileTap={reduce ? undefined : { scale: 0.94 }}
-                        className="relative shrink-0 rounded-2xl px-3 py-2 text-center"
-                        style={{ minWidth: 62, color: active ? "#FFFFFF" : INK }}
+                        transition={{ type: "spring", stiffness: 320, damping: 20 }}
+                        className="group relative shrink-0 overflow-hidden rounded-2xl px-3 py-2 text-center"
+                        style={{ minWidth: 62, color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                       >
                         {active ? (
                           <motion.span
@@ -519,14 +589,21 @@ export function DoctorProfileScreen() {
                             className="absolute inset-0 rounded-2xl"
                             style={{
                               background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
-                              boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55)",
+                              boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.25)",
                             }}
                           />
                         ) : (
-                          <span
-                            className="absolute inset-0 rounded-2xl"
-                            style={{ backgroundColor: MIST }}
-                          />
+                          <>
+                            <span
+                              className="absolute inset-0 rounded-2xl"
+                              style={{ background: `linear-gradient(135deg, ${MIST} 0%, #E9EEE9 100%)` }}
+                            />
+                            <span
+                              aria-hidden
+                              className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                              style={{ background: `linear-gradient(135deg, ${SAGE}22 0%, ${DEEP}18 100%)` }}
+                            />
+                          </>
                         )}
                         <span className="relative block text-[11.5px] font-semibold">
                           {d.label}
@@ -549,7 +626,7 @@ export function DoctorProfileScreen() {
               <div className="mb-2 text-[13px] font-semibold" style={{ color: INK }}>
                 Available slots
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2" style={{ perspective: 800 }}>
                 {defaultTimeSlots.map((s, i) => {
                   const disabled = disabledSlotIndices.includes(i);
                   const active = slot === s;
@@ -558,6 +635,7 @@ export function DoctorProfileScreen() {
                       key={s}
                       disabled={disabled}
                       onClick={() => !disabled && setSlot(s)}
+                      whileHover={reduce || disabled || active ? undefined : { y: -2, scale: 1.05, rotateX: 6 }}
                       whileTap={reduce || disabled ? undefined : { scale: 0.92 }}
                       animate={
                         active && !reduce
@@ -565,22 +643,30 @@ export function DoctorProfileScreen() {
                           : { scale: 1 }
                       }
                       transition={{ duration: 0.35 }}
-                      className="rounded-xl py-2 text-[12px] font-semibold"
+                      className="group relative overflow-hidden rounded-xl py-2 text-[12px] font-semibold"
                       style={{
-                        backgroundColor: disabled
+                        transformStyle: "preserve-3d",
+                        background: disabled
                           ? "#F0F1F0"
                           : active
-                            ? SAGE
-                            : MIST,
+                            ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`
+                            : `linear-gradient(135deg, ${MIST} 0%, #E9EEE9 100%)`,
                         color: disabled ? "#B0B4B0" : active ? "#FFFFFF" : INK,
                         textDecoration: disabled ? "line-through" : "none",
                         cursor: disabled ? "not-allowed" : "pointer",
                         boxShadow: active
-                          ? "0 6px 14px -6px rgba(86,114,87,0.55)"
-                          : "none",
+                          ? "0 8px 16px -8px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.25)"
+                          : "0 3px 8px -6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)",
                       }}
                     >
-                      {s}
+                      {!disabled && !active && (
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{ background: `linear-gradient(135deg, ${SAGE}22 0%, ${DEEP}18 100%)` }}
+                        />
+                      )}
+                      <span className="relative">{s}</span>
                     </motion.button>
                   );
                 })}
@@ -594,8 +680,8 @@ export function DoctorProfileScreen() {
           className="absolute inset-x-0 z-10 border-t bg-white px-4 pb-2 pt-3"
           style={{ bottom: 84, borderColor: "#EEF1EE" }}
         >
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col">
+          <div className="flex items-center gap-3" style={{ perspective: 900 }}>
+            <div className="flex shrink-0 flex-col justify-center leading-tight">
               <span className="text-[11px]" style={{ color: MUTED }}>
                 Total
               </span>
@@ -606,28 +692,43 @@ export function DoctorProfileScreen() {
             <motion.button
               disabled={!canBook}
               onClick={handleConfirm}
-              whileHover={reduce || !canBook ? undefined : { scale: 1.02 }}
+              whileHover={
+                reduce || !canBook
+                  ? undefined
+                  : { scale: 1.04, y: -2, rotateX: 8, rotateY: -6 }
+              }
               whileTap={reduce || !canBook ? undefined : { scale: 0.97 }}
-              className="group relative ml-auto flex-1 overflow-hidden rounded-full py-3 text-[14px] font-bold"
+              transition={{ type: "spring", stiffness: 320, damping: 20 }}
+              className="group relative ml-auto inline-flex h-12 flex-1 items-center justify-center overflow-hidden rounded-full text-[14px] font-bold"
               style={{
+                transformStyle: "preserve-3d",
                 background: canBook
-                  ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`
+                  ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 50%, ${SAGE} 100%)`
                   : "#DCE0DC",
+                backgroundSize: canBook ? "200% 200%" : undefined,
+                backgroundPosition: canBook ? "0% 50%" : undefined,
                 color: canBook ? "#FFFFFF" : "#8A918A",
                 boxShadow: canBook
-                  ? "0 10px 20px -10px rgba(86,114,87,0.6)"
+                  ? "0 12px 24px -10px rgba(86,114,87,0.65), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.12)"
                   : "none",
                 cursor: canBook ? "pointer" : "not-allowed",
+                transition: "background-position 600ms ease",
+              }}
+              onMouseEnter={(e) => {
+                if (canBook) (e.currentTarget as HTMLButtonElement).style.backgroundPosition = "100% 50%";
+              }}
+              onMouseLeave={(e) => {
+                if (canBook) (e.currentTarget as HTMLButtonElement).style.backgroundPosition = "0% 50%";
               }}
             >
-              <span className="relative">Confirm Booking</span>
+              <span className="relative z-10 inline-flex items-center justify-center">Confirm Booking</span>
               {canBook && !reduce && (
                 <span
                   aria-hidden
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-20deg] opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
                   style={{
                     background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)",
+                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)",
                   }}
                 />
               )}
@@ -668,14 +769,32 @@ function ActionCircle({
   label: string;
   reduce: boolean;
 }) {
+  const [hover, setHover] = useState(false);
+  const styledIcon = isValidElement<{ color?: string }>(icon)
+    ? cloneElement(icon, { color: hover ? "#FFFFFF" : SAGE })
+    : icon;
   return (
     <motion.button
+      whileHover={reduce ? undefined : { scale: 1.1, y: -3, rotateX: 10, rotateY: -10 }}
       whileTap={reduce ? undefined : { scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 320, damping: 18 }}
+      onHoverStart={() => setHover(true)}
+      onHoverEnd={() => setHover(false)}
       aria-label={label}
-      className="grid h-11 w-11 place-items-center rounded-full bg-white"
-      style={{ border: `1.5px solid ${SAGE}` }}
+      className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
+      style={{
+        transformStyle: "preserve-3d",
+        border: `1.5px solid ${SAGE}`,
+        background: hover
+          ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`
+          : "linear-gradient(135deg, #FFFFFF 0%, #F6F8F6 100%)",
+        boxShadow: hover
+          ? "0 10px 20px -8px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.35)"
+          : "0 4px 10px -6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)",
+        transition: "background 250ms, box-shadow 250ms",
+      }}
     >
-      {icon}
+      <span className="relative z-10">{styledIcon}</span>
     </motion.button>
   );
 }
