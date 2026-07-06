@@ -23,11 +23,9 @@ export function PromoCard() {
             <Sparkles size={12} /> {promo.code}
           </div>
         </div>
-        <div className="pointer-events-none absolute -right-2 top-0 h-full w-[120px]">
-          <div className="relative h-full w-full">
-            <Img src={promo.image} alt="" wrapperClassName="absolute inset-0" rounded="rounded-2xl" />
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[--color-wcc-green-primary]/30 to-[--color-wcc-green-deep]" />
-          </div>
+        <div className="pointer-events-none absolute right-2 top-2 bottom-2 w-[112px] overflow-hidden rounded-2xl">
+          <Img src={promo.image} alt="" wrapperClassName="absolute inset-0" rounded="rounded-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[--color-wcc-green-deep] via-[--color-wcc-green-primary]/40 to-transparent" />
         </div>
         <div className="wcc-sparkle pointer-events-none absolute left-0 top-0 h-6 w-6">
           <Sparkles size={16} className="text-white/80" />
