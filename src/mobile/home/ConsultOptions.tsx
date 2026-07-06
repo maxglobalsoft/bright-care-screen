@@ -4,6 +4,7 @@ import { consultOptions } from "./data";
 
 export function ConsultOptions() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   return (
     <section className="pt-5" data-reveal>
       <style>{`
