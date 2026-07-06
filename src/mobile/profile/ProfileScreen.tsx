@@ -68,114 +68,113 @@ export function ProfileScreen() {
 
   return (
     <div className="relative flex h-full w-full flex-col" style={{ backgroundColor: "#F3F6F2" }}>
-      <div className="h-11 shrink-0" style={{ background: "linear-gradient(180deg,#2E4030 0%,#3C4F3D 100%)" }} />
-      {/* Header — refined hero */}
-      <div
-        className="relative overflow-hidden px-5 pb-16 pt-5"
+      {/* Header — solid, centered column */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="flex flex-col items-center"
         style={{
-          background: "linear-gradient(160deg,#2E4030 0%,#3C4F3D 55%,#567257 130%)",
-          borderBottomLeftRadius: 32,
-          borderBottomRightRadius: 32,
+          backgroundColor: "#3C4F3D",
+          padding: "24px 16px 56px",
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
         }}
       >
-        {/* soft decorative glows */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full"
-          style={{ background: "radial-gradient(closest-side, rgba(232,145,45,0.28), transparent 70%)" }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-12 bottom-0 h-40 w-40 rounded-full"
-          style={{ background: "radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)" }}
-        />
-
-        <div className="relative flex items-center gap-4">
-          {/* Avatar */}
-          <motion.div
-            initial={{ scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="relative"
-          >
-            <div
-              className="grid h-[72px] w-[72px] place-items-center rounded-full text-[22px] font-bold"
-              style={{
-                background: "linear-gradient(145deg,#7A9679,#4A6249)",
-                color: "#FFFFFF",
-                boxShadow: "inset 0 2px 4px rgba(255,255,255,0.25), 0 8px 20px -8px rgba(0,0,0,0.5)",
-                border: "2px solid rgba(255,255,255,0.9)",
-              }}
-            >
-              PS
-            </div>
-            <motion.button
-              whileTap={reduce ? undefined : { scale: 0.9 }}
-              onClick={() => toast.info("Photo upload coming soon")}
-              aria-label="Edit photo"
-              className="absolute -bottom-0.5 -right-0.5 grid h-7 w-7 place-items-center rounded-full"
-              style={{
-                background: "linear-gradient(145deg,#F5A94A,#D97B1F)",
-                border: "2px solid #3C4F3D",
-                boxShadow: "0 3px 8px -2px rgba(0,0,0,0.4)",
-              }}
-            >
-              <Camera size={12} color="#FFFFFF" />
-            </motion.button>
-          </motion.div>
-
-          {/* Identity */}
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-[17px] font-bold leading-tight" style={{ color: "#FFFFFF" }}>
-              Priya Sharma
-            </div>
-            <div className="mt-1 flex items-center gap-1.5">
-              <span
-                className="inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[9.5px] font-semibold"
-                style={{
-                  background: "rgba(232,145,45,0.18)",
-                  color: "#F5C989",
-                  border: "1px solid rgba(232,145,45,0.35)",
-                }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#F5A94A" }} />
-                Member since 2026
-              </span>
-            </div>
-            <div className="mt-1.5 truncate text-[10.5px]" style={{ color: "rgba(255,255,255,0.72)" }}>
-              +1 555 010 2233
-            </div>
-            <div className="truncate text-[10.5px]" style={{ color: "rgba(255,255,255,0.72)" }}>
-              priya@example.com
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
-        {/* Stats — floating card */}
-        <div className="-mt-10 px-4">
+        <div className="relative">
           <div
-            className="grid grid-cols-3 overflow-hidden rounded-2xl"
+            className="grid place-items-center rounded-full"
             style={{
-              backgroundColor: "#FFFFFF",
-              boxShadow: "0 12px 32px -14px rgba(35,41,31,0.28), 0 2px 6px -2px rgba(35,41,31,0.08)",
+              width: 96,
+              height: 96,
+              backgroundColor: "#567257",
+              border: "3px solid #FFFFFF",
+              color: "#FFFFFF",
+              fontSize: 32,
+              fontWeight: 600,
             }}
           >
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08, type: "spring", stiffness: 260, damping: 22 }}
-                className="px-3 py-3.5 text-center"
-                style={{ borderLeft: i === 0 ? "none" : "1px solid #EEF2EC" }}
-              >
-                <div className="text-[19px] font-bold leading-none" style={{ color: "#3C4F3D" }}>{s.value}</div>
-                <div className="mt-1 text-[10.5px] font-medium" style={{ color: "#6B7280" }}>{s.label}</div>
-              </motion.div>
-            ))}
+            PS
           </div>
+          <motion.button
+            whileTap={reduce ? undefined : { scale: 0.9 }}
+            onClick={() => toast.info("Photo upload coming soon")}
+            aria-label="Edit photo"
+            className="absolute bottom-0 right-0 grid place-items-center rounded-full"
+            style={{
+              width: 32,
+              height: 32,
+              backgroundColor: "#E8912D",
+              border: "2px solid #3C4F3D",
+            }}
+          >
+            <Camera size={16} color="#FFFFFF" />
+          </motion.button>
+        </div>
+
+        <div style={{ marginTop: 12, color: "#FFFFFF", fontSize: 20, fontWeight: 600 }}>
+          Priya Sharma
+        </div>
+
+        <div
+          style={{
+            marginTop: 4,
+            color: "rgba(255,255,255,0.75)",
+            fontSize: 13,
+            fontWeight: 400,
+            whiteSpace: "nowrap",
+          }}
+        >
+          +1 555 010 2233 · priya@example.com
+        </div>
+
+        <div
+          style={{
+            marginTop: 10,
+            height: 26,
+            padding: "0 12px",
+            display: "inline-flex",
+            alignItems: "center",
+            borderRadius: 9999,
+            backgroundColor: "rgba(232,145,45,0.16)",
+            border: "1px solid #E8912D",
+            color: "#E8912D",
+            fontSize: 12,
+            fontWeight: 500,
+          }}
+        >
+          Member since 2026
+        </div>
+      </motion.div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
+        {/* Stats row — overlapping cards */}
+        <div className="relative flex" style={{ margin: "-40px 16px 0", gap: 12, zIndex: 10 }}>
+          {stats.map((s, i) => (
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + i * 0.08, duration: 0.3, ease: "easeOut" }}
+              whileHover={reduce ? undefined : { y: -3, boxShadow: "0 8px 20px rgba(35,41,31,0.16)" }}
+              whileTap={reduce ? undefined : { scale: 0.95 }}
+              onClick={() => {
+                if (s.label === "Appointments") navigate({ to: "/doctors" });
+                else if (s.label === "Orders") navigate({ to: "/pharmacy" });
+                else toast.info(s.label, { description: "Coming in development phase" });
+              }}
+              className="flex flex-1 cursor-pointer flex-col items-center justify-center"
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: 16,
+                padding: "16px 0",
+                boxShadow: "0 4px 12px rgba(35,41,31,0.10)",
+              }}
+            >
+              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{s.value}</div>
+              <div style={{ marginTop: 2, color: "#6B7280", fontSize: 12, fontWeight: 400 }}>{s.label}</div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Menu */}
