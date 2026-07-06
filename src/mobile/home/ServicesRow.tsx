@@ -11,6 +11,9 @@ export function ServicesRow() {
       {services.map((s) => (
         <motion.button
           key={s.key}
+          onClick={() =>
+            toast.info(`${s.title} coming soon`, { description: s.sub })
+          }
           initial="rest"
           animate="rest"
           whileHover={reduce ? undefined : "hover"}
