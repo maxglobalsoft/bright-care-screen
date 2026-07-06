@@ -769,14 +769,37 @@ function ActionCircle({
   label: string;
   reduce: boolean;
 }) {
+  const [hover, setHover] = useState(false);
+  const styledIcon =
+    (icon as React.ReactElement<{ color?: string }>) &&
+    typeof icon === "object"
+      ? (require("react") as typeof import("react")).cloneElement(
+          icon as React.ReactElement<{ color?: string }>,
+          { color: hover ? "#FFFFFF" : SAGE },
+        )
+      : icon;
   return (
     <motion.button
+      whileHover={reduce ? undefined : { scale: 1.1, y: -3, rotateX: 10, rotateY: -10 }}
       whileTap={reduce ? undefined : { scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 320, damping: 18 }}
+      onHoverStart={() => setHover(true)}
+      onHoverEnd={() => setHover(false)}
       aria-label={label}
-      className="grid h-11 w-11 place-items-center rounded-full bg-white"
-      style={{ border: `1.5px solid ${SAGE}` }}
+      className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
+      style={{
+        transformStyle: "preserve-3d",
+        border: `1.5px solid ${SAGE}`,
+        background: hover
+          ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`
+          : "linear-gradient(135deg, #FFFFFF 0%, #F6F8F6 100%)",
+        boxShadow: hover
+          ? "0 10px 20px -8px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.35)"
+          : "0 4px 10px -6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)",
+        transition: "background 250ms, box-shadow 250ms",
+      }}
     >
-      {icon}
+      <span className="relative z-10">{styledIcon}</span>
     </motion.button>
   );
 }
