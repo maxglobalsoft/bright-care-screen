@@ -417,7 +417,7 @@ function MessageRow({
     : {
         initial: { opacity: 0, y: 10 },
         animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.32, ease: [0.2, 0.9, 0.25, 1], delay },
+        transition: { duration: 0.32, ease: [0.2, 0.9, 0.25, 1] as [number, number, number, number], delay },
       };
 
   if (m.kind === "system") {
