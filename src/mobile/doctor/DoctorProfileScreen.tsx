@@ -173,36 +173,55 @@ export function DoctorProfileScreen() {
           </div>
 
           {/* Action row */}
-          <div className="mt-4 flex items-center justify-center gap-3 px-4">
-            <ActionCircle icon={<MessageCircle size={18} color={SAGE} />} label="Chat" reduce={!!reduce} />
-            <ActionCircle icon={<Phone size={18} color={SAGE} />} label="Audio" reduce={!!reduce} />
+          <div className="mt-4 flex items-center justify-center gap-3 px-4" style={{ perspective: 600 }}>
+            <ActionCircle icon={<MessageCircle size={18} />} label="Chat" reduce={!!reduce} />
+            <ActionCircle icon={<Phone size={18} />} label="Audio" reduce={!!reduce} />
             <motion.button
               onClick={() => {
                 setFav((v) => !v);
                 setFavTap((n) => n + 1);
               }}
+              whileHover={reduce ? undefined : { scale: 1.1, y: -3, rotateX: 10, rotateY: -10 }}
               whileTap={reduce ? undefined : { scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 320, damping: 18 }}
               aria-label="Favourite"
-              className="relative grid h-11 w-11 place-items-center rounded-full"
+              className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
               style={{
-                border: `1.5px solid ${fav ? ORANGE : SAGE}`,
-                backgroundColor: fav ? "rgba(232,145,45,0.10)" : "#FFFFFF",
+                transformStyle: "preserve-3d",
+                border: `1.5px solid ${fav ? RED : SAGE}`,
+                background: fav
+                  ? `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)`
+                  : "linear-gradient(135deg, #FFFFFF 0%, #F6F8F6 100%)",
+                boxShadow: fav
+                  ? "0 10px 20px -8px rgba(239,68,68,0.55), inset 0 1px 0 rgba(255,255,255,0.35)"
+                  : "0 4px 10px -6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)",
               }}
             >
               <motion.span
                 key={favTap}
-                animate={reduce || favTap === 0 ? undefined : { scale: [1, 1.4, 1] }}
-                transition={{ duration: 0.35 }}
-                className="grid place-items-center"
+                animate={reduce || favTap === 0 ? undefined : { scale: [1, 1.5, 1] }}
+                transition={{ duration: 0.4 }}
+                className="relative z-10 grid place-items-center"
               >
                 <Heart
                   size={18}
-                  color={fav ? ORANGE : SAGE}
-                  fill={fav ? ORANGE : "transparent"}
+                  color={fav ? "#FFFFFF" : SAGE}
+                  fill={fav ? "#FFFFFF" : "transparent"}
                 />
               </motion.span>
+              {fav && !reduce && (
+                <motion.span
+                  key={`ripple-${favTap}`}
+                  initial={{ scale: 0, opacity: 0.6 }}
+                  animate={{ scale: 2.4, opacity: 0 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  className="pointer-events-none absolute inset-0 rounded-full"
+                  style={{ background: "radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 60%)" }}
+                />
+              )}
             </motion.button>
           </div>
+
 
           {/* ABOUT */}
           <div className="mt-5 px-4">
