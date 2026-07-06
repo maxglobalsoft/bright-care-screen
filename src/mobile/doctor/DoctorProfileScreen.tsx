@@ -59,6 +59,7 @@ export function DoctorProfileScreen() {
   const [date, setDate] = useState<string | null>(null);
   const [slot, setSlot] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
 
   const total = type ? consultTypes.find((c) => c.key === type)!.priceCad : 0;
   const canBook = !!(type && date && slot);
@@ -113,40 +114,100 @@ export function DoctorProfileScreen() {
               -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
             }
             .wcc-conic-ring:hover::before { opacity: 1; animation: wcc-conic-spin 1.6s linear infinite; }
-            /* UNIQUE Confirm Booking button — holographic prismatic 3D */
-            @keyframes wcc-cta-holo {
-              0% { background-position: 0% 50%, 0% 50%; }
-              50% { background-position: 100% 50%, 100% 50%; }
-              100% { background-position: 0% 50%, 0% 50%; }
+            /* UNIQUE Confirm Booking — tactile 3D pedestal button */
+            @keyframes wcc-cta-liquid {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
             }
-            @keyframes wcc-cta-orbit {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
+            @keyframes wcc-cta-glow-pulse {
+              0%,100% { opacity: 0.55; transform: scale(1); }
+              50% { opacity: 1; transform: scale(1.06); }
             }
-            @keyframes wcc-cta-float {
-              0%,100% { transform: translateY(0) scale(1); }
-              50% { transform: translateY(-1px) scale(1.005); }
+            @keyframes wcc-cta-shine {
+              0% { transform: translateX(-140%) skewX(-22deg); }
+              100% { transform: translateX(260%) skewX(-22deg); }
             }
-            .wcc-cta-holo { cursor: pointer !important; position: relative; isolation: isolate; background-size: 300% 300%, 200% 200% !important; animation: wcc-cta-float 3.2s ease-in-out infinite; }
-            .wcc-cta-holo:hover { animation: wcc-cta-holo 2.4s ease-in-out infinite, wcc-cta-float 3.2s ease-in-out infinite; }
-            .wcc-cta-holo::before {
-              content:''; position:absolute; inset:-3px; border-radius: inherit; z-index:0;
-              background: conic-gradient(from 0deg, #C9A24B, #E8912D, #2E6B53, #1F4A3A, #C9A24B);
-              opacity: 0; transition: opacity 220ms ease; filter: blur(6px);
+            @keyframes wcc-cta-ripple {
+              0% { transform: translate(-50%,-50%) scale(0); opacity: 0.55; }
+              100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
             }
-            .wcc-cta-holo:hover::before { opacity: 0.9; animation: wcc-cta-orbit 2.6s linear infinite; }
-            .wcc-cta-holo::after {
-              content:''; position:absolute; inset:0; border-radius: inherit; pointer-events:none; z-index:5;
+            .wcc-cta-pedestal { position: relative; perspective: 900px; border-radius: 9999px; isolation: isolate; }
+            .wcc-cta-pedestal::before {
+              content:''; position:absolute; inset: 4px 0 -6px 0; border-radius: inherit; z-index: 0;
+              background: linear-gradient(180deg, #123326 0%, #0B2119 100%);
+              box-shadow: 0 10px 22px -10px rgba(11,33,25,0.75);
+            }
+            .wcc-cta-pedestal::after {
+              content:''; position:absolute; inset:-4px; border-radius: inherit; z-index:-1; pointer-events:none;
+              background: radial-gradient(60% 80% at 50% 50%, rgba(201,162,75,0.55), rgba(46,107,83,0.35) 55%, transparent 75%);
+              filter: blur(10px); opacity: 0; transition: opacity 260ms ease;
+            }
+            .wcc-cta-pedestal:hover::after { opacity: 1; animation: wcc-cta-glow-pulse 2.2s ease-in-out infinite; }
+            .wcc-cta-top {
+              position: relative; z-index: 1; display: inline-flex; width: 100%; height: 100%;
+              align-items: center; justify-content: center; border-radius: inherit;
               background:
-                radial-gradient(120% 60% at 20% 0%, rgba(255,255,255,0.55), transparent 55%),
-                radial-gradient(80% 80% at 80% 120%, rgba(0,0,0,0.28), transparent 60%);
-              mix-blend-mode: overlay;
+                linear-gradient(115deg, #1F4A3A 0%, #2E6B53 28%, #C9A24B 52%, #2E6B53 76%, #1F4A3A 100%);
+              background-size: 260% 260%;
+              background-position: 0% 50%;
+              box-shadow:
+                inset 0 1.5px 0 rgba(255,255,255,0.55),
+                inset 0 -3px 0 rgba(0,0,0,0.28),
+                inset 0 0 0 1px rgba(255,255,255,0.12),
+                0 6px 0 #0B2119,
+                0 10px 18px -6px rgba(11,33,25,0.55);
+              transform: translateY(0);
+              transition: transform 140ms cubic-bezier(.2,.9,.25,1.2), box-shadow 140ms ease, background-position 600ms ease;
+              overflow: hidden;
+              cursor: pointer;
             }
-            .wcc-cta-holo > .wcc-cta-inner { position:relative; z-index:2; border-radius: inherit; }
+            .wcc-cta-pedestal:hover .wcc-cta-top {
+              background-position: 100% 50%;
+              animation: wcc-cta-liquid 3s ease-in-out infinite;
+              transform: translateY(-1px);
+              box-shadow:
+                inset 0 1.5px 0 rgba(255,255,255,0.6),
+                inset 0 -3px 0 rgba(0,0,0,0.28),
+                inset 0 0 0 1px rgba(255,255,255,0.18),
+                0 7px 0 #0B2119,
+                0 14px 22px -6px rgba(11,33,25,0.6);
+            }
+            .wcc-cta-pedestal:active .wcc-cta-top,
+            .wcc-cta-pressed .wcc-cta-top {
+              transform: translateY(5px);
+              box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.35),
+                inset 0 -1px 0 rgba(0,0,0,0.35),
+                inset 0 0 0 1px rgba(255,255,255,0.1),
+                0 1px 0 #0B2119,
+                0 3px 6px -3px rgba(11,33,25,0.6);
+            }
+            .wcc-cta-top::before {
+              content:''; position:absolute; inset:1px 1px 45% 1px; border-radius: 9999px; pointer-events:none;
+              background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 100%);
+              opacity: 0.9;
+            }
+            .wcc-cta-top .wcc-cta-shine {
+              content:''; position:absolute; top:0; bottom:0; left:0; width:38%; pointer-events:none;
+              background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+              transform: translateX(-140%) skewX(-22deg); opacity: 0;
+            }
+            .wcc-cta-pedestal:hover .wcc-cta-top .wcc-cta-shine { opacity: 1; animation: wcc-cta-shine 1.6s ease-in-out infinite; }
+            .wcc-cta-ripple {
+              position:absolute; width: 220px; height: 220px; border-radius: 9999px; pointer-events:none;
+              left: var(--rx, 50%); top: var(--ry, 50%);
+              transform: translate(-50%,-50%) scale(0);
+              background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.25) 40%, transparent 70%);
+              animation: wcc-cta-ripple 620ms ease-out forwards;
+              mix-blend-mode: screen;
+            }
             @media (prefers-reduced-motion: reduce) {
               .wcc-3d:hover::after, .wcc-grad-anim:hover, .wcc-conic-ring:hover::before, .wcc-3d:active, .wcc-3d-red:active,
-              .wcc-cta-holo, .wcc-cta-holo:hover, .wcc-cta-holo:hover::before { animation: none !important; }
+              .wcc-cta-pedestal:hover::after, .wcc-cta-pedestal:hover .wcc-cta-top,
+              .wcc-cta-pedestal:hover .wcc-cta-top .wcc-cta-shine, .wcc-cta-ripple { animation: none !important; }
             }
+
 
           `}</style>
 
@@ -764,36 +825,41 @@ export function DoctorProfileScreen() {
             <motion.button
               type="button"
               aria-disabled={!canBook}
-              onClick={() => { if (canBook) handleConfirm(); }}
-              whileHover={reduce ? undefined : { scale: 1.04, y: -2, rotateX: 8, rotateY: -6 }}
-              whileTap={reduce ? undefined : { scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="wcc-cta-holo group relative inline-flex h-11 flex-1 items-center justify-center overflow-hidden rounded-full px-6 text-[14px] font-bold"
-              style={{
-                transformStyle: "preserve-3d",
-                background: canBook
-                  ? `linear-gradient(115deg, ${DEEP} 0%, ${SAGE} 22%, #C9A24B 48%, ${SAGE} 74%, ${DEEP} 100%), radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,0.35), transparent 60%)`
-                  : `linear-gradient(115deg, #A9B3A9 0%, #C6CEC6 50%, #A9B3A9 100%)`,
-                backgroundBlendMode: "normal, overlay",
-                color: "#FFFFFF",
-                boxShadow: canBook
-                  ? "0 14px 28px -12px rgba(31,74,58,0.65), 0 4px 10px -4px rgba(201,162,75,0.45), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -2px 0 rgba(0,0,0,0.18)"
-                  : "0 6px 14px -8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.12)",
-                cursor: "pointer",
+              onPointerDown={(e) => {
+                const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const id = Date.now() + Math.random();
+                setRipples((prev) => [...prev, { id, x, y }]);
+                setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 650);
               }}
+              onClick={() => { if (canBook) handleConfirm(); }}
+              whileTap={reduce ? undefined : { scale: 0.985 }}
+              transition={{ type: "spring", stiffness: 500, damping: 26 }}
+              className="wcc-cta-pedestal group relative inline-flex h-12 flex-1 items-stretch justify-stretch rounded-full"
+              style={{ cursor: "pointer" }}
             >
-              <span className="wcc-cta-inner relative z-10 inline-flex items-center justify-center">Confirm Booking</span>
-              {!reduce && (
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-20deg] opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)",
-                  }}
-                />
-              )}
+              <span
+                className="wcc-cta-top text-[14px] font-bold tracking-wide"
+                style={{
+                  color: "#FFFFFF",
+                  textShadow: "0 1px 0 rgba(0,0,0,0.28), 0 0 12px rgba(201,162,75,0.35)",
+                  filter: canBook ? undefined : "grayscale(0.55) brightness(0.92)",
+                }}
+              >
+                <span className="wcc-cta-shine" aria-hidden />
+                <span className="relative z-10">Confirm Booking</span>
+                {ripples.map((r) => (
+                  <span
+                    key={r.id}
+                    className="wcc-cta-ripple"
+                    style={{ ["--rx" as string]: `${r.x}px`, ["--ry" as string]: `${r.y}px` }}
+                    aria-hidden
+                  />
+                ))}
+              </span>
             </motion.button>
+
 
           </div>
         </div>
