@@ -2,6 +2,7 @@ import { Home, Stethoscope, ShoppingBag, User, Video, type LucideIcon } from "lu
 import { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 type Tab = { key: string; label: string; icon: LucideIcon };
 const tabs: Tab[] = [
