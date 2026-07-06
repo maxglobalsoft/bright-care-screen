@@ -61,13 +61,16 @@ export function TopBar({ shadow }: { shadow: boolean }) {
             transition={{ duration: 1, delay: 0.4, repeat: 2, repeatType: "loop" }}
           />
         </motion.button>
-        <button
+        <motion.button
           type="button"
           aria-label="Profile"
-          className="h-9 w-9 overflow-hidden rounded-full transition-transform duration-200 active:scale-[0.94]"
+          whileHover={reduce ? undefined : { scale: 1.06 }}
+          whileTap={reduce ? undefined : { scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="h-9 w-9 cursor-pointer overflow-hidden rounded-full"
         >
           <Img src={user.avatar!} alt="You" wrapperClassName="h-full w-full" rounded="rounded-full" />
-        </button>
+        </motion.button>
       </div>
     </div>
   );

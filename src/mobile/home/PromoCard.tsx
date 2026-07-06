@@ -1,8 +1,10 @@
 import { Sparkles } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { promo } from "./data";
 import { Img } from "./Img";
 
 export function PromoCard() {
+  const reduce = useReducedMotion();
   return (
     <div className="px-4 pt-4" data-reveal>
       <style>{`
@@ -13,8 +15,17 @@ export function PromoCard() {
         .wcc-sparkle-fly { animation: wcc-sparkle-fly 4s ease-in-out 2s infinite; }
         @media (prefers-reduced-motion: reduce) { .wcc-promo,.wcc-sparkle-fly{animation:none} }
       `}</style>
-      <div
-        className="wcc-promo relative overflow-hidden rounded-[18px] p-4"
+      <motion.button
+        type="button"
+        initial="rest"
+        animate="rest"
+        whileHover={reduce ? undefined : "active"}
+        whileTap={reduce ? undefined : "active"}
+        variants={{
+          rest: { scale: 1, y: 0 },
+          active: { scale: 0.985, y: -2, transition: { type: "spring", stiffness: 300, damping: 15 } },
+        }}
+        className="wcc-promo relative w-full cursor-pointer overflow-hidden rounded-[18px] p-4 text-left"
         style={{ background: "linear-gradient(135deg,#567257 0%,#3C4F3D 100%)", color: "#FFFFFF" }}
       >
         <div className="pr-[120px]">
@@ -41,7 +52,7 @@ export function PromoCard() {
         <div className="wcc-sparkle-fly pointer-events-none absolute left-0 top-0 h-6 w-6">
           <Sparkles size={16} style={{ color: "#FFFFFF", opacity: 0.85 }} />
         </div>
-      </div>
+      </motion.button>
     </div>
   );
 }

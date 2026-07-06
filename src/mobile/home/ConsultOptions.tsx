@@ -32,17 +32,12 @@ export function ConsultOptions() {
               whileHover={reduce ? undefined : "active"}
               whileTap={reduce ? undefined : "active"}
               variants={{ rest: { scale: 1 }, active: { scale: 1.04 } }}
-              onTapStart={(_, info) => {
-                const el = (info as unknown as { target?: HTMLElement }).target;
-                if (el && el instanceof HTMLElement) {
-                  const card = el.closest(".wcc-consult-card") as HTMLElement | null;
-                  if (card) {
-                    card.classList.add("wcc-consult-active");
-                    setTimeout(() => card.classList.remove("wcc-consult-active"), 750);
-                  }
-                }
+              onTapStart={(event) => {
+                const card = event.currentTarget as HTMLElement;
+                card.classList.add("wcc-consult-active");
+                setTimeout(() => card.classList.remove("wcc-consult-active"), 750);
               }}
-              className="wcc-consult-card relative w-[140px] shrink-0 rounded-2xl p-3 text-left shadow-[0_2px_10px_-6px_rgba(0,0,0,0.12)]"
+              className="wcc-consult-card relative w-[140px] shrink-0 cursor-pointer rounded-2xl p-3 text-left shadow-[0_2px_10px_-6px_rgba(0,0,0,0.12)]"
               style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #EEF1EE" }}
             >
               <span className="wcc-consult-spark" />
