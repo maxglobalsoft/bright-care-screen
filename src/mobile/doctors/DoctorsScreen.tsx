@@ -201,10 +201,21 @@ export function DoctorsScreen({ initialSpecialty }: Props) {
                   />
                 )}
                 {!active && (
-                  <span
-                    className="absolute inset-0 rounded-full"
-                    style={{ backgroundColor: MIST }}
-                  />
+                  <>
+                    <span
+                      className="absolute inset-0 rounded-full transition-colors duration-300 group-hover:bg-[#E6ECE4]"
+                      style={{ backgroundColor: MIST }}
+                    />
+                    {!reduce && (
+                      <span
+                        className="pointer-events-none absolute inset-0 -translate-x-full rounded-full opacity-0 transition-all duration-500 group-hover:translate-x-full group-hover:opacity-100"
+                        style={{
+                          background:
+                            "linear-gradient(90deg, transparent, rgba(86,114,87,0.35), transparent)",
+                        }}
+                      />
+                    )}
+                  </>
                 )}
                 <span className="relative">{label}</span>
               </motion.button>
