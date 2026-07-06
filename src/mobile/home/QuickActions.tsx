@@ -22,6 +22,13 @@ const particles = Array.from({ length: 6 }, (_, i) => {
 
 export function QuickActions() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
+  const handle = (key: string) => {
+    if (key === "consult") navigate({ to: "/doctors" });
+    else if (key === "ask") navigate({ to: "/doctors", search: { free: 1 } as never });
+    else if (key === "meds") toast.info("Pharmacy coming soon", { description: "Order medicines to your door — launching next release." });
+    else if (key === "lab") toast.info("Lab tests coming soon", { description: "Home sample pickup — launching next release." });
+  };
   return (
     <section className="px-4 pt-3" data-reveal>
       <div className="grid grid-cols-4 gap-2">
@@ -30,6 +37,7 @@ export function QuickActions() {
           return (
             <motion.button
               key={a.key}
+              onClick={() => handle(a.key)}
               whileTap={reduce ? undefined : "tap"}
               whileHover={reduce ? undefined : "hover"}
               initial="rest"
