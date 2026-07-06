@@ -569,16 +569,18 @@ export function DoctorProfileScreen() {
                 Select date
               </div>
               <LayoutGroup id="wcc-date-strip">
-                <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+                <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]" style={{ perspective: 800 }}>
                   {dates.map((d) => {
                     const active = date === d.key;
                     return (
                       <motion.button
                         key={d.key}
                         onClick={() => setDate(d.key)}
+                        whileHover={reduce || active ? undefined : { y: -3, scale: 1.06, rotateX: 8 }}
                         whileTap={reduce ? undefined : { scale: 0.94 }}
-                        className="relative shrink-0 rounded-2xl px-3 py-2 text-center"
-                        style={{ minWidth: 62, color: active ? "#FFFFFF" : INK }}
+                        transition={{ type: "spring", stiffness: 320, damping: 20 }}
+                        className="group relative shrink-0 overflow-hidden rounded-2xl px-3 py-2 text-center"
+                        style={{ minWidth: 62, color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                       >
                         {active ? (
                           <motion.span
@@ -587,14 +589,21 @@ export function DoctorProfileScreen() {
                             className="absolute inset-0 rounded-2xl"
                             style={{
                               background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
-                              boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55)",
+                              boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.25)",
                             }}
                           />
                         ) : (
-                          <span
-                            className="absolute inset-0 rounded-2xl"
-                            style={{ backgroundColor: MIST }}
-                          />
+                          <>
+                            <span
+                              className="absolute inset-0 rounded-2xl"
+                              style={{ background: `linear-gradient(135deg, ${MIST} 0%, #E9EEE9 100%)` }}
+                            />
+                            <span
+                              aria-hidden
+                              className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                              style={{ background: `linear-gradient(135deg, ${SAGE}22 0%, ${DEEP}18 100%)` }}
+                            />
+                          </>
                         )}
                         <span className="relative block text-[11.5px] font-semibold">
                           {d.label}
