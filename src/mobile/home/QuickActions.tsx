@@ -1,5 +1,7 @@
 import { Video, Pill, FlaskConical, MessageCircle, type LucideIcon } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 type Action = { key: string; label: string; icon: LucideIcon };
 const actions: Action[] = [
