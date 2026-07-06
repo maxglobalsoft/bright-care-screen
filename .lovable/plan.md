@@ -1,35 +1,53 @@
-# Plan: Mobile App Splash Screen (Expo + Three.js 3D)
+# Splash Screen — WellnessCareConnect Mobile
 
-## Important context
-This current Lovable project is a **web app** (TanStack Start). Lovable does not build native mobile apps directly — but we can build an **Expo (React Native) web-compatible** app inside this project so you preview it here, and later export it to native iOS/Android via Expo.
+## Scope
+Build only the **Splash Screen** and a placeholder **Home** route inside the mobile app shell. Everything lives in a phone-frame viewport (375×812) for browser preview; structure mirrors what will port to Expo/React Native later.
 
-## Step 1 — Project scaffold
-- Add Expo + React Native Web dependencies (`expo`, `react-native`, `react-native-web`, `expo-router`, `expo-gl`, `expo-three`, `three`).
-- Set up a mobile-shell route (`/app`) that renders a phone-frame viewport (375×812) for realistic preview in the browser.
-- Create `src/mobile/` folder for all screens (splash, home, inner pages) — kept separate from existing web mockup code.
+## Routes
+- `src/routes/app.tsx` — mobile shell layout, centers a phone frame, renders `<Outlet />`.
+- `src/routes/app.index.tsx` — Splash screen (auto-navigates to `/app/home` after 2.4s).
+- `src/routes/app.home.tsx` — minimal placeholder ("Home — coming next") using the sage/orange tokens.
 
-## Step 2 — Splash screen
-- **Component:** `src/mobile/screens/SplashScreen.tsx`
-- **3D animation:** Three.js WebGL canvas rendering an animated gradient shader (custom fragment shader with flowing color blobs) as background.
-- **Logo:** Your PNG logo centered, with subtle scale + fade-in, plus a soft glow.
-- **Duration:** Fixed ~2.5s, then auto-navigate to `/app/home`.
-- **Fallback:** CSS gradient if WebGL unavailable.
+## Splash screen composition
+- **Background:** Three.js WebGL canvas running a custom GLSL fragment shader with flowing/blending color blobs animated on `uTime`. Palette biased to sage `#567257` with warm orange `#E8912D` accents and soft cream highlights. Full-bleed inside the phone frame, behind everything.
+- **Logo:** Centered `WellnessCareConnect_LOGO_tight_4K_App.png` (uploaded asset), ~62% frame width, subtle scale-in (0.92 → 1) + fade-in (0 → 1) over 700ms with a soft glow ring pulse.
+- **Wordmark (optional, faint):** Not shown — the tight logo already contains brand mark. Keep clean.
+- **Status bar area:** kept clean (no clock overlay on top of shader).
+- **Auto-redirect:** `setTimeout` at 2400ms → `navigate({ to: '/app/home' })`. Cleared on unmount.
+- **Reduced motion:** if `matchMedia('(prefers-reduced-motion: reduce)')` matches → skip shader animation, show static gradient + logo, redirect at 1600ms.
+- **Performance:** shader uses transform/opacity only for logo; `requestAnimationFrame` cleaned up on unmount; no scrollbars; DPR capped at 2.
 
-## Step 3 — Waiting on your inputs
-Before I build, I need from you:
-1. **Logo PNG file** (upload it in chat).
-2. **Master prompt** describing the exact gradient colors, animation feel (flowing/pulsing/rotating), mood, and any brand tokens.
+## Design tokens (added to `src/styles.css`)
+- `--wcc-sage: #567257`
+- `--wcc-orange: #E8912D`
+- `--wcc-cream: #FBF7EE` (splash safe fallback bg)
 
-## Step 4 — Homepage (next turn)
-Once splash is approved, you'll send the homepage prompt and I'll build it in the same `src/mobile/` structure, wired to navigate from splash.
+## Files to create
+- `src/routes/app.tsx`
+- `src/routes/app.index.tsx`
+- `src/routes/app.home.tsx`
+- `src/mobile/PhoneViewport.tsx` — phone frame wrapper (375×812, rounded, drop shadow, notch).
+- `src/mobile/screens/SplashScreen.tsx` — logo + auto-redirect + reduced-motion handling.
+- `src/mobile/screens/GradientCanvas.tsx` — Three.js scene: fullscreen quad + custom fragment shader.
+- `src/mobile/shaders/gradient.frag.ts` — GLSL fragment shader string (blobs, warp, sage/orange mix).
+- `src/mobile/shaders/gradient.vert.ts` — passthrough vertex shader.
+
+## Asset
+- Reuse the uploaded logo pointer already present in the project. If a new tight 4K PNG is preferred, upload via chat and I'll swap the asset pointer. For this build I'll use the existing `src/assets/wcc-logo.jpg.asset.json` unless you upload the new one before I start.
+
+## Dependencies to install
+- `three` and `@types/three` (WebGL rendering)
+- No `expo-*` packages this round — the mobile app is previewed as a web build inside the phone frame; Expo-specific porting happens once screens are approved.
 
 ## Technical notes
-- Three.js + custom WGSL-like GLSL fragment shader for the 3D gradient (WebGL, works in browser and Expo).
-- Animation loop uses `requestAnimationFrame`, cleaned up on unmount.
-- Splash duration and gradient colors exposed as constants for easy tweaking.
-- Existing web mockup routes (`/`, concept pages) remain untouched.
+- Shader: two animated metaball-like fields sampled with smoothstep, mixed between sage and orange, softened with a cream vignette. Time-driven only; no mouse input.
+- Renderer: `THREE.WebGLRenderer({ antialias: true, alpha: true })`, resize observer on the canvas parent.
+- Fallback: if `WebGLRenderingContext` unavailable → CSS radial-gradient background with the same palette.
+- Navigation from splash uses TanStack Router `useNavigate` (this is still the web preview shell); the same component ports to Expo Router later with a one-line swap.
 
-## Deliverable this round
-Only the splash screen. Homepage and inner pages come in follow-up prompts as you described.
+## Out of scope (later turns)
+- Real Home screen content, tab bar, and inner pages
+- Actual Expo project export
+- Backend / admin wiring
 
-**Ready when you upload the logo PNG + send the master prompt.**
+Send the go-ahead (and upload the new tight 4K logo PNG if you want it swapped in) and I'll build it.
