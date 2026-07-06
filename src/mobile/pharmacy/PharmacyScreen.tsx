@@ -157,18 +157,18 @@ export function PharmacyScreen() {
 
         {/* Promo strip */}
         <div className="px-4 pt-3">
-          <motion.div
-            whileTap={reduce ? undefined : { scale: 0.98 }}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3"
-            style={{ backgroundColor: "#E8912D" }}
+          <button
+            type="button"
+            onClick={() => toast.info("Free delivery", { description: "On every order over CA$ 35" })}
+            className="wcc-grad-banner flex w-full items-center gap-3 rounded-2xl px-4 py-3"
           >
-            <div className="grid h-8 w-8 place-items-center rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.22)" }}>
+            <div className="grid h-8 w-8 place-items-center rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.28)" }}>
               <Truck size={16} color="#FFFFFF" />
             </div>
             <div className="text-[13px] font-semibold" style={{ color: "#FFFFFF" }}>
               Free delivery on orders over CA$ 35
             </div>
-          </motion.div>
+          </button>
         </div>
 
         {/* Product grid */}
