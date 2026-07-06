@@ -105,10 +105,13 @@ function TabButton({
 }) {
   const Icon = t.icon;
   return (
-    <button
+    <motion.button
       type="button"
       onClick={() => onTap(t.key)}
-      className="relative flex h-11 items-center justify-center"
+      whileHover={reduce ? undefined : { y: -2 }}
+      whileTap={reduce ? undefined : { scale: 0.92 }}
+      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+      className="relative flex h-11 cursor-pointer items-center justify-center"
     >
       {active && (
         <motion.span
@@ -126,6 +129,6 @@ function TabButton({
       >
         <Icon size={20} />
       </motion.span>
-    </button>
+    </motion.button>
   );
 }
