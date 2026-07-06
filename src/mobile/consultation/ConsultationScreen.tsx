@@ -144,7 +144,7 @@ export function ConsultationScreen() {
         <motion.div
           initial={{ y: -12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.35, ease: [0.2, 0.9, 0.25, 1] }}
+          transition={{ duration: 0.35, ease: [0.2, 0.9, 0.25, 1] as [number, number, number, number] }}
           className="relative z-10 shrink-0 px-3 pb-3 pt-2"
           style={{ backgroundColor: DEEP }}
         >
@@ -653,7 +653,7 @@ function VideoCallOverlay({
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.28, ease: [0.2, 0.9, 0.25, 1] }}
+      transition={{ duration: 0.28, ease: [0.2, 0.9, 0.25, 1] as [number, number, number, number] }}
       className="absolute inset-0 z-50 flex flex-col overflow-hidden"
       style={{
         background:
