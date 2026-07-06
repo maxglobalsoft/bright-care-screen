@@ -1,35 +1,31 @@
 import { Bell } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useState } from "react";
 import { user } from "./data";
 import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
 import { Img } from "./Img";
-import { useState } from "react";
 
 export function TopBar({ shadow }: { shadow: boolean }) {
-  const [beat, setBeat] = useState(false);
+  const reduce = useReducedMotion();
+  const [beat, setBeat] = useState(0);
   return (
     <div
       className={`sticky top-0 z-20 flex h-[68px] items-center justify-between bg-white px-4 pb-3 pt-2 transition-shadow duration-300 ${
         shadow ? "shadow-[0_4px_12px_-8px_rgba(0,0,0,0.15)]" : ""
       }`}
     >
-      <style>{`
-        @keyframes wcc-bell-swing { 0%,100%{transform:rotate(0)} 15%{transform:rotate(14deg)} 30%{transform:rotate(-12deg)} 45%{transform:rotate(8deg)} 60%{transform:rotate(-6deg)} 75%{transform:rotate(3deg)} }
-        @keyframes wcc-dot-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.7} }
-        @keyframes wcc-heartbeat { 0%,100%{transform:scale(1)} 20%{transform:scale(1.18)} 40%{transform:scale(0.95)} 60%{transform:scale(1.12)} 80%{transform:scale(0.98)} }
-        .wcc-bell { animation: wcc-bell-swing 1.4s ease-in-out 400ms 2; transform-origin: 50% 15%; }
-        .wcc-bell-dot { animation: wcc-dot-pulse 1.2s ease-in-out 400ms 3; }
-        .wcc-heart-beat { animation: wcc-heartbeat 700ms ease-in-out; }
-        @media (prefers-reduced-motion: reduce) { .wcc-bell,.wcc-bell-dot,.wcc-heart-beat{animation:none} }
-      `}</style>
       <button
         type="button"
-        onClick={() => { setBeat(true); setTimeout(() => setBeat(false), 720); }}
+        onClick={() => setBeat((n) => n + 1)}
         className="flex items-center gap-3 text-left"
       >
-        <img
+        <motion.img
           src={logoAsset.url}
           alt="WellnessCareConnect"
-          className={`h-[52px] w-[52px] object-contain ${beat ? "wcc-heart-beat" : ""}`}
+          className="h-[52px] w-[52px] object-contain"
+          animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.18, 0.95, 1.12, 0.98, 1] }}
+          transition={{ duration: 0.7 }}
+          key={beat}
         />
         <div className="leading-tight">
           <div className="text-[17px] font-bold tracking-tight">
@@ -43,14 +39,28 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         </div>
       </button>
       <div className="flex items-center gap-2.5">
-        <button
+        <motion.button
           type="button"
           aria-label="Notifications"
-          className="relative grid h-9 w-9 place-items-center rounded-full transition-transform duration-200 active:scale-[0.94]"
+          whileTap={reduce ? undefined : { scale: 0.94 }}
+          className="relative grid h-9 w-9 place-items-center rounded-full"
         >
-          <Bell size={20} style={{ color: "#23291F" }} className="wcc-bell" />
-          <span className="wcc-bell-dot absolute right-1.5 top-1.5 h-2 w-2 rounded-full ring-2 ring-white" style={{ backgroundColor: "#E8912D" }} />
-        </button>
+          <motion.span
+            style={{ display: "inline-flex", transformOrigin: "50% 15%" }}
+            initial={reduce ? false : { rotate: 0 }}
+            animate={reduce ? undefined : { rotate: [0, -15, 12, -8, 0] }}
+            transition={{ duration: 1.2, delay: 0.4 }}
+          >
+            <Bell size={20} style={{ color: "#23291F" }} />
+          </motion.span>
+          <motion.span
+            className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full ring-2 ring-white"
+            style={{ backgroundColor: "#E8912D" }}
+            initial={reduce ? false : { scale: 1 }}
+            animate={reduce ? undefined : { scale: [1, 1.4, 1] }}
+            transition={{ duration: 1, delay: 0.4, repeat: 2, repeatType: "loop" }}
+          />
+        </motion.button>
         <button
           type="button"
           aria-label="Profile"
