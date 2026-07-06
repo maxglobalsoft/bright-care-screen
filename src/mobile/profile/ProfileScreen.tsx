@@ -97,15 +97,18 @@ export function ProfileScreen() {
             PS
           </div>
           <motion.button
-            whileTap={reduce ? undefined : { scale: 0.9 }}
+            whileHover={reduce ? undefined : { scale: 1.15, rotate: -8, boxShadow: "0 6px 16px rgba(232,145,45,0.55)" }}
+            whileTap={reduce ? undefined : { scale: 0.88, rotate: 8 }}
+            transition={{ type: "spring", stiffness: 420, damping: 16 }}
             onClick={() => toast.info("Photo upload coming soon")}
             aria-label="Edit photo"
             className="absolute bottom-0 right-0 grid place-items-center rounded-full"
             style={{
               width: 32,
               height: 32,
-              backgroundColor: "#E8912D",
+              background: "linear-gradient(145deg,#F0A24A,#E8912D 55%,#C0731A)",
               border: "2px solid #3C4F3D",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
             }}
           >
             <Camera size={16} color="#FFFFFF" />
