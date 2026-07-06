@@ -503,7 +503,7 @@ export function DoctorProfileScreen() {
             </div>
 
             {/* Consult type */}
-            <div className="mt-3 grid grid-cols-3 gap-2">
+            <div className="mt-3 grid grid-cols-3 items-stretch gap-2" style={{ perspective: 800 }}>
               {consultTypes.map((c) => {
                 const active = type === c.key;
                 const Icon = c.key === "chat" ? MessageCircle : c.key === "audio" ? Phone : Video;
@@ -511,16 +511,28 @@ export function DoctorProfileScreen() {
                   <motion.button
                     key={c.key}
                     onClick={() => setType(c.key)}
-                    whileHover={reduce ? undefined : { y: -2 }}
+                    whileHover={reduce ? undefined : { y: -3, scale: 1.04, rotateX: 8, rotateY: -6 }}
                     whileTap={reduce ? undefined : { scale: 0.96 }}
-                    className="relative flex flex-col items-center gap-1.5 overflow-hidden rounded-2xl px-2 py-3"
+                    transition={{ type: "spring", stiffness: 320, damping: 20 }}
+                    className="group relative flex h-full min-h-[86px] flex-col items-center justify-center gap-1.5 overflow-hidden rounded-2xl px-2 py-3"
                     style={{
-                      backgroundColor: active ? "rgba(86,114,87,0.08)" : MIST,
+                      transformStyle: "preserve-3d",
+                      background: active
+                        ? `linear-gradient(135deg, rgba(86,114,87,0.14) 0%, rgba(60,79,61,0.10) 100%)`
+                        : `linear-gradient(135deg, ${MIST} 0%, #E9EEE9 100%)`,
                       border: active ? `2px solid ${SAGE}` : "2px solid transparent",
-                      boxShadow: active ? "0 8px 18px -10px rgba(86,114,87,0.55)" : "none",
-                      transition: "background-color 200ms, border-color 200ms, box-shadow 200ms",
+                      boxShadow: active
+                        ? "0 10px 22px -10px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.6)"
+                        : "0 4px 10px -8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)",
                     }}
                   >
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      style={{
+                        background: `linear-gradient(135deg, ${SAGE}22 0%, ${DEEP}18 100%)`,
+                      }}
+                    />
                     {active && !reduce && (
                       <motion.span
                         aria-hidden
@@ -538,17 +550,18 @@ export function DoctorProfileScreen() {
                         }}
                       />
                     )}
-                    <Icon size={18} color={active ? SAGE : INK} />
-                    <div className="text-[12px] font-semibold" style={{ color: INK }}>
+                    <Icon size={18} color={active ? SAGE : INK} className="relative z-10" />
+                    <div className="relative z-10 text-[12px] font-semibold" style={{ color: INK }}>
                       {c.label}
                     </div>
-                    <div className="text-[11px] font-bold" style={{ color: SAGE }}>
+                    <div className="relative z-10 text-[11px] font-bold" style={{ color: SAGE }}>
                       CA${c.priceCad}
                     </div>
                   </motion.button>
                 );
               })}
             </div>
+
 
             {/* Date strip */}
             <div className="mt-4">
