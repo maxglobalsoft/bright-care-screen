@@ -22,9 +22,13 @@ export function SearchBar() {
         <input
           type="text"
           placeholder="Search doctors, symptoms, medicines"
-          onFocus={() => setFocused(true)}
+          onFocus={() => {
+            setFocused(true);
+            navigate({ to: "/doctors" });
+          }}
           onBlur={() => setFocused(false)}
-          className="flex-1 bg-transparent text-[14px] text-[--color-wcc-ink] outline-none placeholder:text-[--color-wcc-muted]"
+          readOnly
+          className="flex-1 cursor-pointer bg-transparent text-[14px] text-[--color-wcc-ink] outline-none placeholder:text-[--color-wcc-muted]"
         />
       </div>
     </div>
