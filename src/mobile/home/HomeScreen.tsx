@@ -8,6 +8,7 @@ import { DoctorsRail } from "./DoctorsRail";
 import { ServicesRow } from "./ServicesRow";
 import { QATeaser } from "./QATeaser";
 import { BottomTabBar } from "./BottomTabBar";
+import { QuickActions } from "./QuickActions";
 
 export function HomeScreen() {
   const [scrolled, setScrolled] = useState(false);
@@ -53,6 +54,7 @@ export function HomeScreen() {
         <style>{`.wcc-scroll::-webkit-scrollbar{display:none}`}</style>
         <TopBar shadow={scrolled} />
         <SearchBar />
+        <QuickActions />
         <PromoCard />
         <SpecialtiesRow />
         <ConsultOptions />

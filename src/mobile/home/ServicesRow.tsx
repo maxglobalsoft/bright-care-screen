@@ -6,11 +6,11 @@ export function ServicesRow() {
   return (
     <section className="grid grid-cols-2 gap-3 px-4 pt-5" data-reveal>
       <style>{`
-        .wcc-svc { transition: transform 250ms ease-out, box-shadow 250ms ease-out; }
-        .wcc-svc:hover, .wcc-svc:active { transform: translateY(-2px); box-shadow: 0 10px 24px -14px rgba(0,0,0,0.2); }
-        .wcc-svc:hover .wcc-svc-img, .wcc-svc:active .wcc-svc-img { transform: scale(1.1); }
-        .wcc-svc:hover .wcc-svc-arrow, .wcc-svc:active .wcc-svc-arrow { transform: translateX(4px); }
-        .wcc-svc-img, .wcc-svc-arrow { transition: transform 350ms ease-out; }
+        .wcc-svc { transition: transform 250ms ease-out, box-shadow 250ms ease-out, border-color 300ms ease-out; }
+        .wcc-svc:hover, .wcc-svc:active { transform: translateY(-3px); box-shadow: 0 14px 28px -16px rgba(0,0,0,0.25), 0 4px 10px -6px rgba(86,114,87,0.15); border-color: #567257; }
+        .wcc-svc:hover .wcc-svc-img, .wcc-svc:active .wcc-svc-img { transform: scale(1.08); }
+        .wcc-svc:hover .wcc-svc-arrow, .wcc-svc:active .wcc-svc-arrow { transform: translateX(4px); color: #E8912D; }
+        .wcc-svc-img, .wcc-svc-arrow { transition: transform 350ms ease-out, color 250ms ease-out; }
         @media (prefers-reduced-motion: reduce) { .wcc-svc *{transition:none!important;transform:none!important} }
       `}</style>
       {services.map((s) => (

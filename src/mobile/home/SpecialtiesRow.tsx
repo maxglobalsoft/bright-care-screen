@@ -7,12 +7,11 @@ export function SpecialtiesRow() {
     <section className="pt-5" data-reveal>
       <style>{`
         @keyframes wcc-tile-in { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-        .wcc-tile { opacity: 0; animation: wcc-tile-in 400ms ease-out forwards; }
-        .wcc-tile:hover, .wcc-tile:active { transform: translateY(-3px); }
-        .wcc-tile { transition: transform 250ms ease-out; }
-        .wcc-tile:hover .wcc-tile-icon, .wcc-tile:active .wcc-tile-icon { transform: rotateY(180deg); background-color: rgba(232,145,45,0.15); }
-        .wcc-tile:hover .wcc-tile-icon > *, .wcc-tile:active .wcc-tile-icon > * { color: #E8912D; }
-        .wcc-tile:hover .wcc-tile-count, .wcc-tile:active .wcc-tile-count { transform: translateY(-1px); color: #E8912D; }
+        .wcc-tile { opacity: 0; animation: wcc-tile-in 400ms ease-out forwards; transition: transform 250ms cubic-bezier(0.34,1.56,0.64,1), box-shadow 250ms ease-out; }
+        .wcc-tile:hover, .wcc-tile:active { transform: translateY(-6px) perspective(400px) rotateX(6deg) rotateY(-4deg); box-shadow: 0 14px 28px -14px rgba(86,114,87,0.5); }
+        .wcc-tile:hover .wcc-tile-icon, .wcc-tile:active .wcc-tile-icon { transform: rotateY(180deg); background-color: #E8912D; }
+        .wcc-tile:hover .wcc-tile-icon > *, .wcc-tile:active .wcc-tile-icon > * { color: #ffffff; }
+        .wcc-tile:hover .wcc-tile-count, .wcc-tile:active .wcc-tile-count { transform: translateY(-2px); color: #E8912D; font-weight:600; }
         .wcc-tile-icon, .wcc-tile-icon > *, .wcc-tile-count { transition: all 300ms ease-out; transform-style: preserve-3d; }
         @media (prefers-reduced-motion: reduce) { .wcc-tile,.wcc-tile *{animation:none!important;transform:none!important} }
       `}</style>
