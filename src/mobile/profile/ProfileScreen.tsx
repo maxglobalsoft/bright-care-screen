@@ -224,8 +224,18 @@ export function ProfileScreen() {
                 </div>
                 <span className="flex-1 text-[13.5px] font-semibold" style={{ color: "#23291F" }}>{row.label}</span>
                 {row.action === "toggle" ? (
-                  <button
+                  <span
+                    role="switch"
+                    tabIndex={0}
+                    aria-checked={notif}
                     onClick={(e) => { e.stopPropagation(); setNotif((v) => !v); }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setNotif((v) => !v);
+                      }
+                    }}
                     aria-label="Toggle notifications"
                     className="relative h-6 w-11 rounded-full transition-colors"
                     style={{ backgroundColor: notif ? "#567257" : "#EEF1EE" }}
@@ -236,7 +246,7 @@ export function ProfileScreen() {
                       style={{ backgroundColor: "#FFFFFF", left: notif ? 22 : 2, boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }}
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
-                  </button>
+                  </span>
                 ) : (
                   <ChevronRight size={16} color="#6B7280" />
                 )}
