@@ -1,15 +1,17 @@
 import { Star, BadgeCheck, MapPin } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 import { doctors } from "./data";
 import { Img } from "./Img";
 
 export function DoctorsRail() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   return (
     <section className="pt-5" data-reveal>
       <div className="flex items-center justify-between px-4">
         <h2 className="text-[18px] font-semibold" style={{ color: "#23291F" }}>Top doctors</h2>
-        <button className="text-[13px] font-medium" style={{ color: "#567257" }}>View all</button>
+        <button onClick={() => navigate({ to: "/doctors" })} className="text-[13px] font-medium" style={{ color: "#567257" }}>View all</button>
       </div>
       <div className="mt-3 flex gap-3 overflow-x-auto px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {doctors.map((d) => (

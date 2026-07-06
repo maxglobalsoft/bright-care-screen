@@ -1,13 +1,29 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 import { specialties } from "./data";
+
+const SPECIALTY_MAP: Record<string, string> = {
+  General: "General",
+  Cardiology: "Cardiology",
+  Pediatrics: "Pediatrics",
+  Neurology: "Neurology",
+  Dermatology: "Dermatology",
+  Orthopedics: "Orthopedics",
+  "Mental Health": "Mental Health",
+};
 
 export function SpecialtiesRow() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
+  const go = (label?: string) => {
+    const specialty = label ? SPECIALTY_MAP[label] : undefined;
+    navigate({ to: "/doctors", search: specialty ? { specialty } : {} });
+  };
   return (
     <section className="pt-5" data-reveal>
       <div className="flex items-center justify-between px-4">
         <h2 className="text-[18px] font-semibold" style={{ color: "#23291F" }}>Specialties</h2>
-        <button className="text-[13px] font-medium" style={{ color: "#567257" }}>See all</button>
+        <button onClick={() => go()} className="text-[13px] font-medium" style={{ color: "#567257" }}>See all</button>
       </div>
       <div className="mt-3 flex gap-3 overflow-x-auto px-4 pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {specialties.map((s, i) => {
@@ -15,6 +31,7 @@ export function SpecialtiesRow() {
           return (
             <motion.button
               key={s.label}
+              onClick={() => go(s.label)}
               initial={reduce ? false : { opacity: 0, y: 24 }}
               animate={reduce ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.07, ease: "easeOut" }}
