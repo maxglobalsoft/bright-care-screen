@@ -76,7 +76,47 @@ export function DoctorProfileScreen() {
         <div className="h-11 shrink-0" />
 
         <div className="wcc-profile-scroll relative min-h-0 flex-1 overflow-y-auto pb-40">
-          <style>{`.wcc-profile-scroll::-webkit-scrollbar{display:none}`}</style>
+          <style>{`
+            .wcc-profile-scroll::-webkit-scrollbar{display:none}
+            @keyframes wcc-sheen-sweep {
+              0% { transform: translateX(-160%) skewX(-22deg); opacity: 0; }
+              18% { opacity: 1; }
+              100% { transform: translateX(260%) skewX(-22deg); opacity: 0; }
+            }
+            @keyframes wcc-grad-shift {
+              0%,100% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+            }
+            @keyframes wcc-conic-spin { to { transform: rotate(360deg); } }
+            @keyframes wcc-tap-pulse {
+              0% { box-shadow: 0 0 0 0 rgba(86,114,87,0.55); }
+              100% { box-shadow: 0 0 0 14px rgba(86,114,87,0); }
+            }
+            .wcc-3d { position: relative; isolation: isolate; }
+            .wcc-3d::after {
+              content: ''; position: absolute; inset: 0; pointer-events: none;
+              border-radius: inherit; z-index: 5;
+              background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.65) 50%, transparent 68%);
+              transform: translateX(-160%) skewX(-22deg); opacity: 0;
+            }
+            .wcc-3d:hover::after { animation: wcc-sheen-sweep 1.15s ease-in-out infinite; }
+            .wcc-3d:active { animation: wcc-tap-pulse 0.55s ease-out; }
+            .wcc-3d-red::after { background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.75) 50%, transparent 68%); }
+            .wcc-3d-red:active { animation: wcc-tap-pulse 0.55s ease-out; box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+            .wcc-grad-anim { background-size: 220% 220% !important; }
+            .wcc-grad-anim:hover { animation: wcc-grad-shift 2.2s ease-in-out infinite; }
+            .wcc-conic-ring::before {
+              content: ''; position: absolute; inset: -2px; border-radius: inherit; z-index: 0;
+              background: conic-gradient(from 0deg, transparent 0deg, rgba(232,145,45,0.9) 60deg, transparent 120deg, transparent 360deg);
+              opacity: 0; transition: opacity 200ms ease;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
+            }
+            .wcc-conic-ring:hover::before { opacity: 1; animation: wcc-conic-spin 1.6s linear infinite; }
+            @media (prefers-reduced-motion: reduce) {
+              .wcc-3d:hover::after, .wcc-grad-anim:hover, .wcc-conic-ring:hover::before, .wcc-3d:active, .wcc-3d-red:active { animation: none !important; }
+            }
+          `}</style>
 
           {/* HERO */}
           <div className="relative">
@@ -185,7 +225,7 @@ export function DoctorProfileScreen() {
               whileTap={reduce ? undefined : { scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 18 }}
               aria-label="Favourite"
-              className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
+              className={`wcc-3d wcc-conic-ring ${fav ? "wcc-3d-red" : ""} wcc-grad-anim relative grid h-11 w-11 place-items-center overflow-hidden rounded-full`}
               style={{
                 transformStyle: "preserve-3d",
                 border: `1.5px solid ${fav ? RED : SAGE}`,
@@ -265,7 +305,7 @@ export function DoctorProfileScreen() {
                       whileHover={reduce || active ? undefined : { scale: 1.04, y: -1, rotateX: 6 }}
                       whileTap={reduce ? undefined : { scale: 0.96 }}
                       transition={{ type: "spring", stiffness: 320, damping: 20 }}
-                      className="group relative flex-1 overflow-hidden rounded-full py-2 text-[12.5px] font-semibold"
+                      className="wcc-3d wcc-grad-anim group relative flex-1 overflow-hidden rounded-full py-2 text-[12.5px] font-semibold"
                       style={{ color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                     >
                       {active && (
@@ -514,7 +554,7 @@ export function DoctorProfileScreen() {
                     whileHover={reduce ? undefined : { y: -3, scale: 1.04, rotateX: 8, rotateY: -6 }}
                     whileTap={reduce ? undefined : { scale: 0.96 }}
                     transition={{ type: "spring", stiffness: 320, damping: 20 }}
-                    className="group relative flex h-full min-h-[86px] flex-col items-center justify-center gap-1.5 overflow-hidden rounded-2xl px-2 py-3"
+                    className="wcc-3d wcc-conic-ring wcc-grad-anim group relative flex h-full min-h-[86px] flex-col items-center justify-center gap-1.5 overflow-hidden rounded-2xl px-2 py-3"
                     style={{
                       transformStyle: "preserve-3d",
                       background: active
@@ -579,7 +619,7 @@ export function DoctorProfileScreen() {
                         whileHover={reduce || active ? undefined : { y: -3, scale: 1.06, rotateX: 8 }}
                         whileTap={reduce ? undefined : { scale: 0.94 }}
                         transition={{ type: "spring", stiffness: 320, damping: 20 }}
-                        className="group relative shrink-0 overflow-hidden rounded-2xl px-3 py-2 text-center"
+                        className="wcc-3d wcc-grad-anim group relative shrink-0 overflow-hidden rounded-2xl px-3 py-2 text-center"
                         style={{ minWidth: 62, color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                       >
                         {active ? (
@@ -643,7 +683,7 @@ export function DoctorProfileScreen() {
                           : { scale: 1 }
                       }
                       transition={{ duration: 0.35 }}
-                      className="group relative overflow-hidden rounded-xl py-2 text-[12px] font-semibold"
+                      className="wcc-3d wcc-grad-anim group relative overflow-hidden rounded-xl py-2 text-[12px] font-semibold"
                       style={{
                         transformStyle: "preserve-3d",
                         background: disabled
@@ -699,7 +739,7 @@ export function DoctorProfileScreen() {
               }
               whileTap={reduce || !canBook ? undefined : { scale: 0.97 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="group relative ml-auto inline-flex h-12 flex-1 items-center justify-center overflow-hidden rounded-full text-[14px] font-bold"
+              className="wcc-3d wcc-conic-ring wcc-grad-anim group relative ml-auto inline-flex h-10 items-center justify-center overflow-hidden rounded-full px-5 text-[13px] font-bold"
               style={{
                 transformStyle: "preserve-3d",
                 background: canBook
@@ -781,7 +821,7 @@ function ActionCircle({
       onHoverStart={() => setHover(true)}
       onHoverEnd={() => setHover(false)}
       aria-label={label}
-      className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
+      className="wcc-3d wcc-conic-ring wcc-grad-anim relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
       style={{
         transformStyle: "preserve-3d",
         border: `1.5px solid ${SAGE}`,
