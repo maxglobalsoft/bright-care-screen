@@ -821,7 +821,7 @@ function ActionCircle({
       onHoverStart={() => setHover(true)}
       onHoverEnd={() => setHover(false)}
       aria-label={label}
-      className="relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
+      className="wcc-3d wcc-conic-ring wcc-grad-anim relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
       style={{
         transformStyle: "preserve-3d",
         border: `1.5px solid ${SAGE}`,
