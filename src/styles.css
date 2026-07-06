@@ -158,3 +158,212 @@
   --font-sora: "Sora", "Poppins", sans-serif;
   --font-inter: "Inter", system-ui, sans-serif;
 }
+
+/* ============================================================
+   Global WCC 3D pedestal / gradient button styles
+   Reused across pharmacy, profile and other CTAs.
+   ============================================================ */
+@keyframes wcc-cta-liquid {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes wcc-cta-glow-pulse {
+  0%,100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+@keyframes wcc-cta-shine {
+  0% { transform: translateX(-140%) skewX(-22deg); }
+  100% { transform: translateX(260%) skewX(-22deg); }
+}
+@keyframes wcc-cta-ripple {
+  0% { transform: translate(-50%,-50%) scale(0); opacity: 0.55; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
+}
+@keyframes wcc-icon-spin { to { transform: rotate(360deg); } }
+
+.wcc-pedestal {
+  position: relative; perspective: 900px; border-radius: 9999px; isolation: isolate;
+  display: inline-flex; align-items: stretch; justify-content: stretch;
+}
+.wcc-pedestal::before {
+  content:''; position:absolute; inset: 4px 0 -6px 0; border-radius: inherit; z-index: 0;
+  background: linear-gradient(180deg, #123326 0%, #0B2119 100%);
+  box-shadow: 0 10px 22px -10px rgba(11,33,25,0.75);
+}
+.wcc-pedestal::after {
+  content:''; position:absolute; inset:-4px; border-radius: inherit; z-index:-1; pointer-events:none;
+  background: radial-gradient(60% 80% at 50% 50%, rgba(201,162,75,0.55), rgba(46,107,83,0.35) 55%, transparent 75%);
+  filter: blur(10px); opacity: 0; transition: opacity 260ms ease;
+}
+.wcc-pedestal:hover::after { opacity: 1; animation: wcc-cta-glow-pulse 2.2s ease-in-out infinite; }
+.wcc-pedestal-top {
+  position: relative; z-index: 1; display: inline-flex; width: 100%; height: 100%;
+  align-items: center; justify-content: center; gap: 0.5rem; border-radius: inherit;
+  color: #FFFFFF; font-weight: 700; letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.28), 0 0 12px rgba(201,162,75,0.35);
+  background:
+    linear-gradient(115deg, #1F4A3A 0%, #2E6B53 28%, #C9A24B 52%, #2E6B53 76%, #1F4A3A 100%);
+  background-size: 260% 260%;
+  background-position: 0% 50%;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.55),
+    inset 0 -3px 0 rgba(0,0,0,0.28),
+    inset 0 0 0 1px rgba(255,255,255,0.12),
+    0 6px 0 #0B2119,
+    0 10px 18px -6px rgba(11,33,25,0.55);
+  transform: translateY(0);
+  transition: transform 140ms cubic-bezier(.2,.9,.25,1.2), box-shadow 140ms ease, background-position 600ms ease;
+  overflow: hidden; cursor: pointer;
+}
+.wcc-pedestal:hover .wcc-pedestal-top {
+  background-position: 100% 50%;
+  animation: wcc-cta-liquid 3s ease-in-out infinite;
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.6),
+    inset 0 -3px 0 rgba(0,0,0,0.28),
+    inset 0 0 0 1px rgba(255,255,255,0.18),
+    0 7px 0 #0B2119,
+    0 14px 22px -6px rgba(11,33,25,0.6);
+}
+.wcc-pedestal:active .wcc-pedestal-top {
+  transform: translateY(5px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.1),
+    0 1px 0 #0B2119,
+    0 3px 6px -3px rgba(11,33,25,0.6);
+}
+.wcc-pedestal-top::before {
+  content:''; position:absolute; inset:1px 1px 45% 1px; border-radius: 9999px; pointer-events:none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 100%);
+  opacity: 0.9;
+}
+.wcc-pedestal-shine {
+  position:absolute; top:0; bottom:0; left:0; width:38%; pointer-events:none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: translateX(-140%) skewX(-22deg); opacity: 0;
+}
+.wcc-pedestal:hover .wcc-pedestal-shine { opacity: 1; animation: wcc-cta-shine 1.6s ease-in-out infinite; }
+
+/* Orange variant (for Continue Shopping / Member badge) */
+.wcc-pedestal-orange::before {
+  background: linear-gradient(180deg, #7a3d0f 0%, #5a2b08 100%);
+  box-shadow: 0 10px 22px -10px rgba(90,43,8,0.75);
+}
+.wcc-pedestal-orange .wcc-pedestal-top {
+  background:
+    linear-gradient(115deg, #C4671A 0%, #E8912D 28%, #FFD285 52%, #E8912D 76%, #C4671A 100%);
+  background-size: 260% 260%;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.6),
+    inset 0 -3px 0 rgba(0,0,0,0.25),
+    inset 0 0 0 1px rgba(255,255,255,0.15),
+    0 6px 0 #5a2b08,
+    0 10px 18px -6px rgba(90,43,8,0.55);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3), 0 0 10px rgba(255,210,133,0.4);
+}
+.wcc-pedestal-orange:hover .wcc-pedestal-top {
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.65),
+    inset 0 -3px 0 rgba(0,0,0,0.25),
+    inset 0 0 0 1px rgba(255,255,255,0.2),
+    0 7px 0 #5a2b08,
+    0 14px 22px -6px rgba(90,43,8,0.6);
+}
+.wcc-pedestal-orange:active .wcc-pedestal-top {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.12),
+    0 1px 0 #5a2b08,
+    0 3px 6px -3px rgba(90,43,8,0.6);
+}
+
+/* Small icon variant (round icon buttons: cart, plus) */
+.wcc-orb {
+  position: relative; isolation: isolate; border-radius: 9999px;
+  display: inline-grid; place-items: center; overflow: hidden;
+  color: #FFFFFF; cursor: pointer; border: 0;
+  background:
+    radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,0.55), rgba(255,255,255,0) 45%),
+    linear-gradient(135deg, #C4671A 0%, #E8912D 45%, #FFD285 80%, #E8912D 100%);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -2px 0 rgba(0,0,0,0.25),
+    0 4px 10px -4px rgba(196,103,26,0.55);
+  transition: transform 160ms ease, box-shadow 200ms ease, background-position 500ms ease;
+}
+.wcc-orb::after {
+  content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.55) 50%, transparent 65%);
+  transform: translateX(-160%) skewX(-22deg); opacity: 0;
+}
+.wcc-orb:hover {
+  background-position: 100% 50%;
+  animation: wcc-cta-liquid 2.8s ease-in-out infinite;
+  transform: translateY(-1px) scale(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -2px 0 rgba(0,0,0,0.25),
+    0 8px 18px -6px rgba(196,103,26,0.6);
+}
+.wcc-orb:hover::after { opacity: 1; animation: wcc-cta-shine 1.4s ease-in-out infinite; }
+.wcc-orb:active { transform: translateY(1px) scale(0.94); }
+.wcc-orb-green {
+  background:
+    radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,0.5), rgba(255,255,255,0) 45%),
+    linear-gradient(135deg, #1F4A3A 0%, #2E6B53 45%, #C9A24B 80%, #2E6B53 100%);
+  background-size: 220% 220%;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -2px 0 rgba(0,0,0,0.28),
+    0 4px 10px -4px rgba(11,33,25,0.55);
+}
+.wcc-orb-green:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -2px 0 rgba(0,0,0,0.28),
+    0 8px 18px -6px rgba(11,33,25,0.6);
+}
+
+/* Wide gradient banner (promo strip) */
+.wcc-grad-banner {
+  position: relative; isolation: isolate; overflow: hidden; cursor: pointer;
+  background:
+    linear-gradient(115deg, #C4671A 0%, #E8912D 40%, #FFD285 55%, #E8912D 70%, #C4671A 100%);
+  background-size: 260% 260%;
+  background-position: 0% 50%;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    inset 0 -2px 0 rgba(0,0,0,0.22),
+    0 8px 20px -8px rgba(196,103,26,0.55);
+  transition: transform 160ms ease, box-shadow 200ms ease, background-position 600ms ease;
+}
+.wcc-grad-banner::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.55) 50%, transparent 68%);
+  transform: translateX(-160%) skewX(-22deg); opacity: 0;
+}
+.wcc-grad-banner:hover {
+  background-position: 100% 50%;
+  animation: wcc-cta-liquid 3s ease-in-out infinite;
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -2px 0 rgba(0,0,0,0.22),
+    0 12px 26px -8px rgba(196,103,26,0.65);
+}
+.wcc-grad-banner:hover::after { opacity: 1; animation: wcc-cta-shine 1.6s ease-in-out infinite; }
+.wcc-grad-banner:active { transform: translateY(2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .wcc-pedestal:hover::after, .wcc-pedestal:hover .wcc-pedestal-top,
+  .wcc-pedestal:hover .wcc-pedestal-top .wcc-pedestal-shine,
+  .wcc-orb:hover, .wcc-orb:hover::after,
+  .wcc-grad-banner:hover, .wcc-grad-banner:hover::after { animation: none !important; }
+}

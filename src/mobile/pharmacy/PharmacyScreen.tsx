@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingCart, Search, Plus, Minus, Trash2, Check, Truck } fr
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { BottomTabBar } from "@/mobile/home/BottomTabBar";
+import { PedestalButton } from "@/mobile/components/PedestalButton";
 import { categories, products, type Category, type Product } from "./data";
 
 type CartMap = Record<string, number>;
@@ -90,15 +91,12 @@ export function PharmacyScreen() {
           <ArrowLeft size={18} color="#FFFFFF" />
         </motion.button>
         <h1 className="text-[16px] font-bold" style={{ color: "#FFFFFF" }}>Pharmacy</h1>
-        <motion.button
-          whileTap={reduce ? undefined : { scale: 0.9 }}
-          whileHover={reduce ? undefined : { scale: 1.05 }}
+        <button
           onClick={openCart}
           aria-label="Open cart"
-          className="relative grid h-9 w-9 place-items-center rounded-full"
-          style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
+          className="wcc-orb relative h-10 w-10"
         >
-          <ShoppingCart size={18} color="#FFFFFF" />
+          <ShoppingCart size={18} color="#FFFFFF" style={{ position: "relative", zIndex: 1 }} />
           <AnimatePresence>
             {itemCount > 0 && (
               <motion.span
@@ -107,17 +105,20 @@ export function PharmacyScreen() {
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
                 transition={{ type: "spring", stiffness: 500, damping: 18 }}
-                className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full px-1 text-[10px] font-bold"
-                style={{ backgroundColor: "#E8912D", color: "#FFFFFF" }}
+                className="absolute -right-1 -top-1 z-10 grid h-[18px] min-w-[18px] place-items-center rounded-full px-1 text-[10px] font-bold"
+                style={{ backgroundColor: "#FFFFFF", color: "#C4671A", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}
               >
                 {itemCount}
               </motion.span>
             )}
           </AnimatePresence>
-        </motion.button>
+        </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
+      <div
+        className="min-h-0 flex-1 overflow-y-auto"
+        style={{ scrollbarWidth: "none", paddingBottom: itemCount > 0 ? 176 : 112 }}
+      >
         {/* Search */}
         <div className="px-4 pt-3">
           <div className="flex items-center gap-2 rounded-2xl px-3 py-2.5" style={{ backgroundColor: "#FFFFFF" }}>
@@ -156,18 +157,18 @@ export function PharmacyScreen() {
 
         {/* Promo strip */}
         <div className="px-4 pt-3">
-          <motion.div
-            whileTap={reduce ? undefined : { scale: 0.98 }}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3"
-            style={{ backgroundColor: "#E8912D" }}
+          <button
+            type="button"
+            onClick={() => toast.info("Free delivery", { description: "On every order over CA$ 35" })}
+            className="wcc-grad-banner flex w-full items-center gap-3 rounded-2xl px-4 py-3"
           >
-            <div className="grid h-8 w-8 place-items-center rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.22)" }}>
+            <div className="grid h-8 w-8 place-items-center rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.28)" }}>
               <Truck size={16} color="#FFFFFF" />
             </div>
             <div className="text-[13px] font-semibold" style={{ color: "#FFFFFF" }}>
               Free delivery on orders over CA$ 35
             </div>
-          </motion.div>
+          </button>
         </div>
 
         {/* Product grid */}
@@ -195,16 +196,13 @@ export function PharmacyScreen() {
                     <div className="mt-1 flex items-center justify-between">
                       <div className="text-[13px] font-bold" style={{ color: "#3C4F3D" }}>{money(p.priceCad)}</div>
                       {qty === 0 ? (
-                        <motion.button
-                          whileTap={reduce ? undefined : { scale: 0.9 }}
-                          whileHover={reduce ? undefined : { scale: 1.06 }}
+                        <button
                           onClick={() => add(p)}
                           aria-label={`Add ${p.name}`}
-                          className="grid h-7 w-7 place-items-center rounded-full"
-                          style={{ backgroundColor: "#E8912D" }}
+                          className="wcc-orb h-8 w-8"
                         >
-                          <Plus size={14} color="#FFFFFF" />
-                        </motion.button>
+                          <Plus size={14} color="#FFFFFF" style={{ position: "relative", zIndex: 1 }} />
+                        </button>
                       ) : (
                         <div className="flex items-center gap-1.5 rounded-full px-1.5 py-1" style={{ backgroundColor: "#567257" }}>
                           <motion.button whileTap={reduce ? undefined : { scale: 0.85 }} onClick={() => dec(p.id)} aria-label="Decrease">
@@ -343,15 +341,13 @@ export function PharmacyScreen() {
                     <div className="mt-2 flex justify-between text-[15px] font-bold" style={{ color: "#3C4F3D" }}>
                       <span>Total</span><span>{money(total)}</span>
                     </div>
-                    <motion.button
-                      whileTap={reduce ? undefined : { scale: 0.97 }}
+                    <PedestalButton
                       onClick={checkout}
                       disabled={itemCount === 0}
-                      className="mt-3 w-full rounded-2xl py-3 text-[14px] font-bold disabled:opacity-50"
-                      style={{ backgroundColor: "#567257", color: "#FFFFFF" }}
+                      className="mt-3 h-12 w-full"
                     >
                       Proceed to Checkout
-                    </motion.button>
+                    </PedestalButton>
                   </div>
                 </div>
               ) : (
@@ -375,14 +371,13 @@ export function PharmacyScreen() {
                   <div className="mt-1 text-[12px]" style={{ color: "#6B7280" }}>
                     Order #WCC-{Math.floor(100000 + Math.random() * 899999)}
                   </div>
-                  <motion.button
-                    whileTap={reduce ? undefined : { scale: 0.97 }}
+                  <PedestalButton
+                    variant="orange"
                     onClick={closeSheet}
-                    className="mt-6 w-full rounded-2xl py-3 text-[14px] font-bold"
-                    style={{ backgroundColor: "#E8912D", color: "#FFFFFF" }}
+                    className="mt-6 h-12 w-full"
                   >
                     Continue Shopping
-                  </motion.button>
+                  </PedestalButton>
                 </div>
               )}
             </motion.div>
