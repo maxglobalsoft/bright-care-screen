@@ -76,7 +76,47 @@ export function DoctorProfileScreen() {
         <div className="h-11 shrink-0" />
 
         <div className="wcc-profile-scroll relative min-h-0 flex-1 overflow-y-auto pb-40">
-          <style>{`.wcc-profile-scroll::-webkit-scrollbar{display:none}`}</style>
+          <style>{`
+            .wcc-profile-scroll::-webkit-scrollbar{display:none}
+            @keyframes wcc-sheen-sweep {
+              0% { transform: translateX(-160%) skewX(-22deg); opacity: 0; }
+              18% { opacity: 1; }
+              100% { transform: translateX(260%) skewX(-22deg); opacity: 0; }
+            }
+            @keyframes wcc-grad-shift {
+              0%,100% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+            }
+            @keyframes wcc-conic-spin { to { transform: rotate(360deg); } }
+            @keyframes wcc-tap-pulse {
+              0% { box-shadow: 0 0 0 0 rgba(86,114,87,0.55); }
+              100% { box-shadow: 0 0 0 14px rgba(86,114,87,0); }
+            }
+            .wcc-3d { position: relative; isolation: isolate; }
+            .wcc-3d::after {
+              content: ''; position: absolute; inset: 0; pointer-events: none;
+              border-radius: inherit; z-index: 5;
+              background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.65) 50%, transparent 68%);
+              transform: translateX(-160%) skewX(-22deg); opacity: 0;
+            }
+            .wcc-3d:hover::after { animation: wcc-sheen-sweep 1.15s ease-in-out infinite; }
+            .wcc-3d:active { animation: wcc-tap-pulse 0.55s ease-out; }
+            .wcc-3d-red::after { background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.75) 50%, transparent 68%); }
+            .wcc-3d-red:active { animation: wcc-tap-pulse 0.55s ease-out; box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+            .wcc-grad-anim { background-size: 220% 220% !important; }
+            .wcc-grad-anim:hover { animation: wcc-grad-shift 2.2s ease-in-out infinite; }
+            .wcc-conic-ring::before {
+              content: ''; position: absolute; inset: -2px; border-radius: inherit; z-index: 0;
+              background: conic-gradient(from 0deg, transparent 0deg, rgba(232,145,45,0.9) 60deg, transparent 120deg, transparent 360deg);
+              opacity: 0; transition: opacity 200ms ease;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
+            }
+            .wcc-conic-ring:hover::before { opacity: 1; animation: wcc-conic-spin 1.6s linear infinite; }
+            @media (prefers-reduced-motion: reduce) {
+              .wcc-3d:hover::after, .wcc-grad-anim:hover, .wcc-conic-ring:hover::before, .wcc-3d:active, .wcc-3d-red:active { animation: none !important; }
+            }
+          `}</style>
 
           {/* HERO */}
           <div className="relative">
