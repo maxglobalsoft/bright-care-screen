@@ -68,7 +68,7 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.button
           type="button"
           aria-label="Profile"
-          onClick={() => toast.info("Profile coming soon", { description: "Manage your account, appointments, and settings." })}
+          onClick={() => navigate({ to: "/profile" })}
           whileHover={reduce ? undefined : { scale: 1.06 }}
           whileTap={reduce ? undefined : { scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
