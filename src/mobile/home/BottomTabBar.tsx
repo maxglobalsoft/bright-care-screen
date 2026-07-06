@@ -40,40 +40,6 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
       `}</style>
 
       <div className="relative mx-4">
-        {/* FAB */}
-        <div className="pointer-events-none absolute left-1/2 -top-8 z-10 -translate-x-1/2">
-          <div className="pointer-events-auto relative h-[60px] w-[60px]">
-            <div
-              className="wcc-fab-ring absolute -inset-[3px] rounded-full"
-              style={{ background: "conic-gradient(from 0deg,#567257,#E8912D,#567257)" }}
-            />
-            <motion.button
-              type="button"
-              aria-label="Start consultation"
-              onClick={() => setFabTaps((n) => n + 1)}
-              whileTap={reduce ? undefined : { scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              className="wcc-fab-glow absolute inset-0 grid place-items-center overflow-hidden rounded-full"
-              style={{ background: "linear-gradient(135deg,#567257 0%,#E8912D 100%)", color: "#FFFFFF" }}
-            >
-              <Video size={26} />
-              <AnimatePresence>
-                {!reduce && fabTaps > 0 && (
-                  <motion.span
-                    key={fabTaps}
-                    className="pointer-events-none absolute inset-0 rounded-full"
-                    style={{ backgroundColor: "#FFFFFF" }}
-                    initial={{ scale: 0, opacity: 0.55 }}
-                    animate={{ scale: 2.6, opacity: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.65, ease: "easeOut" }}
-                  />
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
-        </div>
-
         {/* Pill */}
         <div
           className="relative flex h-[62px] items-center rounded-[28px] px-2"
@@ -83,7 +49,36 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
             {tabs.slice(0, 2).map((t) => (
               <TabButton key={t.key} t={t} active={active === t.key} tapped={tapKey === t.key} onTap={handleTap} reduce={!!reduce} />
             ))}
-            <div />
+
+            {/* Center video call button — inline with other tab icons */}
+            <div className="flex items-center justify-center">
+              <motion.button
+                type="button"
+                aria-label="Start consultation"
+                onClick={() => setFabTaps((n) => n + 1)}
+                whileHover={reduce ? undefined : { scale: 1.06, y: -1 }}
+                whileTap={reduce ? undefined : { scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                className="wcc-fab-glow relative grid h-11 w-11 place-items-center overflow-hidden rounded-full"
+                style={{ background: "linear-gradient(135deg,#567257 0%,#E8912D 100%)", color: "#FFFFFF" }}
+              >
+                <Video size={20} />
+                <AnimatePresence>
+                  {!reduce && fabTaps > 0 && (
+                    <motion.span
+                      key={fabTaps}
+                      className="pointer-events-none absolute inset-0 rounded-full"
+                      style={{ backgroundColor: "#FFFFFF" }}
+                      initial={{ scale: 0, opacity: 0.55 }}
+                      animate={{ scale: 2.6, opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.65, ease: "easeOut" }}
+                    />
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            </div>
+
             {tabs.slice(2).map((t) => (
               <TabButton key={t.key} t={t} active={active === t.key} tapped={tapKey === t.key} onTap={handleTap} reduce={!!reduce} />
             ))}
