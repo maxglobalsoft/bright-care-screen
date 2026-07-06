@@ -152,7 +152,7 @@ export function ProfileScreen() {
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
         {/* Stats row — floating 3D gradient cards */}
-        <div className="relative flex" style={{ margin: "34px 16px 0", gap: 12, zIndex: 10, perspective: 1000 }}>
+        <div className="relative flex" style={{ margin: "54px 16px 0", gap: 12, zIndex: 10, perspective: 1000 }}>
           {stats.map((s, i) => (
             <motion.button
               key={s.label}
@@ -218,7 +218,7 @@ export function ProfileScreen() {
         </div>
 
         {/* Menu */}
-        <div className="mx-4 mt-5 overflow-hidden rounded-2xl" style={{ backgroundColor: "#FFFFFF" }}>
+        <div className="mx-4 mt-6 overflow-hidden rounded-2xl" style={{ backgroundColor: "#FFFFFF" }}>
           {menu.map((row, i) => {
             const Icon = row.icon;
             return (
