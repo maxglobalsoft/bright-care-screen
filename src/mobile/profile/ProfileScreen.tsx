@@ -158,7 +158,7 @@ export function ProfileScreen() {
               key={s.label}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + i * 0.08, duration: 0.35, ease: "easeOut" }}
+              transition={{ type: "spring", stiffness: 360, damping: 18, delay: 0.4 + i * 0.08 }}
               whileHover={
                 reduce
                   ? undefined
@@ -181,7 +181,6 @@ export function ProfileScreen() {
                       boxShadow: "0 3px 8px rgba(35,41,31,0.16), inset 0 8px 14px rgba(35,41,31,0.10)",
                     }
               }
-              transition={{ type: "spring", stiffness: 360, damping: 18 }}
               onClick={() => {
                 if (s.label === "Appointments") navigate({ to: "/doctors" });
                 else if (s.label === "Orders") navigate({ to: "/pharmacy" });
