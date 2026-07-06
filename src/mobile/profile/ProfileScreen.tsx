@@ -152,23 +152,22 @@ export function ProfileScreen() {
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
         {/* Stats row — floating 3D gradient cards */}
-        <div className="relative flex" style={{ margin: "20px 16px 0", gap: 12, zIndex: 10, perspective: 900 }}>
+        <div className="relative flex" style={{ margin: "34px 16px 0", gap: 12, zIndex: 10, perspective: 1000 }}>
           {stats.map((s, i) => (
-            <motion.div
+            <motion.button
               key={s.label}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 360, damping: 18, delay: 0.4 + i * 0.08 }}
+              type="button"
+              initial={false}
               whileHover={
                 reduce
                   ? undefined
                   : {
-                      y: -10,
-                      rotateX: 10,
-                      rotateY: i === 0 ? -7 : i === 2 ? 7 : 0,
-                      scale: 1.06,
+                      y: -12,
+                      rotateX: 12,
+                      rotateY: i === 0 ? -8 : i === 2 ? 8 : 0,
+                      scale: 1.07,
                       boxShadow:
-                        "0 22px 34px -14px rgba(35,41,31,0.16), 0 10px 18px -12px rgba(232,145,45,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -8px 14px rgba(35,41,31,0.10)",
+                        "0 26px 36px -16px rgba(35,41,31,0.16), 0 12px 18px -12px rgba(232,145,45,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -10px 18px rgba(35,41,31,0.10)",
                     }
               }
               whileTap={
@@ -181,26 +180,40 @@ export function ProfileScreen() {
                       boxShadow: "0 3px 8px rgba(35,41,31,0.16), inset 0 8px 14px rgba(35,41,31,0.10)",
                     }
               }
+              transition={{ type: "spring", stiffness: 420, damping: 18 }}
               onClick={() => {
                 if (s.label === "Appointments") navigate({ to: "/doctors" });
                 else if (s.label === "Orders") navigate({ to: "/pharmacy" });
                 else toast.info(s.label, { description: "Coming in development phase" });
               }}
-              className="flex flex-1 cursor-pointer flex-col items-center justify-center"
+              className="relative flex flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden"
               style={{
                 background:
-                  "linear-gradient(150deg,#FFFFFF 0%,#F3F6F2 56%,#FFFFFF 100%)",
+                  "linear-gradient(150deg,#FFFFFF 0%,#F3F6F2 48%,#FFFFFF 100%)",
                 borderRadius: 18,
                 padding: "17px 0 16px",
                 border: "1px solid rgba(35,41,31,0.10)",
                 boxShadow:
-                  "0 10px 20px -12px rgba(35,41,31,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -5px 10px rgba(35,41,31,0.10)",
+                  "0 12px 22px -12px rgba(35,41,31,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -6px 12px rgba(35,41,31,0.10)",
                 transformStyle: "preserve-3d",
               }}
             >
-              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{s.value}</div>
-              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500 }}>{s.label}</div>
-            </motion.div>
+              <motion.span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                initial={false}
+                whileHover={{ x: "70%", opacity: 1 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                style={{
+                  width: "70%",
+                  background: "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.75) 48%, transparent 100%)",
+                  opacity: 0.45,
+                  transform: "translateX(-80%) skewX(-16deg)",
+                }}
+              />
+              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1, transform: "translateZ(18px)" }}>{s.value}</div>
+              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500, transform: "translateZ(14px)" }}>{s.label}</div>
+            </motion.button>
           ))}
         </div>
 
