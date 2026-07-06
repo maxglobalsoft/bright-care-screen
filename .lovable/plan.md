@@ -1,63 +1,84 @@
-# Splash Screen v2 — Correct Logo + Full Master Prompt Spec
 
-## What went wrong last time
-- I built the splash at `/app` with a dark WebGL shader background.
-- I reused the old `wcc-logo.jpg` asset (rejected logo).
-- The master prompt actually asked for: route `/`, **light** premium gradient, floating particles, specific logo animation sequence, sage loading dots, redirect to `/home`.
+# Home Screen — WellnessCareConnect Mobile App
 
-## Fixes
+Replace the `/home` placeholder with the full Home Screen inside the existing 390×844 `PhoneViewport`. Splash and its 2.2s redirect stay untouched. Aligned with the signed MGS proposal (Online Doctor Consultation & Healthcare Marketplace — mobile app scope: consult, doctors, pharmacy, lab, records/profile).
 
-### 1. Swap the logo asset
-- Upload the new file `WellnessCareConnect_LOGO_tight_4K_App-2.png` via `lovable-assets` and create a new pointer `src/assets/wcc-logo-v2.png.asset.json`.
-- Leave the old `wcc-logo.jpg.asset.json` in place for now (still referenced by the old `/mockups` LogoLockup); do not touch mockups this turn.
+## Files
 
-### 2. Move splash to `/` and add `/home`
-- Replace `src/routes/index.tsx` (currently the placeholder) with the Splash screen.
-- Create `src/routes/home.tsx` — white bg, centered text "Home Screen — coming next" in sage `#567257`, 18px.
-- Delete the interim files from the previous turn: `src/routes/app.tsx`, `src/routes/app.index.tsx`, `src/routes/app.home.tsx`, `src/mobile/screens/GradientCanvas.tsx`, `src/mobile/shaders/gradient.vert.ts`, `src/mobile/shaders/gradient.frag.ts`.
-- Keep `src/mobile/PhoneViewport.tsx` but resize to **390×844** with safe areas for status bar and home indicator, soft neutral backdrop around it on desktop.
+**New**
+- `src/mobile/home/data.ts` — editable content arrays (user, specialties, consultOptions, doctors, promo, quickLinks, tips) — CMS-ready
+- `src/mobile/home/TopBar.tsx` — sticky bar with emblem, greeting, bell (orange dot), avatar
+- `src/mobile/home/SearchBar.tsx` — rounded 14px, mist bg, sage focus glow
+- `src/mobile/home/PromoCard.tsx` — sage gradient, CARE20 chip, floating shadow anim
+- `src/mobile/home/SpecialtiesRow.tsx` — horizontal scroll, 8 tiles, icon→orange flip on tap
+- `src/mobile/home/ConsultOptions.tsx` — Chat/Audio/Video cards, gradient border trace on active
+- `src/mobile/home/DoctorsRail.tsx` — horizontal doctor cards with Book sheen
+- `src/mobile/home/ServicesRow.tsx` — Pharmacy + Lab half-width cards
+- `src/mobile/home/QATeaser.tsx` — Ask-a-doctor card
+- `src/mobile/home/BottomTabBar.tsx` — 5 tabs with center floating Consult FAB
+- `src/mobile/home/HomeScreen.tsx` — composes all sections; owns scroll + sticky shadow logic
 
-### 3. Splash composition (matches master prompt exactly)
-File: `src/mobile/screens/SplashScreen.tsx`
+**Rewritten**
+- `src/routes/home.tsx` — renders `<PhoneViewport><HomeScreen/></PhoneViewport>`, sets head meta ("Home — WellnessCareConnect")
 
-- **Background layers (bottom → top):**
-  1. Linear gradient white → `#F3F6F2` (top to bottom).
-  2. Large radial glow of `#567257` at 6% opacity centered behind logo.
-  3. 7 tiny particles (2–4px dots, sage & warm orange `#E8912D` at 15% opacity) drifting slowly upward on a 10–14s loop with staggered delays. Pure CSS keyframes, transform+opacity only.
+**Untouched**
+- Splash, PhoneViewport, styles.css tokens (`--wcc-sage`, `--wcc-orange`, `--wcc-mist`, `--wcc-muted`), all `/mockups` code
 
-- **Logo (new asset), 78% of frame width, centered, no white box, `object-contain`:**
-  - 0.0–0.5s: scale 0.6 → 1.0 with spring easing (`cubic-bezier(0.34, 1.56, 0.64, 1)`), opacity 0 → 1.
-  - 0.4s: circular ring behind logo, conic/linear sage→orange gradient, expands from 40% → 140% and fades 0.6 → 0 over 700ms (heartbeat).
-  - 0.6–1.1s: diagonal white shine strip masked to logo bounding box, translateX left → right, 500ms.
-  - 1.1s onward: infinite breathing loop, scale 1.0 ↔ 1.015 over 3s ease-in-out.
+## Layout (top → bottom, inside 390×844 safe area)
 
-- **Bottom UI:**
-  - Three 6px sage dots pulsing in sequence (0/150/300ms stagger, 1.2s cycle), 96px from bottom.
-  - `v1.0` text, 10px, muted gray `#9AA39A`, 24px from bottom.
+```text
+┌──────────────────────────── 390 ──┐
+│ 44px status-bar safe area         │
+│ TopBar  emblem  greeting   🔔 ◯   │ sticky, white, shadow-on-scroll
+│ SearchBar (mist, sage focus glow) │
+│ PromoCard  20% off  [CARE20]  🎨  │ sage→deep-green gradient
+│ Specialties  ▸  ▸  ▸  (8 tiles)   │ horizontal scroll
+│ Consult now  Chat  Audio  Video★  │
+│ Top doctors  ▸  ▸  ▸  (4 cards)   │
+│ Pharmacy │ Lab Tests              │ 2 half cards
+│ Q&A teaser  Ask a doctor free →   │
+│ (bottom padding for tab bar)      │
+│                                   │
+│ Home  Doctors  ⓥ  Pharmacy  Profile │ fixed BottomTabBar + FAB
+│ home indicator safe area          │
+└───────────────────────────────────┘
+```
 
-- **Auto-redirect:**
-  - At 1600ms trigger a whole-screen 300ms opacity fade-out, then `navigate({ to: '/home' })`. Cleanup timers on unmount.
-  - `prefers-reduced-motion: reduce` → skip all entry/shine/breathing/particles, show final logo state immediately, still redirect at 1600ms.
+Scroll container: single vertical scroll between TopBar (sticky top) and BottomTabBar (fixed bottom). 16px horizontal padding on all sections; horizontal rails use `-mx-4 px-4` with `overflow-x-auto` and hidden scrollbars.
 
-- **Quality:** All motion via transform/opacity only. No scrollbars (`overflow-hidden`). Status bar area kept clean (nothing overlapping top 44px safe area).
+## Content (data.ts sketch)
 
-### 4. Brand tokens
-Add to `src/styles.css` `:root`:
-- `--wcc-sage: #567257;`
-- `--wcc-orange: #E8912D;`
-- `--wcc-mist: #F3F6F2;`
-- `--wcc-muted: #9AA39A;`
+- `user`: `{ name: "Bhupendra", greeting: "Good morning,", avatar: null }`
+- `specialties`: 8 items — General Physician, Cardiology, Pediatrics, Neurology, Dermatology, Orthopedics, Ophthalmology, Mental Health — each `{ label, icon (lucide), doctorCount }`
+- `consultOptions`: Chat CA$29, Audio CA$39, Video CA$49 (popular)
+- `doctors`: 4 sample Canadian doctors — Toronto, Vancouver, Calgary, Montreal — `{ name, specialty, years, rating, reviews, priceCad, availability, verified }`
+- `promo`: `{ title, code: "CARE20", discount: "20%" }`
+- `services`: Pharmacy, Lab Tests
+- `qa`: sample question + CTA
 
-These become the project-wide sage/orange tokens for all future screens.
+Photo/illustration slots use gradient placeholders (initials for doctors, icon for promo art) — no external image URLs so nothing breaks offline.
 
-## Files changed
-- **New:** `src/assets/wcc-logo-v2.png.asset.json`, `src/routes/home.tsx`
-- **Rewritten:** `src/routes/index.tsx` (now splash), `src/mobile/PhoneViewport.tsx` (390×844 + safe areas), `src/mobile/screens/SplashScreen.tsx` (full new animation), `src/styles.css` (tokens)
-- **Deleted:** `src/routes/app.tsx`, `src/routes/app.index.tsx`, `src/routes/app.home.tsx`, `src/mobile/screens/GradientCanvas.tsx`, `src/mobile/shaders/*.ts`
-- **Untouched:** `/mockups` and existing web mockup components (old logo stays there for now)
+## Interactions (transform/opacity only, 60fps, reduced-motion respected)
 
-## Out of scope
-- Real home screen content (next master prompt).
-- Removing the old logo asset — will do that once nothing references it.
+- Tap scale 0.96 on TopBar icons and tabs
+- PromoCard: 4s ease-in-out shadow-y translate loop (±2px)
+- Specialty tile tap: `translateY(-2px)` + icon color transitions sage→orange
+- Consult card active/press: pseudo-element border with sage→orange conic-gradient mask, 400ms trace
+- Doctor card tap: photo scales 1.03; Book button gets 600ms shine sweep (masked gradient translate)
+- Bottom tab tap: icon pop `scale(0.9→1.1→1)` 250ms; active dot indicator
+- Center Consult FAB: 3s slow glow pulse (box-shadow opacity), floats 8px above bar
+- `@media (prefers-reduced-motion: reduce)`: disable all loops, keep static styling
 
-Approve and I'll rebuild.
+## Technical notes
+
+- All colors via existing tokens (`bg-[--wcc-sage]`, etc.) — no new tokens
+- Icons via `lucide-react` (Stethoscope, Heart, Baby, Brain, Sparkles, Bone, Eye, Smile, Bell, Search, MessageCircle, Phone, Video, Pill, FlaskConical, Home, User, ShoppingBag)
+- Sticky shadow: `useState` + `onScroll` on scroll container, apply `shadow-sm` after >4px
+- BottomTabBar uses `position: absolute; bottom: 0` inside the phone frame (not page-fixed), with safe-area bottom padding for the home indicator
+- No routing yet on tab items / buttons (other routes come next) — buttons are visual, tabs highlight Home as active
+- No horizontal page overflow: rails clip inside phone frame width
+
+## Out of scope (future master prompts)
+- Doctors, Consult, Pharmacy, Profile route pages
+- Real booking flow, search results, notifications page
+- Backend / auth wiring
