@@ -1,5 +1,16 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 import { specialties } from "./data";
+
+const SPECIALTY_MAP: Record<string, string> = {
+  General: "General",
+  Cardiology: "Cardiology",
+  Pediatrics: "Pediatrics",
+  Neurology: "Neurology",
+  Dermatology: "Dermatology",
+  Orthopedics: "Orthopedics",
+  "Mental Health": "Mental Health",
+};
 
 export function SpecialtiesRow() {
   const reduce = useReducedMotion();
