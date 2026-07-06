@@ -305,7 +305,7 @@ export function DoctorProfileScreen() {
                       whileHover={reduce || active ? undefined : { scale: 1.04, y: -1, rotateX: 6 }}
                       whileTap={reduce ? undefined : { scale: 0.96 }}
                       transition={{ type: "spring", stiffness: 320, damping: 20 }}
-                      className="group relative flex-1 overflow-hidden rounded-full py-2 text-[12.5px] font-semibold"
+                      className="wcc-3d wcc-grad-anim group relative flex-1 overflow-hidden rounded-full py-2 text-[12.5px] font-semibold"
                       style={{ color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                     >
                       {active && (
