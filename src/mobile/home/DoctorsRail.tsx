@@ -44,12 +44,12 @@ export function DoctorsRail() {
                 <motion.span
                   key={k}
                   variants={{
-                    rest: { scale: 1 },
-                    active: { scale: [1, 1.4, 1], transition: { duration: 0.3, delay: k * 0.07 } },
+                    rest: { scale: 1, color: "#CBD5C7" },
+                    active: { color: "#E8912D", scale: [1, 1.4, 1], transition: { duration: 0.3, delay: k * 0.07 } },
                   }}
                   style={{ display: "inline-block" }}
                 >
-                  <Star size={11} style={{ fill: "#E8912D", color: "#E8912D" }} />
+                  <Star size={11} style={{ fill: "currentColor", color: "currentColor" }} />
                 </motion.span>
               ))}
               <span className="ml-1 font-semibold">{d.rating}</span>

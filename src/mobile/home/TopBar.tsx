@@ -42,7 +42,9 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.button
           type="button"
           aria-label="Notifications"
+          whileHover={reduce ? undefined : { scale: 1.06, y: -1 }}
           whileTap={reduce ? undefined : { scale: 0.94 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
           className="relative grid h-9 w-9 place-items-center rounded-full"
         >
           <motion.span
