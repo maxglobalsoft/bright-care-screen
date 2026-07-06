@@ -440,19 +440,42 @@ export function DoctorProfileScreen() {
                           opacity="0.4"
                         />
                       </svg>
-                      <motion.div
+                      <motion.button
                         initial={reduce ? false : { scale: 0, y: -6 }}
-                        animate={reduce ? undefined : { scale: 1, y: 0 }}
-                        transition={{ type: "spring", stiffness: 350, damping: 16, delay: 0.15 }}
-                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full"
+                        animate={
+                          reduce
+                            ? undefined
+                            : { scale: 1, y: [0, -4, 0] }
+                        }
+                        transition={{
+                          scale: { type: "spring", stiffness: 350, damping: 16, delay: 0.15 },
+                          y: { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 },
+                        }}
+                        whileHover={reduce ? undefined : { scale: 1.2, rotateX: 12, rotateY: -12 }}
+                        whileTap={reduce ? undefined : { scale: 0.92 }}
+                        aria-label={extras.clinic.name}
+                        className="group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full"
+                        style={{ transformStyle: "preserve-3d", perspective: 600 }}
                       >
+                        <span
+                          aria-hidden
+                          className="absolute left-1/2 top-1/2 -z-10 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                          style={{
+                            background: `radial-gradient(circle, ${SAGE}55 0%, transparent 70%)`,
+                            animation: reduce ? undefined : "wcc-pin-pulse 1.8s ease-out infinite",
+                          }}
+                        />
                         <div
-                          className="grid h-9 w-9 place-items-center rounded-full"
-                          style={{ backgroundColor: SAGE, boxShadow: "0 6px 14px -4px rgba(86,114,87,0.6)" }}
+                          className="grid h-9 w-9 place-items-center rounded-full transition-shadow duration-300 group-hover:shadow-[0_14px_28px_-8px_rgba(86,114,87,0.75)]"
+                          style={{
+                            background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
+                            boxShadow: "0 6px 14px -4px rgba(86,114,87,0.6), inset 0 1px 0 rgba(255,255,255,0.35)",
+                          }}
                         >
                           <MapPin size={18} color="#FFFFFF" />
                         </div>
-                      </motion.div>
+                      </motion.button>
+                      <style>{`@keyframes wcc-pin-pulse{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.8}100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}}`}</style>
                     </div>
                     <div className="text-[13.5px] font-semibold" style={{ color: INK }}>
                       {extras.clinic.name}
