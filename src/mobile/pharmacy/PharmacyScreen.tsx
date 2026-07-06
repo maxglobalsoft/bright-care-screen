@@ -196,16 +196,13 @@ export function PharmacyScreen() {
                     <div className="mt-1 flex items-center justify-between">
                       <div className="text-[13px] font-bold" style={{ color: "#3C4F3D" }}>{money(p.priceCad)}</div>
                       {qty === 0 ? (
-                        <motion.button
-                          whileTap={reduce ? undefined : { scale: 0.9 }}
-                          whileHover={reduce ? undefined : { scale: 1.06 }}
+                        <button
                           onClick={() => add(p)}
                           aria-label={`Add ${p.name}`}
-                          className="grid h-7 w-7 place-items-center rounded-full"
-                          style={{ backgroundColor: "#E8912D" }}
+                          className="wcc-orb h-8 w-8"
                         >
-                          <Plus size={14} color="#FFFFFF" />
-                        </motion.button>
+                          <Plus size={14} color="#FFFFFF" style={{ position: "relative", zIndex: 1 }} />
+                        </button>
                       ) : (
                         <div className="flex items-center gap-1.5 rounded-full px-1.5 py-1" style={{ backgroundColor: "#567257" }}>
                           <motion.button whileTap={reduce ? undefined : { scale: 0.85 }} onClick={() => dec(p.id)} aria-label="Decrease">
