@@ -6,14 +6,19 @@ export function SearchBar() {
   return (
     <div className="px-4 pt-2">
       <div
-        className={`flex items-center gap-2 rounded-[14px] bg-[--color-wcc-mist] px-3.5 py-3 transition-shadow duration-200 ${
-          focused ? "shadow-[0_0_0_3px_rgba(86,114,87,0.18)]" : ""
+        className={`flex items-center gap-2 rounded-[14px] border bg-[--color-wcc-mist] px-3.5 py-3 transition-all duration-300 ${
+          focused
+            ? "border-[--color-wcc-sage] shadow-[0_0_0_3px_rgba(86,114,87,0.18)]"
+            : "border-transparent"
         }`}
       >
-        <Search size={18} className="text-[--color-wcc-sage]" />
+        <Search
+          size={18}
+          className={`transition-all duration-300 ${focused ? "translate-x-[3px] text-[--color-wcc-green-deep]" : "text-[--color-wcc-sage]"}`}
+        />
         <input
           type="text"
-          placeholder="Search doctors, symptoms, medicines..."
+          placeholder="Search doctors, symptoms, medicines"
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           className="flex-1 bg-transparent text-[14px] text-[--color-wcc-ink] outline-none placeholder:text-[--color-wcc-muted]"
