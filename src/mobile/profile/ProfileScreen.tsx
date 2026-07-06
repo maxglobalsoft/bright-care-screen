@@ -76,7 +76,7 @@ export function ProfileScreen() {
         className="flex flex-col items-center"
         style={{
           backgroundColor: "#3C4F3D",
-          padding: "24px 16px 56px",
+          padding: "24px 16px 28px",
           borderBottomLeftRadius: 24,
           borderBottomRightRadius: 24,
         }}
