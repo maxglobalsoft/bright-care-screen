@@ -1,6 +1,7 @@
 import { Bell } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "sonner";
 import { user } from "./data";
 import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
 import { Img } from "./Img";
