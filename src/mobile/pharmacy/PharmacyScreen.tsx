@@ -115,7 +115,10 @@ export function PharmacyScreen() {
         </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
+      <div
+        className="min-h-0 flex-1 overflow-y-auto"
+        style={{ scrollbarWidth: "none", paddingBottom: itemCount > 0 ? 176 : 112 }}
+      >
         {/* Search */}
         <div className="px-4 pt-3">
           <div className="flex items-center gap-2 rounded-2xl px-3 py-2.5" style={{ backgroundColor: "#FFFFFF" }}>
