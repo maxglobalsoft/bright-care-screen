@@ -771,40 +771,33 @@ export function DoctorProfileScreen() {
               }
               whileTap={reduce || !canBook ? undefined : { scale: 0.97 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="wcc-3d wcc-conic-ring wcc-grad-anim group relative inline-flex h-11 flex-1 items-center justify-center overflow-hidden rounded-full px-6 text-[14px] font-bold"
+              className="wcc-cta-holo group relative inline-flex h-11 flex-1 items-center justify-center overflow-hidden rounded-full px-6 text-[14px] font-bold"
               style={{
                 transformStyle: "preserve-3d",
                 background: canBook
-                  ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 50%, ${SAGE} 100%)`
-                  : "#DCE0DC",
-                backgroundSize: canBook ? "200% 200%" : undefined,
-                backgroundPosition: canBook ? "0% 50%" : undefined,
-                color: canBook ? "#FFFFFF" : "#8A918A",
+                  ? `linear-gradient(115deg, ${DEEP} 0%, ${SAGE} 22%, #C9A24B 48%, ${SAGE} 74%, ${DEEP} 100%), radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,0.35), transparent 60%)`
+                  : `linear-gradient(115deg, #A9B3A9 0%, #C6CEC6 50%, #A9B3A9 100%)`,
+                backgroundBlendMode: "normal, overlay",
+                color: "#FFFFFF",
                 boxShadow: canBook
-                  ? "0 12px 24px -10px rgba(86,114,87,0.65), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.12)"
-                  : "none",
-                cursor: canBook ? "pointer" : "not-allowed",
-                transition: "background-position 600ms ease",
-              }}
-              onMouseEnter={(e) => {
-                if (canBook) (e.currentTarget as HTMLButtonElement).style.backgroundPosition = "100% 50%";
-              }}
-              onMouseLeave={(e) => {
-                if (canBook) (e.currentTarget as HTMLButtonElement).style.backgroundPosition = "0% 50%";
+                  ? "0 14px 28px -12px rgba(31,74,58,0.65), 0 4px 10px -4px rgba(201,162,75,0.45), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -2px 0 rgba(0,0,0,0.18)"
+                  : "0 6px 14px -8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.12)",
+                cursor: "pointer",
               }}
             >
-              <span className="relative z-10 inline-flex items-center justify-center">Confirm Booking</span>
-              {canBook && !reduce && (
+              <span className="wcc-cta-inner relative z-10 inline-flex items-center justify-center">Confirm Booking</span>
+              {!reduce && (
                 <span
                   aria-hidden
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-20deg] opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
                   style={{
                     background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)",
+                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)",
                   }}
                 />
               )}
             </motion.button>
+
           </div>
         </div>
 
