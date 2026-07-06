@@ -21,22 +21,12 @@ export function TopBar({ shadow }: { shadow: boolean }) {
       >
         <motion.img
           src={logoAsset.url}
-          alt="WellnessCareConnect"
-          className="h-[52px] w-[52px] object-contain"
-          animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.18, 0.95, 1.12, 0.98, 1] }}
+          alt="Wellness Care Connect — Every health matters"
+          className="h-[56px] w-auto object-contain"
+          animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.12, 0.97, 1.06, 1] }}
           transition={{ duration: 0.7 }}
           key={beat}
         />
-        <div className="leading-tight">
-          <div className="text-[17px] font-bold tracking-tight">
-            <span style={{ color: "#567257" }}>Wellness</span>{" "}
-            <span style={{ color: "#E8912D" }}>Care</span>{" "}
-            <span style={{ color: "#3C4F3D" }}>Connect</span>
-          </div>
-          <div className="text-[10px] font-medium uppercase tracking-[0.16em]" style={{ color: "#6B7280" }}>
-            Every health matters
-          </div>
-        </div>
       </button>
       <div className="flex items-center gap-2.5">
         <motion.button
