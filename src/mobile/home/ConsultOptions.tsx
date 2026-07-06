@@ -6,13 +6,15 @@ export function ConsultOptions() {
   return (
     <section className="pt-5" data-reveal>
       <style>{`
-        @keyframes wcc-price-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+        @keyframes wcc-price-pulse { 0%,100%{transform:scale(1);background-color:#F3F6F2;color:#0F1B12} 50%{transform:scale(1.15);background-color:#E8912D;color:#ffffff} }
         @keyframes wcc-btn-sheen { 0%{transform:translateX(-120%)} 100%{transform:translateX(220%)} }
-        @keyframes wcc-badge-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.08);opacity:.85} }
-        .wcc-consult:hover .wcc-price, .wcc-consult:active .wcc-price { animation: wcc-price-pulse 400ms ease-out; }
+        @keyframes wcc-badge-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.12);opacity:.85} }
+        .wcc-consult { transition: transform 300ms cubic-bezier(0.34,1.56,0.64,1), box-shadow 300ms ease-out; }
+        .wcc-consult:hover, .wcc-consult:active { transform: translateY(-4px) scale(1.03); box-shadow: 0 16px 32px -14px rgba(86,114,87,0.35); }
+        .wcc-consult:hover .wcc-price, .wcc-consult:active .wcc-price { animation: wcc-price-pulse 600ms ease-out; }
         .wcc-consult:hover .wcc-btn-sheen, .wcc-consult:active .wcc-btn-sheen { animation: wcc-btn-sheen 700ms ease-in-out; }
-        .wcc-badge-load { animation: wcc-badge-pulse 900ms ease-in-out 300ms 1; }
-        @media (prefers-reduced-motion: reduce) { .wcc-consult *,.wcc-badge-load{animation:none!important} }
+        .wcc-badge-load { animation: wcc-badge-pulse 900ms ease-in-out 300ms infinite; }
+        @media (prefers-reduced-motion: reduce) { .wcc-consult *,.wcc-badge-load{animation:none!important;transform:none!important} }
       `}</style>
       <div className="flex items-center justify-between px-4">
         <h2 className="text-[18px] font-semibold text-[--color-wcc-ink]">Consult now</h2>
