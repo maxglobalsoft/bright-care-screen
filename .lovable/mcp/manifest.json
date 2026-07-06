@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "wellnesscareconnect-mockups-mcp",
+      "version": "0.1.0",
+      "title": "WellnessCareConnect Mockups MCP"
+    },
+    "tools": [
+      {
+        "name": "list_mockup_concepts",
+        "title": "List mockup concepts",
+        "description": "List the three WellnessCareConnect mobile homepage mockup concepts available at /mockups.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_doctors",
+        "title": "List doctors",
+        "description": "List the sample doctors shown in the WellnessCareConnect mockups, optionally filtered by a case-insensitive substring match on name or specialty.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "filter": {
+              "description": "Optional case-insensitive substring to match name or specialty.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_specialties",
+        "title": "List specialties",
+        "description": "List the medical specialties featured in the WellnessCareConnect mockups.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
