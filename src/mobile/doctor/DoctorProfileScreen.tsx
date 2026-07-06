@@ -59,6 +59,7 @@ export function DoctorProfileScreen() {
   const [date, setDate] = useState<string | null>(null);
   const [slot, setSlot] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
 
   const total = type ? consultTypes.find((c) => c.key === type)!.priceCad : 0;
   const canBook = !!(type && date && slot);
