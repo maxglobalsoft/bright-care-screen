@@ -4,10 +4,12 @@ import { useNavigate } from "@tanstack/react-router";
 
 export function SearchBar() {
   const [focused, setFocused] = useState(false);
+  const navigate = useNavigate();
   return (
     <div className="px-4 pt-2">
       <div
-        className={`flex items-center gap-2 rounded-[14px] border bg-[--color-wcc-mist] px-3.5 py-3 transition-all duration-300 ${
+        onClick={() => navigate({ to: "/doctors" })}
+        className={`flex cursor-pointer items-center gap-2 rounded-[14px] border bg-[--color-wcc-mist] px-3.5 py-3 transition-all duration-300 ${
           focused
             ? "border-[--color-wcc-sage] shadow-[0_0_0_3px_rgba(86,114,87,0.18)]"
             : "border-transparent"
