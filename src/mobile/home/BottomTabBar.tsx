@@ -2,6 +2,7 @@ import { Home, Stethoscope, ShoppingBag, User, Video, type LucideIcon } from "lu
 import { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 type Tab = { key: string; label: string; icon: LucideIcon };
 const tabs: Tab[] = [
@@ -24,6 +25,8 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
     setTimeout(() => setTapKey(null), 460);
     if (key === "home") navigate({ to: "/home" });
     else if (key === "doctors") navigate({ to: "/doctors" });
+    else if (key === "pharmacy") toast.info("Pharmacy coming soon", { description: "Order medicines to your door — launching next release." });
+    else if (key === "profile") toast.info("Profile coming soon", { description: "Manage your account, appointments, and settings." });
   };
 
   return (
@@ -130,7 +133,7 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
               <motion.button
                 type="button"
                 aria-label="Start consultation"
-                onClick={() => setFabTaps((n) => n + 1)}
+                onClick={() => { setFabTaps((n) => n + 1); navigate({ to: "/consultation/$id", params: { id: "1" } }); }}
                 whileHover={reduce ? undefined : { scale: 1.1, y: -2, rotateX: 10, rotateY: -10 }}
                 whileTap={reduce ? undefined : { scale: 0.88 }}
                 transition={{ type: "spring", stiffness: 320, damping: 16 }}

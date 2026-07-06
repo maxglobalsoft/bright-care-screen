@@ -1,8 +1,10 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 import { consultOptions } from "./data";
 
 export function ConsultOptions() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   return (
     <section className="pt-5" data-reveal>
       <style>{`
@@ -26,6 +28,7 @@ export function ConsultOptions() {
           return (
             <motion.button
               key={o.key}
+              onClick={() => navigate({ to: "/doctors" })}
               initial={reduce ? false : { opacity: 0, y: 24 }}
               animate={reduce ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.07, ease: "easeOut" }}

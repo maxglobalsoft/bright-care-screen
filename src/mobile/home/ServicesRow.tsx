@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { toast } from "sonner";
 import { services } from "./data";
 import { Img } from "./Img";
 
@@ -10,6 +11,9 @@ export function ServicesRow() {
       {services.map((s) => (
         <motion.button
           key={s.key}
+          onClick={() =>
+            toast.info(`${s.title} coming soon`, { description: s.sub })
+          }
           initial="rest"
           animate="rest"
           whileHover={reduce ? undefined : "hover"}

@@ -1,10 +1,18 @@
 import { Sparkles } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { promo } from "./data";
 import { Img } from "./Img";
 
 export function PromoCard() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
+  const applyPromo = () => {
+    try { navigator.clipboard?.writeText(promo.code); } catch {}
+    toast.success(`Promo ${promo.code} applied`, { description: "20% off will apply at booking." });
+    navigate({ to: "/doctors" });
+  };
   return (
     <div className="px-4 pt-4" data-reveal>
       <style>{`
@@ -17,6 +25,7 @@ export function PromoCard() {
       `}</style>
       <motion.button
         type="button"
+        onClick={applyPromo}
         initial="rest"
         animate="rest"
         whileHover={reduce ? undefined : "active"}

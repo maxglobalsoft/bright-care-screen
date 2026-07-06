@@ -1,6 +1,7 @@
 import { Bell } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "sonner";
 import { user } from "./data";
 import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
 import { Img } from "./Img";
@@ -40,6 +41,7 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.button
           type="button"
           aria-label="Notifications"
+          onClick={() => toast.info(`${user.notifications} new notifications`, { description: "You have upcoming appointments and reminders." })}
           whileHover={reduce ? undefined : { scale: 1.06, y: -1 }}
           whileTap={reduce ? undefined : { scale: 0.94 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -64,6 +66,7 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.button
           type="button"
           aria-label="Profile"
+          onClick={() => toast.info("Profile coming soon", { description: "Manage your account, appointments, and settings." })}
           whileHover={reduce ? undefined : { scale: 1.06 }}
           whileTap={reduce ? undefined : { scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
