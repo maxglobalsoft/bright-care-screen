@@ -59,10 +59,12 @@ export function DoctorsRail() {
               <span className="text-[--color-wcc-sage]">{d.availability}</span>
             </div>
             <div className="mt-2 flex items-center justify-between">
-              <div className="text-[13px] font-bold text-[--color-wcc-ink]">CA${d.priceCad}</div>
-              <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-[--color-wcc-sage] to-[--color-wcc-green-deep] px-3.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+              <span className="wcc-price rounded-full border border-transparent bg-[--color-wcc-mist] px-2 py-0.5 text-[12px] font-bold text-[--color-wcc-ink] transition-colors duration-300">
+                CA${d.priceCad}
+              </span>
+              <button className="relative overflow-hidden rounded-full bg-[--color-wcc-sage] px-4 py-1.5 text-[13px] font-bold text-white shadow-sm">
                 <span className="relative z-10">Book</span>
-                <span className="wcc-sheen pointer-events-none absolute inset-y-0 left-0 w-1/2 -skew-x-12 bg-white/40" />
+                <span className="wcc-book-sweep pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-[--color-wcc-green-deep] to-transparent" />
               </button>
             </div>
           </div>
