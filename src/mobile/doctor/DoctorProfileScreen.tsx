@@ -262,9 +262,11 @@ export function DoctorProfileScreen() {
                     <motion.button
                       key={k}
                       onClick={() => setTab(k)}
+                      whileHover={reduce || active ? undefined : { scale: 1.04, y: -1, rotateX: 6 }}
                       whileTap={reduce ? undefined : { scale: 0.96 }}
-                      className="relative flex-1 rounded-full py-2 text-[12.5px] font-semibold"
-                      style={{ color: active ? "#FFFFFF" : INK }}
+                      transition={{ type: "spring", stiffness: 320, damping: 20 }}
+                      className="group relative flex-1 overflow-hidden rounded-full py-2 text-[12.5px] font-semibold"
+                      style={{ color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                     >
                       {active && (
                         <motion.span
@@ -273,7 +275,16 @@ export function DoctorProfileScreen() {
                           className="absolute inset-0 rounded-full"
                           style={{
                             background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
-                            boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55)",
+                            boxShadow: "0 6px 14px -6px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.25)",
+                          }}
+                        />
+                      )}
+                      {!active && (
+                        <span
+                          className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{
+                            background: `linear-gradient(135deg, rgba(86,114,87,0.14) 0%, rgba(60,79,61,0.10) 100%)`,
+                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
                           }}
                         />
                       )}
