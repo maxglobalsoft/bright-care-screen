@@ -15,6 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { BottomTabBar } from "@/mobile/home/BottomTabBar";
+import { PedestalButton } from "@/mobile/components/PedestalButton";
 
 type MenuRow = {
   key: string;
