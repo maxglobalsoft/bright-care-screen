@@ -22,6 +22,8 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
     setActive(key);
     setTapKey(key);
     setTimeout(() => setTapKey(null), 360);
+    if (key === "home") navigate({ to: "/home" });
+    else if (key === "doctors") navigate({ to: "/doctors" });
   };
 
   return (
