@@ -97,15 +97,18 @@ export function ProfileScreen() {
             PS
           </div>
           <motion.button
-            whileTap={reduce ? undefined : { scale: 0.9 }}
+            whileHover={reduce ? undefined : { scale: 1.15, rotate: -8, boxShadow: "0 6px 16px rgba(232,145,45,0.55)" }}
+            whileTap={reduce ? undefined : { scale: 0.88, rotate: 8 }}
+            transition={{ type: "spring", stiffness: 420, damping: 16 }}
             onClick={() => toast.info("Photo upload coming soon")}
             aria-label="Edit photo"
             className="absolute bottom-0 right-0 grid place-items-center rounded-full"
             style={{
               width: 32,
               height: 32,
-              backgroundColor: "#E8912D",
+              background: "linear-gradient(145deg,#F0A24A,#E8912D 55%,#C0731A)",
               border: "2px solid #3C4F3D",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
             }}
           >
             <Camera size={16} color="#FFFFFF" />
@@ -148,16 +151,36 @@ export function ProfileScreen() {
       </motion.div>
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
-        {/* Stats row — overlapping cards */}
-        <div className="relative flex" style={{ margin: "-40px 16px 0", gap: 12, zIndex: 10 }}>
+        {/* Stats row — floating 3D gradient cards */}
+        <div className="relative flex" style={{ margin: "-24px 16px 0", gap: 12, zIndex: 10, perspective: 800 }}>
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + i * 0.08, duration: 0.3, ease: "easeOut" }}
-              whileHover={reduce ? undefined : { y: -3, boxShadow: "0 8px 20px rgba(35,41,31,0.16)" }}
-              whileTap={reduce ? undefined : { scale: 0.95 }}
+              transition={{ delay: 0.4 + i * 0.08, duration: 0.35, ease: "easeOut" }}
+              whileHover={
+                reduce
+                  ? undefined
+                  : {
+                      y: -6,
+                      rotateX: 6,
+                      rotateY: -4,
+                      scale: 1.03,
+                      boxShadow:
+                        "0 18px 32px -12px rgba(60,79,61,0.35), 0 4px 10px rgba(35,41,31,0.12)",
+                    }
+              }
+              whileTap={
+                reduce
+                  ? undefined
+                  : {
+                      scale: 0.94,
+                      y: 2,
+                      rotateX: -4,
+                      boxShadow: "0 4px 10px rgba(35,41,31,0.18)",
+                    }
+              }
               onClick={() => {
                 if (s.label === "Appointments") navigate({ to: "/doctors" });
                 else if (s.label === "Orders") navigate({ to: "/pharmacy" });
@@ -165,14 +188,18 @@ export function ProfileScreen() {
               }}
               className="flex flex-1 cursor-pointer flex-col items-center justify-center"
               style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: 16,
-                padding: "16px 0",
-                boxShadow: "0 4px 12px rgba(35,41,31,0.10)",
+                background:
+                  "linear-gradient(150deg,#FFFFFF 0%,#F7FAF6 55%,#E8EFE6 100%)",
+                borderRadius: 18,
+                padding: "18px 0",
+                border: "1px solid rgba(86,114,87,0.14)",
+                boxShadow:
+                  "0 8px 18px -8px rgba(35,41,31,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 4px rgba(60,79,61,0.08)",
+                transformStyle: "preserve-3d",
               }}
             >
               <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{s.value}</div>
-              <div style={{ marginTop: 2, color: "#6B7280", fontSize: 12, fontWeight: 400 }}>{s.label}</div>
+              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500 }}>{s.label}</div>
             </motion.div>
           ))}
         </div>

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/profile")({
     ],
   }),
   component: () => (
-    <PhoneViewport>
+    <PhoneViewport hideNotch>
       <ProfileScreen />
     </PhoneViewport>
   ),
