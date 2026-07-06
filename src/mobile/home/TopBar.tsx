@@ -28,10 +28,10 @@ export function TopBar({ shadow }: { shadow: boolean }) {
           key={beat}
         />
         <div className="flex flex-col items-center justify-center">
-          <span className="font-sora whitespace-nowrap text-[16px] font-bold leading-tight tracking-tight text-[#23291F]">
+          <span className="font-sora whitespace-nowrap text-[13px] font-bold leading-tight tracking-tight text-[#23291F]">
             Wellness <span className="text-[#E8912D]">Care</span> Connect
           </span>
-          <span className="font-sora whitespace-nowrap text-[11px] font-bold leading-tight tracking-[0.12em] text-[#567257]">
+          <span className="font-sora whitespace-nowrap text-[9px] font-bold leading-tight tracking-[0.12em] text-[#567257]">
             EVERY HEALTH MATTERS
           </span>
         </div>
