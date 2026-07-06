@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { toast } from "sonner";
 import { services } from "./data";
 import { Img } from "./Img";
 
