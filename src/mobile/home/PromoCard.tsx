@@ -25,6 +25,7 @@ export function PromoCard() {
       `}</style>
       <motion.button
         type="button"
+        onClick={applyPromo}
         initial="rest"
         animate="rest"
         whileHover={reduce ? undefined : "active"}
