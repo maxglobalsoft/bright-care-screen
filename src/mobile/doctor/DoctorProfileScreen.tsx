@@ -31,6 +31,8 @@ import {
 const SAGE = "#567257";
 const DEEP = "#3C4F3D";
 const ORANGE = "#E8912D";
+const RED = "#EF4444";
+const RED_DEEP = "#B91C1C";
 const MIST = "#F3F6F2";
 const INK = "#23291F";
 const MUTED = "#6B7280";
