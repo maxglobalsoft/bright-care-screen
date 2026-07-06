@@ -17,16 +17,24 @@ export function TopBar({ shadow }: { shadow: boolean }) {
       <button
         type="button"
         onClick={() => setBeat((n) => n + 1)}
-        className="flex items-center gap-3 text-left"
+        className="flex items-center gap-2.5 text-left"
       >
         <motion.img
           src={logoAsset.url}
-          alt="Wellness Care Connect — Every health matters"
-          className="h-[56px] w-auto object-contain"
+          alt="Wellness Care Connect logo"
+          className="h-12 w-auto object-contain"
           animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.12, 0.97, 1.06, 1] }}
           transition={{ duration: 0.7 }}
           key={beat}
         />
+        <div className="flex flex-col items-center justify-center">
+          <span className="font-sora text-[15px] font-bold leading-tight tracking-tight text-[#23291F]">
+            Wellness <span className="text-[#E8912D]">Care</span> Connect
+          </span>
+          <span className="font-sora text-[10px] font-semibold leading-tight tracking-[0.12em] text-[#567257]">
+            EVERY HEALTH MATTERS
+          </span>
+        </div>
       </button>
       <div className="flex items-center gap-2.5">
         <motion.button
