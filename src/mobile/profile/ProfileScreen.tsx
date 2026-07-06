@@ -76,7 +76,7 @@ export function ProfileScreen() {
         className="flex flex-col items-center"
         style={{
           backgroundColor: "#3C4F3D",
-          padding: "24px 16px 56px",
+          padding: "24px 16px 28px",
           borderBottomLeftRadius: 24,
           borderBottomRightRadius: 24,
         }}
@@ -152,35 +152,46 @@ export function ProfileScreen() {
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
         {/* Stats row — floating 3D gradient cards */}
-        <div className="relative flex" style={{ margin: "54px 16px 0", gap: 12, zIndex: 10, perspective: 1000 }}>
+        <div className="relative flex" style={{ margin: "18px 16px 0", gap: 12, zIndex: 10, perspective: 1000 }}>
           {stats.map((s, i) => (
             <motion.button
               key={s.label}
               type="button"
-              initial={false}
-              whileHover={
-                reduce
-                  ? undefined
-                  : {
-                      y: -12,
-                      rotateX: 12,
-                      rotateY: i === 0 ? -8 : i === 2 ? 8 : 0,
-                      scale: 1.07,
-                      boxShadow:
-                        "0 26px 36px -16px rgba(35,41,31,0.16), 0 12px 18px -12px rgba(232,145,45,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -10px 18px rgba(35,41,31,0.10)",
-                    }
-              }
-              whileTap={
-                reduce
-                  ? undefined
-                  : {
-                      scale: 0.93,
-                      y: 4,
-                      rotateX: -10,
-                      boxShadow: "0 3px 8px rgba(35,41,31,0.16), inset 0 8px 14px rgba(35,41,31,0.10)",
-                    }
-              }
-              transition={{ type: "spring", stiffness: 420, damping: 18 }}
+              initial="rest"
+              animate="rest"
+              whileHover={reduce ? undefined : "hover"}
+              whileTap={reduce ? undefined : "tap"}
+              variants={{
+                rest: {
+                  y: 0,
+                  rotateX: 0,
+                  rotateY: 0,
+                  scale: 1,
+                  background: "linear-gradient(150deg,#FFFFFF 0%,#F3F6F2 48%,#FFFFFF 100%)",
+                  boxShadow:
+                    "0 12px 22px -12px rgba(35,41,31,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -6px 12px rgba(35,41,31,0.10)",
+                },
+                hover: {
+                  y: -10,
+                  rotateX: 14,
+                  rotateY: i === 0 ? -10 : i === 2 ? 10 : 0,
+                  scale: 1.06,
+                  background:
+                    "linear-gradient(150deg,#FFFFFF 0%,#EAF3EA 45%,#F7E9D4 100%)",
+                  boxShadow:
+                    "0 28px 40px -18px rgba(60,79,61,0.35), 0 14px 22px -14px rgba(232,145,45,0.30), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -12px 20px rgba(60,79,61,0.12)",
+                },
+                tap: {
+                  scale: 0.94,
+                  y: 3,
+                  rotateX: -8,
+                  background:
+                    "linear-gradient(150deg,#F3F6F2 0%,#E8EFE6 50%,#F3F6F2 100%)",
+                  boxShadow:
+                    "0 3px 8px rgba(35,41,31,0.18), inset 0 8px 14px rgba(35,41,31,0.12)",
+                },
+              }}
+              transition={{ type: "spring", stiffness: 380, damping: 20 }}
               onClick={() => {
                 if (s.label === "Appointments") navigate({ to: "/doctors" });
                 else if (s.label === "Orders") navigate({ to: "/pharmacy" });
@@ -188,34 +199,33 @@ export function ProfileScreen() {
               }}
               className="relative flex flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden"
               style={{
-                background:
-                  "linear-gradient(150deg,#FFFFFF 0%,#F3F6F2 48%,#FFFFFF 100%)",
                 borderRadius: 18,
                 padding: "17px 0 16px",
                 border: "1px solid rgba(35,41,31,0.10)",
-                boxShadow:
-                  "0 12px 22px -12px rgba(35,41,31,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -6px 12px rgba(35,41,31,0.10)",
                 transformStyle: "preserve-3d",
               }}
             >
               <motion.span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0"
-                initial={false}
-                whileHover={{ x: "70%", opacity: 1 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
+                className="pointer-events-none absolute inset-y-0"
+                variants={{
+                  rest: { x: "-120%", opacity: 0 },
+                  hover: { x: "220%", opacity: 1 },
+                }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
                 style={{
-                  width: "70%",
-                  background: "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.75) 48%, transparent 100%)",
-                  opacity: 0.45,
-                  transform: "translateX(-80%) skewX(-16deg)",
+                  width: "55%",
+                  background:
+                    "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.85) 50%, transparent 100%)",
+                  transform: "skewX(-18deg)",
                 }}
               />
-              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1, transform: "translateZ(18px)" }}>{s.value}</div>
-              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500, transform: "translateZ(14px)" }}>{s.label}</div>
+              <div style={{ color: "#3C4F3D", fontSize: 22, fontWeight: 700, lineHeight: 1, transform: "translateZ(20px)" }}>{s.value}</div>
+              <div style={{ marginTop: 4, color: "#6B7280", fontSize: 12, fontWeight: 500, transform: "translateZ(16px)" }}>{s.label}</div>
             </motion.button>
           ))}
         </div>
+
 
         {/* Menu */}
         <div className="mx-4 mt-6 overflow-hidden rounded-2xl" style={{ backgroundColor: "#FFFFFF" }}>
