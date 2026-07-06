@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VideoRouteImport } from './routes/video'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as MockupsRouteImport } from './routes/mockups'
@@ -18,6 +17,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VideoIndexRouteImport } from './routes/video.index'
 import { Route as VideoCallRouteImport } from './routes/video.call'
 import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
 import { Route as ConsultationIdRouteImport } from './routes/consultation.$id'
@@ -25,11 +25,6 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
-const VideoRoute = VideoRouteImport.update({
-  id: '/video',
-  path: '/video',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -70,10 +65,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VideoIndexRoute = VideoIndexRouteImport.update({
+  id: '/video/',
+  path: '/video/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VideoCallRoute = VideoCallRouteImport.update({
-  id: '/call',
-  path: '/call',
-  getParentRoute: () => VideoRoute,
+  id: '/video/call',
+  path: '/video/call',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DoctorIdRoute = DoctorIdRouteImport.update({
   id: '/doctor/$id',
@@ -113,12 +113,12 @@ export interface FileRoutesByFullPath {
   '/mockups': typeof MockupsRoute
   '/pharmacy': typeof PharmacyRoute
   '/profile': typeof ProfileRoute
-  '/video': typeof VideoRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/consultation/$id': typeof ConsultationIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/video/call': typeof VideoCallRoute
+  '/video/': typeof VideoIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesByTo {
@@ -130,12 +130,12 @@ export interface FileRoutesByTo {
   '/mockups': typeof MockupsRoute
   '/pharmacy': typeof PharmacyRoute
   '/profile': typeof ProfileRoute
-  '/video': typeof VideoRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/consultation/$id': typeof ConsultationIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/video/call': typeof VideoCallRoute
+  '/video': typeof VideoIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesById {
@@ -148,12 +148,12 @@ export interface FileRoutesById {
   '/mockups': typeof MockupsRoute
   '/pharmacy': typeof PharmacyRoute
   '/profile': typeof ProfileRoute
-  '/video': typeof VideoRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/consultation/$id': typeof ConsultationIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/video/call': typeof VideoCallRoute
+  '/video/': typeof VideoIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRouteTypes {
@@ -167,12 +167,12 @@ export interface FileRouteTypes {
     | '/mockups'
     | '/pharmacy'
     | '/profile'
-    | '/video'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/consultation/$id'
     | '/doctor/$id'
     | '/video/call'
+    | '/video/'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -184,12 +184,12 @@ export interface FileRouteTypes {
     | '/mockups'
     | '/pharmacy'
     | '/profile'
-    | '/video'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/consultation/$id'
     | '/doctor/$id'
     | '/video/call'
+    | '/video'
     | '/.mcp/invoke-tool/$tool'
   id:
     | '__root__'
@@ -201,12 +201,12 @@ export interface FileRouteTypes {
     | '/mockups'
     | '/pharmacy'
     | '/profile'
-    | '/video'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/consultation/$id'
     | '/doctor/$id'
     | '/video/call'
+    | '/video/'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesById: FileRoutesById
 }
@@ -219,23 +219,17 @@ export interface RootRouteChildren {
   MockupsRoute: typeof MockupsRoute
   PharmacyRoute: typeof PharmacyRoute
   ProfileRoute: typeof ProfileRoute
-  VideoRoute: typeof VideoRouteWithChildren
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ConsultationIdRoute: typeof ConsultationIdRoute
   DoctorIdRoute: typeof DoctorIdRoute
+  VideoCallRoute: typeof VideoCallRoute
+  VideoIndexRoute: typeof VideoIndexRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/video': {
-      id: '/video'
-      path: '/video'
-      fullPath: '/video'
-      preLoaderRoute: typeof VideoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -292,12 +286,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/video/': {
+      id: '/video/'
+      path: '/video'
+      fullPath: '/video/'
+      preLoaderRoute: typeof VideoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/video/call': {
       id: '/video/call'
-      path: '/call'
+      path: '/video/call'
       fullPath: '/video/call'
       preLoaderRoute: typeof VideoCallRouteImport
-      parentRoute: typeof VideoRoute
+      parentRoute: typeof rootRouteImport
     }
     '/doctor/$id': {
       id: '/doctor/$id'
@@ -337,16 +338,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface VideoRouteChildren {
-  VideoCallRoute: typeof VideoCallRoute
-}
-
-const VideoRouteChildren: VideoRouteChildren = {
-  VideoCallRoute: VideoCallRoute,
-}
-
-const VideoRouteWithChildren = VideoRoute._addFileChildren(VideoRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
@@ -356,12 +347,13 @@ const rootRouteChildren: RootRouteChildren = {
   MockupsRoute: MockupsRoute,
   PharmacyRoute: PharmacyRoute,
   ProfileRoute: ProfileRoute,
-  VideoRoute: VideoRouteWithChildren,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ConsultationIdRoute: ConsultationIdRoute,
   DoctorIdRoute: DoctorIdRoute,
+  VideoCallRoute: VideoCallRoute,
+  VideoIndexRoute: VideoIndexRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport

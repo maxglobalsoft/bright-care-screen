@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PhoneViewport } from "@/mobile/PhoneViewport";
 import { VideoLobbyScreen } from "@/mobile/video/VideoLobbyScreen";
 
-export const Route = createFileRoute("/video")({
+export const Route = createFileRoute("/video/")({
   head: () => ({
     meta: [
       { title: "Video Consultation — WellnessCareConnect" },
