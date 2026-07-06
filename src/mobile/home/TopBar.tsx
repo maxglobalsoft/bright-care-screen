@@ -41,6 +41,7 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.button
           type="button"
           aria-label="Notifications"
+          onClick={() => toast.info(`${user.notifications} new notifications`, { description: "You have upcoming appointments and reminders." })}
           whileHover={reduce ? undefined : { scale: 1.06, y: -1 }}
           whileTap={reduce ? undefined : { scale: 0.94 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
