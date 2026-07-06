@@ -683,7 +683,7 @@ export function DoctorProfileScreen() {
                           : { scale: 1 }
                       }
                       transition={{ duration: 0.35 }}
-                      className="group relative overflow-hidden rounded-xl py-2 text-[12px] font-semibold"
+                      className="wcc-3d wcc-grad-anim group relative overflow-hidden rounded-xl py-2 text-[12px] font-semibold"
                       style={{
                         transformStyle: "preserve-3d",
                         background: disabled
