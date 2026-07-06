@@ -176,14 +176,15 @@ export function DoctorsScreen({ initialSpecialty }: Props) {
             return (
               <motion.button
                 key={label}
-                whileTap={reduce ? undefined : { scale: [1, 0.9, 1.05, 1] }}
-                transition={{ duration: 0.35, times: [0, 0.3, 0.7, 1] }}
+                whileHover={reduce ? undefined : { scale: 1.08, y: -2 }}
+                whileTap={reduce ? undefined : { scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 onClick={() => {
                   if (label === "Available today") setAvailableToday((v) => !v);
                   else if (label === "Top rated") setTopRated((v) => !v);
                   else setActiveSpecialty(label);
                 }}
-                className="relative shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-medium"
+                className="group relative shrink-0 overflow-hidden rounded-full px-3.5 py-1.5 text-[12.5px] font-medium"
                 style={{ color: active ? "#FFFFFF" : INK }}
               >
                 {active && (
@@ -193,7 +194,10 @@ export function DoctorsScreen({ initialSpecialty }: Props) {
                     }
                     transition={{ type: "spring", stiffness: 400, damping: 32 }}
                     className="absolute inset-0 rounded-full"
-                    style={{ backgroundColor: SAGE }}
+                    style={{
+                      background: `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`,
+                      boxShadow: "0 6px 16px -6px rgba(86,114,87,0.55)",
+                    }}
                   />
                 )}
                 {!active && (
