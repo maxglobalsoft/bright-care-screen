@@ -152,7 +152,7 @@ export function ProfileScreen() {
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
         {/* Stats row — floating 3D gradient cards */}
-        <div className="relative flex" style={{ margin: "-24px 16px 0", gap: 12, zIndex: 10, perspective: 800 }}>
+        <div className="relative flex" style={{ margin: "20px 16px 0", gap: 12, zIndex: 10, perspective: 900 }}>
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
@@ -163,24 +163,25 @@ export function ProfileScreen() {
                 reduce
                   ? undefined
                   : {
-                      y: -6,
-                      rotateX: 6,
-                      rotateY: -4,
-                      scale: 1.03,
+                      y: -10,
+                      rotateX: 10,
+                      rotateY: i === 0 ? -7 : i === 2 ? 7 : 0,
+                      scale: 1.06,
                       boxShadow:
-                        "0 18px 32px -12px rgba(60,79,61,0.35), 0 4px 10px rgba(35,41,31,0.12)",
+                        "0 22px 34px -14px rgba(35,41,31,0.16), 0 10px 18px -12px rgba(232,145,45,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -8px 14px rgba(35,41,31,0.10)",
                     }
               }
               whileTap={
                 reduce
                   ? undefined
                   : {
-                      scale: 0.94,
-                      y: 2,
-                      rotateX: -4,
-                      boxShadow: "0 4px 10px rgba(35,41,31,0.18)",
+                      scale: 0.93,
+                      y: 4,
+                      rotateX: -10,
+                      boxShadow: "0 3px 8px rgba(35,41,31,0.16), inset 0 8px 14px rgba(35,41,31,0.10)",
                     }
               }
+              transition={{ type: "spring", stiffness: 360, damping: 18 }}
               onClick={() => {
                 if (s.label === "Appointments") navigate({ to: "/doctors" });
                 else if (s.label === "Orders") navigate({ to: "/pharmacy" });
@@ -189,12 +190,12 @@ export function ProfileScreen() {
               className="flex flex-1 cursor-pointer flex-col items-center justify-center"
               style={{
                 background:
-                  "linear-gradient(150deg,#FFFFFF 0%,#F7FAF6 55%,#E8EFE6 100%)",
+                  "linear-gradient(150deg,#FFFFFF 0%,#F3F6F2 56%,#FFFFFF 100%)",
                 borderRadius: 18,
-                padding: "18px 0",
-                border: "1px solid rgba(86,114,87,0.14)",
+                padding: "17px 0 16px",
+                border: "1px solid rgba(35,41,31,0.10)",
                 boxShadow:
-                  "0 8px 18px -8px rgba(35,41,31,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 4px rgba(60,79,61,0.08)",
+                  "0 10px 20px -12px rgba(35,41,31,0.16), inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -5px 10px rgba(35,41,31,0.10)",
                 transformStyle: "preserve-3d",
               }}
             >
