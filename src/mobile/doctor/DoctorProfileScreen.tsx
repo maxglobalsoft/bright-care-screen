@@ -69,7 +69,7 @@ export function DoctorProfileScreen() {
     setConfirmOpen(true);
   };
 
-  const goHome = () => navigate({ to: "/home" });
+  const goHome = () => navigate({ to: "/consultation/$id", params: { id: doctor.id } });
 
   return (
     <PhoneViewport>
@@ -1048,7 +1048,7 @@ function ConfirmSheet({
               }}
             >
               <Check size={14} />
-              Done
+              Start Consultation
             </motion.button>
           </div>
         </div>
