@@ -25,7 +25,7 @@ export function QuickActions() {
   const navigate = useNavigate();
   const handle = (key: string) => {
     if (key === "consult") navigate({ to: "/doctors" });
-    else if (key === "ask") navigate({ to: "/doctors", search: { free: 1 } as never });
+    else if (key === "ask") navigate({ to: "/doctors" });
     else if (key === "meds") toast.info("Pharmacy coming soon", { description: "Order medicines to your door — launching next release." });
     else if (key === "lab") toast.info("Lab tests coming soon", { description: "Home sample pickup — launching next release." });
   };
