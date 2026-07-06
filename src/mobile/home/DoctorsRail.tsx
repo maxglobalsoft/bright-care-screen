@@ -15,12 +15,14 @@ export function DoctorsRail() {
         {doctors.map((d) => (
           <motion.div
             key={d.name}
+            role="button"
+            tabIndex={0}
             initial="rest"
             animate="rest"
             whileHover={reduce ? undefined : "active"}
             whileTap={reduce ? undefined : "active"}
             variants={{ rest: {}, active: {} }}
-            className="w-[200px] shrink-0 rounded-2xl p-3 shadow-[0_2px_10px_-6px_rgba(0,0,0,0.10)]"
+            className="w-[200px] shrink-0 cursor-pointer rounded-2xl p-3 shadow-[0_2px_10px_-6px_rgba(0,0,0,0.10)]"
             style={{ backgroundColor: "#FFFFFF", border: "1px solid #EEF1EE" }}
           >
             <div className="relative overflow-hidden rounded-xl">
@@ -42,12 +44,12 @@ export function DoctorsRail() {
                 <motion.span
                   key={k}
                   variants={{
-                    rest: { scale: 1 },
-                    active: { scale: [1, 1.4, 1], transition: { duration: 0.3, delay: k * 0.07 } },
+                    rest: { scale: 1, color: "#CBD5C7" },
+                    active: { color: "#E8912D", scale: [1, 1.4, 1], transition: { duration: 0.3, delay: k * 0.07 } },
                   }}
                   style={{ display: "inline-block" }}
                 >
-                  <Star size={11} style={{ fill: "#E8912D", color: "#E8912D" }} />
+                  <Star size={11} style={{ fill: "currentColor", color: "currentColor" }} />
                 </motion.span>
               ))}
               <span className="ml-1 font-semibold">{d.rating}</span>

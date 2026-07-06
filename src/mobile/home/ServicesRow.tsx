@@ -19,7 +19,7 @@ export function ServicesRow() {
             hover: { y: -2 },
             tap: { y: [0, 2, -8, 0], transition: { duration: 0.45, times: [0, 0.2, 0.7, 1] } },
           }}
-          className="flex flex-col overflow-hidden rounded-2xl text-left shadow-[0_2px_10px_-6px_rgba(0,0,0,0.08)]"
+          className="flex cursor-pointer flex-col overflow-hidden rounded-2xl text-left shadow-[0_2px_10px_-6px_rgba(0,0,0,0.08)]"
           style={{ backgroundColor: "#FFFFFF", border: "1px solid #EEF1EE" }}
         >
           <div className="h-[72px] w-full overflow-hidden">

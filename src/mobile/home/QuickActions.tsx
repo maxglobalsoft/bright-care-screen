@@ -37,7 +37,7 @@ export function QuickActions() {
                 hover: { y: -2 },
                 tap: { scale: [1, 0.92, 1.06, 1], transition: { duration: 0.4, times: [0, 0.25, 0.65, 1] } },
               }}
-              className="relative flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3"
+              className="relative flex cursor-pointer flex-col items-center gap-1.5 rounded-2xl px-2 py-3"
               style={{ backgroundColor: "#F3F6F2" }}
             >
               <motion.span

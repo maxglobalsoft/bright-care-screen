@@ -24,7 +24,7 @@ export function SpecialtiesRow() {
                 rest: { y: 0, boxShadow: "0 0 0 rgba(0,0,0,0)" },
                 active: { y: -8, boxShadow: "0 12px 28px rgba(86,114,87,0.25)" },
               }}
-              className="flex w-[76px] shrink-0 flex-col items-center gap-1.5 rounded-2xl p-2"
+              className="flex w-[76px] shrink-0 cursor-pointer flex-col items-center gap-1.5 rounded-2xl p-2"
               style={{ perspective: 600 }}
             >
               <motion.div

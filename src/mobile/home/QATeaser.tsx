@@ -13,7 +13,7 @@ export function QATeaser() {
         whileHover={reduce ? undefined : "active"}
         whileTap={reduce ? undefined : "active"}
         variants={{ rest: { x: 0 }, active: { x: 6 } }}
-        className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-left"
+        className="flex w-full cursor-pointer items-center gap-3 rounded-2xl p-3.5 text-left"
         style={{ backgroundColor: "#F3F6F2" }}
       >
         <div className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl" style={{ backgroundColor: "#FFFFFF", color: "#567257" }}>
