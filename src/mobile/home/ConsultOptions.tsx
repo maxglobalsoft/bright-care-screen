@@ -32,8 +32,10 @@ export function ConsultOptions() {
               whileHover={reduce ? undefined : "active"}
               whileTap={reduce ? undefined : "active"}
               variants={{ rest: { scale: 1 }, active: { scale: 1.04 } }}
-              onTapStart={(event) => {
-                const card = event.currentTarget as HTMLElement;
+              onTapStart={(_, info) => {
+                const el = (info?.point ? document.elementFromPoint(info.point.x, info.point.y) : null) as HTMLElement | null;
+                const card = el?.closest(".wcc-consult-card") as HTMLElement | null;
+                if (!card) return;
                 card.classList.add("wcc-consult-active");
                 setTimeout(() => card.classList.remove("wcc-consult-active"), 750);
               }}
