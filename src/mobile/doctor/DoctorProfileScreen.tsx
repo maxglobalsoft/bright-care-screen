@@ -619,7 +619,7 @@ export function DoctorProfileScreen() {
                         whileHover={reduce || active ? undefined : { y: -3, scale: 1.06, rotateX: 8 }}
                         whileTap={reduce ? undefined : { scale: 0.94 }}
                         transition={{ type: "spring", stiffness: 320, damping: 20 }}
-                        className="group relative shrink-0 overflow-hidden rounded-2xl px-3 py-2 text-center"
+                        className="wcc-3d wcc-grad-anim group relative shrink-0 overflow-hidden rounded-2xl px-3 py-2 text-center"
                         style={{ minWidth: 62, color: active ? "#FFFFFF" : INK, transformStyle: "preserve-3d" }}
                       >
                         {active ? (
