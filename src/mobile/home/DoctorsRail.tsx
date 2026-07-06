@@ -10,15 +10,20 @@ export function DoctorsRail() {
         <button className="text-[13px] font-medium text-[--color-wcc-sage]">View all</button>
       </div>
       <style>{`
-        @keyframes wcc-sheen { 0%{transform:translateX(-120%)} 100%{transform:translateX(220%)} }
+        @keyframes wcc-sweep { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
         @keyframes wcc-star-pop { 0%{transform:scale(1);filter:brightness(1)} 50%{transform:scale(1.35);filter:brightness(1.3)} 100%{transform:scale(1);filter:brightness(1)} }
+        @keyframes wcc-sparkle { 0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(232,145,45,0))} 50%{transform:scale(1.6);filter:drop-shadow(0 0 6px rgba(232,145,45,0.9))} }
         @keyframes wcc-badge-shimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.5) drop-shadow(0 0 4px rgba(86,114,87,0.6))} }
+        @keyframes wcc-price-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+        .wcc-doc { transition: transform 300ms ease-out, box-shadow 300ms ease-out; }
+        .wcc-doc:hover, .wcc-doc:active { transform: translateY(-3px); }
         .wcc-doc:hover .wcc-doc-photo, .wcc-doc:active .wcc-doc-photo { transform: scale(1.08); }
-        .wcc-doc:hover .wcc-sheen, .wcc-doc:active .wcc-sheen { animation: wcc-sheen 700ms ease-in-out; }
+        .wcc-doc:hover .wcc-book-sweep, .wcc-doc:active .wcc-book-sweep { animation: wcc-sweep 700ms ease-in-out; }
         .wcc-doc:hover .wcc-star, .wcc-doc:active .wcc-star { animation: wcc-star-pop 500ms ease-out both; }
         .wcc-doc:hover .wcc-star:nth-child(2){animation-delay:80ms} .wcc-doc:hover .wcc-star:nth-child(3){animation-delay:160ms}
-        .wcc-doc:hover .wcc-star:nth-child(4){animation-delay:240ms} .wcc-doc:hover .wcc-star:nth-child(5){animation-delay:320ms}
+        .wcc-doc:hover .wcc-star:nth-child(4){animation-delay:240ms} .wcc-doc:hover .wcc-star:nth-child(5){animation:wcc-sparkle 700ms ease-out 320ms both}
         .wcc-doc:hover .wcc-badge, .wcc-doc:active .wcc-badge { animation: wcc-badge-shimmer 900ms ease-in-out; }
+        .wcc-doc:hover .wcc-price, .wcc-doc:active .wcc-price { border-color: #E8912D; animation: wcc-price-pulse 600ms ease-out; }
         @media (prefers-reduced-motion: reduce) { .wcc-doc *{animation:none!important;transform:none!important} }
       `}</style>
       <div className="mt-3 flex gap-3 overflow-x-auto px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
