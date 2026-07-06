@@ -152,6 +152,9 @@
   --color-wcc-slate: #6B7269;
   --color-wcc-gold: #C9A24B;
   --color-wcc-cream: #FBF7F1;
+  --color-wcc-orange: #E8912D;
+  --color-wcc-mist: #F3F6F2;
+  --color-wcc-muted: #9AA39A;
   --font-sora: "Sora", "Poppins", sans-serif;
   --font-inter: "Inter", system-ui, sans-serif;
 }
