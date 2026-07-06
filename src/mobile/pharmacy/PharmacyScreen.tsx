@@ -341,15 +341,13 @@ export function PharmacyScreen() {
                     <div className="mt-2 flex justify-between text-[15px] font-bold" style={{ color: "#3C4F3D" }}>
                       <span>Total</span><span>{money(total)}</span>
                     </div>
-                    <motion.button
-                      whileTap={reduce ? undefined : { scale: 0.97 }}
+                    <PedestalButton
                       onClick={checkout}
                       disabled={itemCount === 0}
-                      className="mt-3 w-full rounded-2xl py-3 text-[14px] font-bold disabled:opacity-50"
-                      style={{ backgroundColor: "#567257", color: "#FFFFFF" }}
+                      className="mt-3 h-12 w-full"
                     >
                       Proceed to Checkout
-                    </motion.button>
+                    </PedestalButton>
                   </div>
                 </div>
               ) : (
