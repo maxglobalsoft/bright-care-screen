@@ -739,7 +739,7 @@ export function DoctorProfileScreen() {
               }
               whileTap={reduce || !canBook ? undefined : { scale: 0.97 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="group relative ml-auto inline-flex h-12 flex-1 items-center justify-center overflow-hidden rounded-full text-[14px] font-bold"
+              className="wcc-3d wcc-conic-ring wcc-grad-anim group relative ml-auto inline-flex h-10 items-center justify-center overflow-hidden rounded-full px-5 text-[13px] font-bold"
               style={{
                 transformStyle: "preserve-3d",
                 background: canBook
