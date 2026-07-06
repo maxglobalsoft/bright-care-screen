@@ -1,6 +1,7 @@
 import { Home, Stethoscope, ShoppingBag, User, Video, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 
 type Tab = { key: string; label: string; icon: LucideIcon };
 const tabs: Tab[] = [
@@ -10,9 +11,10 @@ const tabs: Tab[] = [
   { key: "profile", label: "Profile", icon: User },
 ];
 
-export function BottomTabBar() {
+export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}) {
   const reduce = useReducedMotion();
-  const [active, setActive] = useState("home");
+  const navigate = useNavigate();
+  const [active, setActive] = useState(activeTab);
   const [tapKey, setTapKey] = useState<string | null>(null);
   const [fabTaps, setFabTaps] = useState(0);
 
