@@ -1,15 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { PhoneViewport } from "@/mobile/PhoneViewport";
 import { DoctorsScreen } from "@/mobile/doctors/DoctorsScreen";
 
-const searchSchema = z.object({
-  specialty: fallback(z.string().optional(), undefined),
-});
+type DoctorsSearch = { specialty?: string };
 
 export const Route = createFileRoute("/doctors")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (s: Record<string, unknown>): DoctorsSearch => ({
+    specialty: typeof s.specialty === "string" ? s.specialty : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Find Doctors — WellnessCareConnect" },
