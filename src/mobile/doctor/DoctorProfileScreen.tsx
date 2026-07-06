@@ -626,7 +626,7 @@ export function DoctorProfileScreen() {
               <div className="mb-2 text-[13px] font-semibold" style={{ color: INK }}>
                 Available slots
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2" style={{ perspective: 800 }}>
                 {defaultTimeSlots.map((s, i) => {
                   const disabled = disabledSlotIndices.includes(i);
                   const active = slot === s;
@@ -635,6 +635,7 @@ export function DoctorProfileScreen() {
                       key={s}
                       disabled={disabled}
                       onClick={() => !disabled && setSlot(s)}
+                      whileHover={reduce || disabled || active ? undefined : { y: -2, scale: 1.05, rotateX: 6 }}
                       whileTap={reduce || disabled ? undefined : { scale: 0.92 }}
                       animate={
                         active && !reduce
@@ -642,22 +643,30 @@ export function DoctorProfileScreen() {
                           : { scale: 1 }
                       }
                       transition={{ duration: 0.35 }}
-                      className="rounded-xl py-2 text-[12px] font-semibold"
+                      className="group relative overflow-hidden rounded-xl py-2 text-[12px] font-semibold"
                       style={{
-                        backgroundColor: disabled
+                        transformStyle: "preserve-3d",
+                        background: disabled
                           ? "#F0F1F0"
                           : active
-                            ? SAGE
-                            : MIST,
+                            ? `linear-gradient(135deg, ${SAGE} 0%, ${DEEP} 100%)`
+                            : `linear-gradient(135deg, ${MIST} 0%, #E9EEE9 100%)`,
                         color: disabled ? "#B0B4B0" : active ? "#FFFFFF" : INK,
                         textDecoration: disabled ? "line-through" : "none",
                         cursor: disabled ? "not-allowed" : "pointer",
                         boxShadow: active
-                          ? "0 6px 14px -6px rgba(86,114,87,0.55)"
-                          : "none",
+                          ? "0 8px 16px -8px rgba(86,114,87,0.55), inset 0 1px 0 rgba(255,255,255,0.25)"
+                          : "0 3px 8px -6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)",
                       }}
                     >
-                      {s}
+                      {!disabled && !active && (
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{ background: `linear-gradient(135deg, ${SAGE}22 0%, ${DEEP}18 100%)` }}
+                        />
+                      )}
+                      <span className="relative">{s}</span>
                     </motion.button>
                   );
                 })}
