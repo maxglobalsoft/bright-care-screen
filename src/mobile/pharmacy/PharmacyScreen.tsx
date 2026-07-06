@@ -91,15 +91,12 @@ export function PharmacyScreen() {
           <ArrowLeft size={18} color="#FFFFFF" />
         </motion.button>
         <h1 className="text-[16px] font-bold" style={{ color: "#FFFFFF" }}>Pharmacy</h1>
-        <motion.button
-          whileTap={reduce ? undefined : { scale: 0.9 }}
-          whileHover={reduce ? undefined : { scale: 1.05 }}
+        <button
           onClick={openCart}
           aria-label="Open cart"
-          className="relative grid h-9 w-9 place-items-center rounded-full"
-          style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
+          className="wcc-orb relative h-10 w-10"
         >
-          <ShoppingCart size={18} color="#FFFFFF" />
+          <ShoppingCart size={18} color="#FFFFFF" style={{ position: "relative", zIndex: 1 }} />
           <AnimatePresence>
             {itemCount > 0 && (
               <motion.span
@@ -108,14 +105,14 @@ export function PharmacyScreen() {
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
                 transition={{ type: "spring", stiffness: 500, damping: 18 }}
-                className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full px-1 text-[10px] font-bold"
-                style={{ backgroundColor: "#E8912D", color: "#FFFFFF" }}
+                className="absolute -right-1 -top-1 z-10 grid h-[18px] min-w-[18px] place-items-center rounded-full px-1 text-[10px] font-bold"
+                style={{ backgroundColor: "#FFFFFF", color: "#C4671A", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}
               >
                 {itemCount}
               </motion.span>
             )}
           </AnimatePresence>
-        </motion.button>
+        </button>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
