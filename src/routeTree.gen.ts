@@ -15,6 +15,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
+import { Route as ConsultationIdRouteImport } from './routes/consultation.$id'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -49,6 +50,11 @@ const DoctorIdRoute = DoctorIdRouteImport.update({
   path: '/doctor/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConsultationIdRoute = ConsultationIdRouteImport.update({
+  id: '/consultation/$id',
+  path: '/consultation/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/mockups': typeof MockupsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/consultation/$id': typeof ConsultationIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/mockups': typeof MockupsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/consultation/$id': typeof ConsultationIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/mockups': typeof MockupsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/consultation/$id': typeof ConsultationIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
     | '/mockups'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/consultation/$id'
     | '/doctor/$id'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/mockups'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/consultation/$id'
     | '/doctor/$id'
     | '/.mcp/invoke-tool/$tool'
   id:
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/mockups'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/consultation/$id'
     | '/doctor/$id'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesById: FileRoutesById
@@ -146,6 +158,7 @@ export interface RootRouteChildren {
   MockupsRoute: typeof MockupsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ConsultationIdRoute: typeof ConsultationIdRoute
   DoctorIdRoute: typeof DoctorIdRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/consultation/$id': {
+      id: '/consultation/$id'
+      path: '/consultation/$id'
+      fullPath: '/consultation/$id'
+      preLoaderRoute: typeof ConsultationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -227,6 +247,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ConsultationIdRoute: ConsultationIdRoute,
   DoctorIdRoute: DoctorIdRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
