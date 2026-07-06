@@ -54,6 +54,7 @@ export function HomeScreen() {
         <style>{`.wcc-scroll::-webkit-scrollbar{display:none}`}</style>
         <TopBar shadow={scrolled} />
         <SearchBar />
+        <QuickActions />
         <PromoCard />
         <SpecialtiesRow />
         <ConsultOptions />
