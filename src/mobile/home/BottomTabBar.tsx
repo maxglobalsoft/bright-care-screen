@@ -1,86 +1,110 @@
-import { Home, Stethoscope, ShoppingBag, User, Video } from "lucide-react";
+import { Home, Stethoscope, ShoppingBag, User, Video, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 
-const tabs = [
+type Tab = { key: string; label: string; icon: LucideIcon };
+const tabs: Tab[] = [
   { key: "home", label: "Home", icon: Home },
   { key: "doctors", label: "Doctors", icon: Stethoscope },
   { key: "pharmacy", label: "Pharmacy", icon: ShoppingBag },
   { key: "profile", label: "Profile", icon: User },
 ];
 
-// Center-of-tab positions in %, matching the layout (4 tabs + center gap)
-// Each tab slot is 20% wide; centers at 10, 30, 70, 90.
-const tabCenters: Record<string, number> = { home: 10, doctors: 30, pharmacy: 70, profile: 90 };
-
 export function BottomTabBar() {
   const [active, setActive] = useState("home");
-  const [popKey, setPopKey] = useState<string | null>(null);
+  const [squash, setSquash] = useState<string | null>(null);
   const [rippling, setRippling] = useState(false);
-  const [bouncing, setBouncing] = useState(false);
+  const [fabPulse, setFabPulse] = useState(false);
+
+  const activeIndex = tabs.findIndex((t) => t.key === active);
 
   const handleTap = (key: string) => {
     setActive(key);
-    setPopKey(key);
-    setTimeout(() => setPopKey(null), 320);
+    setSquash(key);
+    setTimeout(() => setSquash(null), 380);
   };
   const handleFab = () => {
     setRippling(true);
-    setBouncing(true);
-    setTimeout(() => setRippling(false), 600);
-    setTimeout(() => setBouncing(false), 500);
+    setFabPulse(true);
+    setTimeout(() => setRippling(false), 650);
+    setTimeout(() => setFabPulse(false), 500);
   };
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-20">
+    <div className="absolute inset-x-0 bottom-0 z-20" style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}>
       <style>{`
-        @keyframes wcc-tab-pop { 0%{transform:scale(1)} 40%{transform:scale(0.85)} 65%{transform:scale(1.25)} 100%{transform:scale(1)} }
-        .wcc-tab-pop { animation: wcc-tab-pop 320ms cubic-bezier(0.34,1.56,0.64,1); }
+        @keyframes wcc-jelly { 0%,100%{transform:scale(1,1)} 30%{transform:scale(1.25,0.8)} 60%{transform:scale(0.9,1.15)} }
         @keyframes wcc-fab-glow {
-          0%,100% { box-shadow: 0 8px 22px -8px rgba(86,114,87,0.65), 0 0 0 0 rgba(86,114,87,0.35); }
-          50% { box-shadow: 0 10px 26px -8px rgba(86,114,87,0.9), 0 0 0 12px rgba(86,114,87,0); }
+          0%,100% { box-shadow: 0 10px 24px -8px rgba(86,114,87,0.6), 0 0 0 0 rgba(232,145,45,0.35); }
+          50% { box-shadow: 0 14px 32px -8px rgba(232,145,45,0.7), 0 0 0 14px rgba(232,145,45,0); }
         }
-        .wcc-fab { animation: wcc-fab-glow 2.5s ease-in-out infinite; }
         @keyframes wcc-ring-spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+        @keyframes wcc-ripple { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(2.6);opacity:0} }
+        @keyframes wcc-fab-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+        .wcc-fab { animation: wcc-fab-glow 2.5s ease-in-out infinite; }
         .wcc-fab-ring { animation: wcc-ring-spin 6s linear infinite; }
-        @keyframes wcc-ripple { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(2.4);opacity:0} }
-        .wcc-ripple { animation: wcc-ripple 600ms ease-out; }
-        @keyframes wcc-fab-bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
-        .wcc-fab-bounce { animation: wcc-fab-bounce 500ms cubic-bezier(0.34,1.56,0.64,1); }
-        @media (prefers-reduced-motion: reduce) {
-          .wcc-tab-pop,.wcc-fab,.wcc-ripple,.wcc-fab-ring,.wcc-fab-bounce { animation: none; }
-        }
+        .wcc-ripple { animation: wcc-ripple 650ms ease-out; }
+        .wcc-fab-pulse { animation: wcc-fab-pulse 500ms cubic-bezier(0.34,1.56,0.64,1); }
+        .wcc-jelly { animation: wcc-jelly 380ms cubic-bezier(0.34,1.56,0.64,1); }
+        .wcc-pill-morph { transition: left 450ms cubic-bezier(0.68,-0.2,0.32,1.4), width 450ms cubic-bezier(0.68,-0.2,0.32,1.4); }
+        @media (prefers-reduced-motion: reduce) { .wcc-fab,.wcc-fab-ring,.wcc-ripple,.wcc-fab-pulse,.wcc-jelly,.wcc-pill-morph{animation:none!important;transition:none!important} }
       `}</style>
 
-      <div className="pointer-events-none absolute left-1/2 -top-7 z-10 -translate-x-1/2">
-        <div className="pointer-events-auto relative h-[58px] w-[58px]">
-          <div className="wcc-fab-ring absolute -inset-[3px] rounded-full bg-[conic-gradient(from_0deg,#567257,#E8912D,#567257)]" />
-          <button
-            type="button"
-            aria-label="Start consultation"
-            onClick={handleFab}
-            className="wcc-fab absolute inset-0 grid place-items-center overflow-hidden rounded-full bg-gradient-to-br from-[--color-wcc-sage] to-[--color-wcc-green-deep] text-white transition-transform active:scale-95"
-          >
-            <Video size={24} className={bouncing ? "wcc-fab-bounce" : ""} />
-            {rippling && (
-              <span className="wcc-ripple pointer-events-none absolute inset-0 rounded-full bg-white" />
-            )}
-          </button>
+      <div className="relative mx-4">
+        {/* Floating center FAB */}
+        <div className="pointer-events-none absolute left-1/2 -top-8 z-10 -translate-x-1/2">
+          <div className="pointer-events-auto relative h-[60px] w-[60px]">
+            <div
+              className="wcc-fab-ring absolute -inset-[3px] rounded-full"
+              style={{ background: "conic-gradient(from 0deg,#567257,#E8912D,#567257)" }}
+            />
+            <button
+              type="button"
+              aria-label="Start consultation"
+              onClick={handleFab}
+              className="wcc-fab absolute inset-0 grid place-items-center overflow-hidden rounded-full transition-transform active:scale-95"
+              style={{ background: "linear-gradient(135deg,#567257 0%,#E8912D 100%)", color: "#FFFFFF" }}
+            >
+              <Video size={26} className={fabPulse ? "wcc-fab-pulse" : ""} />
+              {rippling && (
+                <span className="wcc-ripple pointer-events-none absolute inset-0 rounded-full" style={{ backgroundColor: "#FFFFFF" }} />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div className="relative flex h-[68px] items-end bg-white pb-4 pt-2 shadow-[0_-8px_20px_-14px_rgba(0,0,0,0.25)]">
-        <span
-          className="pointer-events-none absolute top-2 h-1 w-1 -translate-x-1/2 rounded-full bg-[--color-wcc-sage] transition-[left] duration-400"
-          style={{ left: `${tabCenters[active] ?? 10}%`, transitionDuration: "400ms" }}
-        />
-        <div className="flex flex-1 items-end justify-around">
-          {tabs.slice(0, 2).map((t) => (
-            <TabButton key={t.key} t={t} active={active === t.key} popping={popKey === t.key} onTap={handleTap} />
-          ))}
-          <div className="w-14" />
-          {tabs.slice(2).map((t) => (
-            <TabButton key={t.key} t={t} active={active === t.key} popping={popKey === t.key} onTap={handleTap} />
-          ))}
+        {/* Floating pill bar */}
+        <div
+          className="relative flex h-[62px] items-center rounded-[28px] px-2"
+          style={{ backgroundColor: "#FFFFFF", boxShadow: "0 12px 30px -12px rgba(0,0,0,0.20), 0 4px 10px -6px rgba(0,0,0,0.10)" }}
+        >
+          {/* Liquid morph indicator */}
+          {(() => {
+            const slotPct = 100 / 5; // 5 slots (2 tabs + center + 2 tabs)
+            const slotIdx = activeIndex < 2 ? activeIndex : activeIndex + 1; // skip center slot (index 2)
+            const isCompact = tabs[activeIndex].label.length > 0;
+            const width = isCompact ? 92 : 44;
+            return (
+              <div
+                className="wcc-pill-morph absolute top-1/2 h-11 -translate-y-1/2 rounded-full"
+                style={{
+                  left: `calc(${slotPct * slotIdx}% + ${slotPct / 2}% - ${width / 2}px)`,
+                  width: `${width}px`,
+                  backgroundColor: "#567257",
+                  boxShadow: "0 6px 14px -6px rgba(86,114,87,0.6)",
+                }}
+              />
+            );
+          })()}
+
+          <div className="relative z-10 grid w-full grid-cols-5 items-center">
+            {tabs.slice(0, 2).map((t) => (
+              <TabButton key={t.key} t={t} active={active === t.key} squash={squash === t.key} onTap={handleTap} />
+            ))}
+            <div />
+            {tabs.slice(2).map((t) => (
+              <TabButton key={t.key} t={t} active={active === t.key} squash={squash === t.key} onTap={handleTap} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -90,24 +114,31 @@ export function BottomTabBar() {
 function TabButton({
   t,
   active,
-  popping,
+  squash,
   onTap,
 }: {
-  t: { key: string; label: string; icon: typeof Home };
+  t: Tab;
   active: boolean;
-  popping: boolean;
+  squash: boolean;
   onTap: (key: string) => void;
 }) {
   const Icon = t.icon;
   return (
-    <button type="button" onClick={() => onTap(t.key)} className="flex w-16 flex-col items-center gap-0.5">
+    <button
+      type="button"
+      onClick={() => onTap(t.key)}
+      className="flex h-11 items-center justify-center gap-1.5 px-1"
+    >
       <Icon
         size={20}
-        className={`${active ? "text-[--color-wcc-sage]" : "text-[--color-wcc-muted]"} ${popping ? "wcc-tab-pop" : ""}`}
+        className={squash ? "wcc-jelly" : ""}
+        style={{ color: active ? "#FFFFFF" : "#6B7280" }}
       />
-      <span className={`text-[10px] ${active ? "font-semibold text-[--color-wcc-sage]" : "text-[--color-wcc-muted]"}`}>
-        {t.label}
-      </span>
+      {active && (
+        <span className="text-[11px] font-semibold" style={{ color: "#FFFFFF" }}>
+          {t.label}
+        </span>
+      )}
     </button>
   );
 }
