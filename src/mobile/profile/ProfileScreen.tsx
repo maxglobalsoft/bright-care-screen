@@ -69,15 +69,15 @@ export function ProfileScreen() {
   return (
     <div className="relative flex h-full w-full flex-col" style={{ backgroundColor: "#F3F6F2" }}>
       <div className="h-11 shrink-0" style={{ backgroundColor: "#3C4F3D" }} />
-      {/* Header */}
+      {/* Header — compact */}
       <div
-        className="relative flex flex-col items-center px-6 pb-8 pt-4"
-        style={{ backgroundColor: "#3C4F3D", borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
+        className="relative flex flex-col items-center px-5 pb-6 pt-3"
+        style={{ backgroundColor: "#3C4F3D", borderBottomLeftRadius: 28, borderBottomRightRadius: 28 }}
       >
         <div className="relative">
           <div
-            className="grid h-24 w-24 place-items-center rounded-full text-[32px] font-bold"
-            style={{ backgroundColor: "#567257", color: "#FFFFFF", border: "3px solid #FFFFFF" }}
+            className="grid h-[68px] w-[68px] place-items-center rounded-full text-[22px] font-bold"
+            style={{ backgroundColor: "#567257", color: "#FFFFFF", border: "2.5px solid #FFFFFF" }}
           >
             PS
           </div>
@@ -85,25 +85,23 @@ export function ProfileScreen() {
             whileTap={reduce ? undefined : { scale: 0.9 }}
             onClick={() => toast.info("Photo upload coming soon")}
             aria-label="Edit photo"
-            className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full"
+            className="absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full"
             style={{ backgroundColor: "#E8912D", border: "2px solid #3C4F3D" }}
           >
-            <Camera size={14} color="#FFFFFF" />
+            <Camera size={12} color="#FFFFFF" />
           </motion.button>
         </div>
-        <div className="mt-3 text-[18px] font-bold" style={{ color: "#FFFFFF" }}>Priya Sharma</div>
-        <div className="mt-0.5 text-[11.5px]" style={{ color: "#FFFFFF", opacity: 0.85 }}>
+        <div className="mt-2 text-[15px] font-bold" style={{ color: "#FFFFFF" }}>Priya Sharma</div>
+        <div className="mt-0.5 text-[10.5px]" style={{ color: "#FFFFFF", opacity: 0.85 }}>
           +1 555 010 2233 · priya@example.com
         </div>
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
-          className="mt-3 rounded-full px-3 py-1 text-[11px] font-bold"
-          style={{ backgroundColor: "#E8912D", color: "#FFFFFF" }}
+        <PedestalButton
+          variant="orange"
+          onClick={() => toast.success("Loyal member", { description: "Thanks for being with us since 2026" })}
+          className="mt-2.5 h-7 px-3 text-[10.5px]"
         >
           Member since 2026
-        </motion.div>
+        </PedestalButton>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto pb-28" style={{ scrollbarWidth: "none" }}>
