@@ -1,5 +1,6 @@
 import { MessagesSquare, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
 import { qa } from "./data";
 
 export function QATeaser() {
