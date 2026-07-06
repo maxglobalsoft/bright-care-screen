@@ -8,7 +8,7 @@ export function TopBar({ shadow }: { shadow: boolean }) {
   const [beat, setBeat] = useState(false);
   return (
     <div
-      className={`sticky top-0 z-20 flex items-center justify-between bg-white px-4 pb-3 pt-2 transition-shadow duration-300 ${
+      className={`sticky top-0 z-20 flex h-[68px] items-center justify-between bg-white px-4 pb-3 pt-2 transition-shadow duration-300 ${
         shadow ? "shadow-[0_4px_12px_-8px_rgba(0,0,0,0.15)]" : ""
       }`}
     >
@@ -24,20 +24,20 @@ export function TopBar({ shadow }: { shadow: boolean }) {
       <button
         type="button"
         onClick={() => { setBeat(true); setTimeout(() => setBeat(false), 720); }}
-        className="flex items-center gap-2.5 text-left"
+        className="flex items-center gap-3 text-left"
       >
         <img
           src={logoAsset.url}
           alt="WellnessCareConnect"
-          className={`h-11 w-11 object-contain ${beat ? "wcc-heart-beat" : ""}`}
+          className={`h-[52px] w-[52px] object-contain ${beat ? "wcc-heart-beat" : ""}`}
         />
         <div className="leading-tight">
-          <div className="text-[16px] font-semibold tracking-tight">
-            <span className="text-[--color-wcc-sage]">Wellness</span>{" "}
-            <span className="text-[--color-wcc-orange]">Care</span>{" "}
-            <span className="text-[--color-wcc-green-deep]">Connect</span>
+          <div className="text-[17px] font-bold tracking-tight">
+            <span style={{ color: "#567257" }}>Wellness</span>{" "}
+            <span style={{ color: "#E8912D" }}>Care</span>{" "}
+            <span style={{ color: "#3C4F3D" }}>Connect</span>
           </div>
-          <div className="text-[9px] font-medium uppercase tracking-[0.14em] text-[--color-wcc-muted]">
+          <div className="text-[10px] font-medium uppercase tracking-[0.16em]" style={{ color: "#6B7280" }}>
             Every health matters
           </div>
         </div>
@@ -48,8 +48,8 @@ export function TopBar({ shadow }: { shadow: boolean }) {
           aria-label="Notifications"
           className="relative grid h-9 w-9 place-items-center rounded-full transition-transform duration-200 active:scale-[0.94]"
         >
-          <Bell size={20} className="wcc-bell text-[--color-wcc-ink]" />
-          <span className="wcc-bell-dot absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[--color-wcc-orange] ring-2 ring-white" />
+          <Bell size={20} style={{ color: "#23291F" }} className="wcc-bell" />
+          <span className="wcc-bell-dot absolute right-1.5 top-1.5 h-2 w-2 rounded-full ring-2 ring-white" style={{ backgroundColor: "#E8912D" }} />
         </button>
         <button
           type="button"
