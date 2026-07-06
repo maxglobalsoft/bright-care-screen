@@ -5,10 +5,12 @@ import { qa } from "./data";
 
 export function QATeaser() {
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   return (
     <section className="px-4 pt-4" data-reveal>
       <motion.button
         type="button"
+        onClick={() => navigate({ to: "/doctors" })}
         initial="rest"
         animate="rest"
         whileHover={reduce ? undefined : "active"}
