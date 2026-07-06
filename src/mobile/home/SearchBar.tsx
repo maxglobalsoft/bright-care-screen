@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 export function SearchBar() {
   const [focused, setFocused] = useState(false);
