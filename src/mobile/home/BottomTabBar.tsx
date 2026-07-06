@@ -133,7 +133,7 @@ export function BottomTabBar({ activeTab = "home" }: { activeTab?: string } = {}
               <motion.button
                 type="button"
                 aria-label="Start consultation"
-                onClick={() => { setFabTaps((n) => n + 1); navigate({ to: "/consultation/$id", params: { id: "1" } }); }}
+                onClick={() => { setFabTaps((n) => n + 1); navigate({ to: "/video" }); }}
                 whileHover={reduce ? undefined : { scale: 1.1, y: -2, rotateX: 10, rotateY: -10 }}
                 whileTap={reduce ? undefined : { scale: 0.88 }}
                 transition={{ type: "spring", stiffness: 320, damping: 16 }}
