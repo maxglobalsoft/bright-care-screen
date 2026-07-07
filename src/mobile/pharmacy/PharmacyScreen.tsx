@@ -159,8 +159,10 @@ export function PharmacyScreen() {
 
         {/* Promo strip */}
         <div className="px-4 pt-3">
-          <button
+          <motion.button
             type="button"
+            whileTap={reduce ? undefined : { scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
             onClick={() => toast.info("Free delivery", { description: "On every order over CA$ 35" })}
             className="wcc-grad-banner flex w-full items-center gap-3 rounded-2xl px-4 py-3"
           >
@@ -170,7 +172,7 @@ export function PharmacyScreen() {
             <div className="text-[13px] font-semibold" style={{ color: "#FFFFFF" }}>
               Free delivery on orders over CA$ 35
             </div>
-          </button>
+          </motion.button>
         </div>
 
         {/* Product grid */}
