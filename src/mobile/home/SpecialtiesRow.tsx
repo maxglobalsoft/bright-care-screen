@@ -23,7 +23,7 @@ export function SpecialtiesRow() {
     <section className="pt-5" data-reveal>
       <div className="flex items-center justify-between px-4">
         <h2 className="text-[18px] font-semibold" style={{ color: "#23291F" }}>Specialties</h2>
-        <button onClick={() => go()} className="text-[13px] font-medium" style={{ color: "#567257" }}>See all</button>
+        <motion.button whileTap={reduce ? undefined : { scale: 0.94 }} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => go()} className="text-[13px] font-medium" style={{ color: "#567257" }}>See all</motion.button>
       </div>
       <div className="mt-3 flex gap-3 overflow-x-auto px-4 pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {specialties.map((s, i) => {

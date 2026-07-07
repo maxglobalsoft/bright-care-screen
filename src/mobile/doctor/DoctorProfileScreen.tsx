@@ -972,14 +972,16 @@ function ConfirmSheet({
           className="mx-auto mb-4 h-1 w-10 rounded-full"
           style={{ backgroundColor: "#DDE2DD" }}
         />
-        <button
+        <motion.button
+          whileTap={reduce ? undefined : { scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           onClick={onClose}
           aria-label="Close"
           className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full"
           style={{ backgroundColor: MIST }}
         >
           <X size={14} color={INK} />
-        </button>
+        </motion.button>
 
         {/* Confetti */}
         {!reduce &&

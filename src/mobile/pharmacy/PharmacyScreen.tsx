@@ -91,7 +91,9 @@ export function PharmacyScreen() {
           <ArrowLeft size={18} color="#FFFFFF" />
         </motion.button>
         <h1 className="text-[16px] font-bold" style={{ color: "#FFFFFF" }}>Pharmacy</h1>
-        <button
+        <motion.button
+          whileTap={reduce ? undefined : { scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           onClick={openCart}
           aria-label="Open cart"
           className="wcc-orb relative h-10 w-10"
@@ -112,7 +114,7 @@ export function PharmacyScreen() {
               </motion.span>
             )}
           </AnimatePresence>
-        </button>
+        </motion.button>
       </div>
 
       <div
@@ -157,8 +159,10 @@ export function PharmacyScreen() {
 
         {/* Promo strip */}
         <div className="px-4 pt-3">
-          <button
+          <motion.button
             type="button"
+            whileTap={reduce ? undefined : { scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
             onClick={() => toast.info("Free delivery", { description: "On every order over CA$ 35" })}
             className="wcc-grad-banner flex w-full items-center gap-3 rounded-2xl px-4 py-3"
           >
@@ -168,7 +172,7 @@ export function PharmacyScreen() {
             <div className="text-[13px] font-semibold" style={{ color: "#FFFFFF" }}>
               Free delivery on orders over CA$ 35
             </div>
-          </button>
+          </motion.button>
         </div>
 
         {/* Product grid */}
@@ -196,13 +200,15 @@ export function PharmacyScreen() {
                     <div className="mt-1 flex items-center justify-between">
                       <div className="text-[13px] font-bold" style={{ color: "#3C4F3D" }}>{money(p.priceCad)}</div>
                       {qty === 0 ? (
-                        <button
+                        <motion.button
+                          whileTap={reduce ? undefined : { scale: 0.88 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
                           onClick={() => add(p)}
                           aria-label={`Add ${p.name}`}
                           className="wcc-orb h-8 w-8"
                         >
                           <Plus size={14} color="#FFFFFF" style={{ position: "relative", zIndex: 1 }} />
-                        </button>
+                        </motion.button>
                       ) : (
                         <div className="flex items-center gap-1.5 rounded-full px-1.5 py-1" style={{ backgroundColor: "#567257" }}>
                           <motion.button whileTap={reduce ? undefined : { scale: 0.85 }} onClick={() => dec(p.id)} aria-label="Decrease">

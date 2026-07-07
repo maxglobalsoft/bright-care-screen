@@ -17,7 +17,7 @@ export function DoctorsRail() {
     <section className="pt-5" data-reveal>
       <div className="flex items-center justify-between px-4">
         <h2 className="text-[18px] font-semibold" style={{ color: "#23291F" }}>Top doctors</h2>
-        <button onClick={() => navigate({ to: "/doctors" })} className="text-[13px] font-medium" style={{ color: "#567257" }}>View all</button>
+        <motion.button whileTap={reduce ? undefined : { scale: 0.94 }} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => navigate({ to: "/doctors" })} className="text-[13px] font-medium" style={{ color: "#567257" }}>View all</motion.button>
       </div>
       <div className="mt-3 flex gap-3 overflow-x-auto px-4 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {doctors.map((d) => (
