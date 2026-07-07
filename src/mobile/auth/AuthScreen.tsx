@@ -173,13 +173,15 @@ export function AuthScreen() {
                     />
                   ))}
                 </div>
-                <button
+                <motion.button
+                  whileTap={reduce ? undefined : { scale: 0.94 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   onClick={() => toast.success("Code resent", { description: "Use 1234 to continue." })}
                   className="mt-4 text-[12px] font-semibold"
                   style={{ color: "#567257" }}
                 >
                   Resend code
-                </button>
+                </motion.button>
                 <motion.button
                   whileTap={reduce ? undefined : { scale: 0.97 }}
                   onClick={verify}
