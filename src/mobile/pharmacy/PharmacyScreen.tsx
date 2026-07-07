@@ -91,7 +91,9 @@ export function PharmacyScreen() {
           <ArrowLeft size={18} color="#FFFFFF" />
         </motion.button>
         <h1 className="text-[16px] font-bold" style={{ color: "#FFFFFF" }}>Pharmacy</h1>
-        <button
+        <motion.button
+          whileTap={reduce ? undefined : { scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           onClick={openCart}
           aria-label="Open cart"
           className="wcc-orb relative h-10 w-10"
@@ -112,7 +114,7 @@ export function PharmacyScreen() {
               </motion.span>
             )}
           </AnimatePresence>
-        </button>
+        </motion.button>
       </div>
 
       <div
