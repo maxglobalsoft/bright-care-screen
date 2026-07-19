@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
 
 // ── palette (explicit hex, no tokens) ─────────────────────────────
