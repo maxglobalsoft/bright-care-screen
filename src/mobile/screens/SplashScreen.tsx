@@ -1,284 +1,366 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "framer-motion";
 import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
 
-const TOKENS = {
-  SAGE: "#567257",
-  ORANGE: "#E8912D",
-  MIST: "#F3F6F2",
-  MUTED: "#9AA39A",
+// ── palette (explicit hex, no tokens) ─────────────────────────────
+const NIGHT = "#23291F";
+const DAWN = "#3C4F3D";
+const SAGE = "#567257";
+const ORANGE = "#E8912D";
+const MIST = "#F3F6F2";
+const WHITE = "#FFFFFF";
+
+// ── timeline (seconds) ────────────────────────────────────────────
+const T = {
+  ACT1_END: 0.6,
+  ACT2_END: 1.2,
+  ACT3_END: 1.8,
+  ACT4_END: 2.4,
+  ACT5_END: 2.8,
 };
 
-const TIMING = {
-  ENTRANCE_MS: 800,
-  RING_SAGE_DELAY: 700,
-  RING_ORANGE_DELAY: 900,
-  RING_DURATION: 900,
-  SHINE_DELAY: 1100,
-  SHINE_DURATION: 500,
-  BREATHE_START: 1600,
-  EXIT_START: 2200,
-  EXIT_DURATION: 350,
-};
+// ECG spike is at exact horizontal center (x=195 of 390)
+const ECG_PATH =
+  "M0,80 L60,80 L80,80 L95,72 L110,88 L125,80 L160,80 L180,80 L188,80 L192,20 L198,140 L204,50 L210,80 L230,80 L260,80 L280,72 L295,88 L310,80 L340,80 L390,80";
 
-type Particle = {
-  left: number;
-  size: number;
-  color: string;
-  duration: number;
-  delay: number;
-  drift: number;
-};
+type Mote = { id: number; fromX: number; fromY: number; size: number; color: string; delay: number };
 
 export function SplashScreen() {
   const navigate = useNavigate();
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [fadingOut, setFadingOut] = useState(false);
+  const reduced = useReducedMotion();
+  const [skipped, setSkipped] = useState(false);
+  const [canSkip, setCanSkip] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const motes = useMemo<Mote[]>(() => {
+    const arr: Mote[] = [];
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.5;
+      const dist = 260 + Math.random() * 140;
+      arr.push({
+        id: i,
+        fromX: Math.cos(angle) * dist,
+        fromY: Math.sin(angle) * dist,
+        size: 3 + Math.random() * 3,
+        color: i % 2 === 0 ? ORANGE : MIST,
+        delay: Math.random() * 0.25,
+      });
     }
+    return arr;
   }, []);
 
   useEffect(() => {
-    const fadeT = setTimeout(() => setFadingOut(true), TIMING.EXIT_START);
-    const navT = setTimeout(
-      () => navigate({ to: "/home" }),
-      TIMING.EXIT_START + TIMING.EXIT_DURATION,
-    );
+    const total = reduced ? 1200 : T.ACT5_END * 1000;
+    const skipT = setTimeout(() => setCanSkip(true), 1200);
+    const navT = setTimeout(() => navigate({ to: "/home" }), total);
     return () => {
-      clearTimeout(fadeT);
+      clearTimeout(skipT);
       clearTimeout(navT);
     };
-  }, [navigate]);
+  }, [navigate, reduced]);
 
-  const particles = useMemo<Particle[]>(
-    () => [
-      { left: 12, size: 3, color: TOKENS.SAGE, duration: 12, delay: 0, drift: -8 },
-      { left: 22, size: 2, color: TOKENS.ORANGE, duration: 14, delay: 2, drift: 6 },
-      { left: 38, size: 4, color: TOKENS.SAGE, duration: 11, delay: 4, drift: -10 },
-      { left: 52, size: 3, color: TOKENS.ORANGE, duration: 13, delay: 1, drift: 8 },
-      { left: 66, size: 2, color: TOKENS.SAGE, duration: 12, delay: 3, drift: -6 },
-      { left: 78, size: 4, color: TOKENS.ORANGE, duration: 14, delay: 5, drift: 10 },
-      { left: 88, size: 3, color: TOKENS.SAGE, duration: 13, delay: 2.5, drift: -8 },
-    ],
-    [],
-  );
+  const handleSkip = () => {
+    if (!canSkip || skipped) return;
+    setSkipped(true);
+    navigate({ to: "/home" });
+  };
+
+  // ── reduced motion fallback ────────────────────────────────────
+  if (reduced) {
+    return (
+      <div
+        className="relative flex h-full w-full items-center justify-center"
+        style={{ background: DAWN }}
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <img src={logoAsset.url} alt="WellnessCareConnect" style={{ width: "55%", maxWidth: 220 }} />
+          <div style={{ color: WHITE, fontSize: 18, fontWeight: 700 }}>
+            Wellness<span style={{ color: ORANGE }}>Care</span>Connect
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div
       className="relative h-full w-full overflow-hidden"
-      style={{
-        opacity: fadingOut ? 0 : 1,
-        transition: `opacity ${TIMING.EXIT_DURATION}ms ease-out`,
-        background: `linear-gradient(180deg, #FFFFFF 0%, ${TOKENS.MIST} 100%)`,
-      }}
+      style={{ background: NIGHT }}
+      onClick={handleSkip}
+      role="button"
+      aria-label="Skip splash"
     >
-      <style>{`
-        @keyframes wcc-logo-in {
-          0%   { transform: perspective(800px) rotateX(4deg) scale(0.55); opacity: 0; filter: drop-shadow(0 4px 8px rgba(86,114,87,0)); }
-          50%  { opacity: 1; }
-          81%  { transform: perspective(800px) rotateX(1deg) scale(1.04); opacity: 1; filter: drop-shadow(0 14px 22px rgba(86,114,87,0.18)); }
-          100% { transform: perspective(800px) rotateX(0deg) scale(1); opacity: 1; filter: drop-shadow(0 10px 18px rgba(86,114,87,0.15)); }
-        }
-        @keyframes wcc-breathe {
-          0%, 100% { transform: scale(1); }
-          50%      { transform: scale(1.02); }
-        }
-        @keyframes wcc-ring {
-          0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-          20%  { opacity: 0.25; }
-          100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
-        }
-        @keyframes wcc-shine {
-          0%   { transform: translateX(-140%) skewX(-18deg); opacity: 0; }
-          20%  { opacity: 0.85; }
-          80%  { opacity: 0.85; }
-          100% { transform: translateX(140%) skewX(-18deg); opacity: 0; }
-        }
-        @keyframes wcc-dot {
-          0%, 60%, 100% { transform: translateY(0) scale(0.75); opacity: 0.4; }
-          30%           { transform: translateY(-4px) scale(1); opacity: 1; }
-        }
-        @keyframes wcc-float {
-          0%   { transform: translate3d(0, 0, 0); opacity: 0; }
-          10%  { opacity: 0.15; }
-          90%  { opacity: 0.15; }
-          100% { transform: translate3d(var(--drift), -120%, 0); opacity: 0; }
-        }
-      `}</style>
-
-      {/* radial sage glow */}
-      <div
+      {/* ── ACT 2: dawn bloom flood from spike center ─────────── */}
+      <motion.div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2"
+        className="pointer-events-none absolute"
         style={{
-          width: 620,
-          height: 620,
-          background: `radial-gradient(circle, ${TOKENS.SAGE}0F 0%, ${TOKENS.SAGE}00 60%)`,
+          left: "50%",
+          top: "50%",
+          width: 40,
+          height: 40,
+          marginLeft: -20,
+          marginTop: -20,
+          borderRadius: "50%",
+          background: DAWN,
         }}
+        initial={{ scale: 0, opacity: 1 }}
+        animate={{ scale: 60 }}
+        transition={{ delay: T.ACT1_END, duration: 0.45, ease: "easeOut" }}
       />
 
-      {/* particles */}
-      {!reducedMotion && (
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          {particles.map((p, i) => (
-            <span
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                left: `${p.left}%`,
-                bottom: -10,
-                width: p.size,
-                height: p.size,
-                backgroundColor: p.color,
-                opacity: 0.15,
-                ["--drift" as string]: `${p.drift}px`,
-                animation: `wcc-float ${p.duration}s linear ${p.delay}s infinite`,
-                willChange: "transform, opacity",
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* logo stack */}
-      <div className="relative flex h-full w-full items-center justify-center">
-        <div
-          className="relative flex items-center justify-center"
-          style={{ width: "78%", aspectRatio: "1 / 1" }}
-        >
-          {/* sage ring */}
-          {!reducedMotion && (
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 rounded-full"
-              style={{
-                width: "100%",
-                height: "100%",
-                border: `2px solid ${TOKENS.SAGE}`,
-                transform: "translate(-50%, -50%) scale(0.5)",
-                opacity: 0,
-                animation: `wcc-ring ${TIMING.RING_DURATION}ms ease-out ${TIMING.RING_SAGE_DELAY}ms 1 forwards`,
-                willChange: "transform, opacity",
-              }}
-            />
-          )}
-          {/* orange ring */}
-          {!reducedMotion && (
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 rounded-full"
-              style={{
-                width: "100%",
-                height: "100%",
-                border: `2px solid ${TOKENS.ORANGE}`,
-                transform: "translate(-50%, -50%) scale(0.5)",
-                opacity: 0,
-                animation: `wcc-ring ${TIMING.RING_DURATION}ms ease-out ${TIMING.RING_ORANGE_DELAY}ms 1 forwards`,
-                willChange: "transform, opacity",
-              }}
-            />
-          )}
-
-          {/* breathing wrapper (starts after entrance) */}
-          <div
-            className="relative flex h-full w-full items-center justify-center"
-            style={
-              reducedMotion
-                ? undefined
-                : {
-                    animation: `wcc-breathe 3s ease-in-out ${TIMING.BREATHE_START}ms infinite`,
-                    willChange: "transform",
-                  }
-            }
-          >
-            {/* entrance wrapper */}
-            <div
-              className="relative flex h-full w-full items-center justify-center"
-              style={
-                reducedMotion
-                  ? undefined
-                  : {
-                      animation: `wcc-logo-in ${TIMING.ENTRANCE_MS}ms cubic-bezier(0.34, 1.56, 0.64, 1) both`,
-                      willChange: "transform, opacity, filter",
-                      transformOrigin: "center",
-                    }
-              }
-            >
-              <img
-                src={logoAsset.url}
-                alt="WellnessCareConnect"
-                className="h-full w-full select-none object-contain"
-                draggable={false}
-              />
-
-              {/* shine sweep */}
-              {!reducedMotion && (
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 overflow-hidden"
-                  style={{
-                    WebkitMaskImage: `url(${logoAsset.url})`,
-                    maskImage: `url(${logoAsset.url})`,
-                    WebkitMaskRepeat: "no-repeat",
-                    maskRepeat: "no-repeat",
-                    WebkitMaskSize: "contain",
-                    maskSize: "contain",
-                    WebkitMaskPosition: "center",
-                    maskPosition: "center",
-                  }}
-                >
-                  <span
-                    className="absolute top-0 h-full"
-                    style={{
-                      left: 0,
-                      width: "55%",
-                      background:
-                        "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,220,180,0.35) 30%, rgba(255,255,255,0.9) 50%, rgba(255,220,180,0.35) 70%, rgba(255,255,255,0) 100%)",
-                      animation: `wcc-shine ${TIMING.SHINE_DURATION}ms ease-in-out ${TIMING.SHINE_DELAY}ms 1 both`,
-                      willChange: "transform, opacity",
-                    }}
-                  />
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* loading dots */}
-      <div
-        className="absolute left-1/2 flex -translate-x-1/2 items-end gap-2"
-        style={{ bottom: 96, height: 12 }}
-        aria-label="Loading"
+      {/* ── ACT 1: ECG heartbeat line ─────────────────────────── */}
+      <motion.svg
+        aria-hidden
+        viewBox="0 0 390 160"
+        className="pointer-events-none absolute left-0 right-0"
+        style={{ top: "50%", transform: "translateY(-50%)", width: "100%", height: 160 }}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ delay: T.ACT1_END, duration: 0.3 }}
       >
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="block rounded-full"
+        {/* glow duplicate */}
+        <motion.path
+          d={ECG_PATH}
+          fill="none"
+          stroke={ORANGE}
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ filter: "blur(12px)", opacity: 0.35 }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: T.ACT1_END, ease: "easeInOut" }}
+        />
+        {/* main line */}
+        <motion.path
+          d={ECG_PATH}
+          fill="none"
+          stroke={ORANGE}
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: T.ACT1_END, ease: "easeInOut" }}
+        />
+        {/* leading tip dot */}
+        <motion.circle
+          r={3.5}
+          fill={WHITE}
+          style={{ filter: `drop-shadow(0 0 6px ${ORANGE})` }}
+          initial={{ cx: 0, cy: 80, opacity: 1 }}
+          animate={{ cx: 390, cy: 80, opacity: [1, 1, 0] }}
+          transition={{ duration: T.ACT1_END, ease: "easeInOut", times: [0, 0.9, 1] }}
+        />
+      </motion.svg>
+
+      {/* ── ACT 2–5: composition (heart + motes + wordmark) ─── */}
+      <motion.div
+        className="absolute inset-0 flex flex-col items-center justify-center"
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.035 }}
+        transition={{ delay: T.ACT4_END, duration: 0.4, ease: "easeOut" }}
+      >
+        {/* motes converging */}
+        {motes.map((m) => (
+          <motion.span
+            key={m.id}
+            aria-hidden
+            className="pointer-events-none absolute rounded-full"
             style={{
-              width: 6,
-              height: 6,
-              backgroundColor: TOKENS.SAGE,
-              animation: reducedMotion
-                ? undefined
-                : `wcc-dot 1.2s ease-in-out ${i * 0.15}s infinite`,
-              opacity: reducedMotion ? 0.7 : undefined,
-              willChange: "transform, opacity",
+              left: "50%",
+              top: "42%",
+              width: m.size,
+              height: m.size,
+              backgroundColor: m.color,
+              marginLeft: -m.size / 2,
+              marginTop: -m.size / 2,
+              boxShadow: `0 0 6px ${m.color}`,
+            }}
+            initial={{ x: m.fromX, y: m.fromY, opacity: 0 }}
+            animate={{ x: 0, y: 0, opacity: [0, 0.8, 0] }}
+            transition={{
+              delay: T.ACT1_END + 0.05 + m.delay,
+              duration: 0.5,
+              ease: "easeIn",
+              times: [0, 0.5, 1],
             }}
           />
         ))}
-      </div>
 
-      {/* version */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 tracking-wide"
-        style={{ bottom: 24, fontSize: 10, color: TOKENS.MUTED }}
-      >
-        v1.0
-      </div>
+        {/* heart logo wrapper */}
+        <div
+          className="relative flex items-center justify-center"
+          style={{ width: "55%", aspectRatio: "1/1", marginTop: "-8%" }}
+        >
+          {/* echo rings (Act 3) */}
+          {[0, 0.14].map((d, i) => (
+            <motion.span
+              key={i}
+              aria-hidden
+              className="pointer-events-none absolute rounded-full"
+              style={{
+                inset: 0,
+                border: `1.5px solid ${ORANGE}`,
+              }}
+              initial={{ scale: 1, opacity: 0 }}
+              animate={{ scale: 1.9, opacity: [0, 0.45, 0] }}
+              transition={{
+                delay: T.ACT2_END + d,
+                duration: 0.5,
+                ease: "easeOut",
+                times: [0, 0.2, 1],
+              }}
+            />
+          ))}
+
+          {/* heart born + double-thump */}
+          <motion.div
+            className="relative h-full w-full"
+            initial={{ scale: 0.2, opacity: 0 }}
+            animate={{
+              scale: [0.2, 1.06, 1, 1.05, 0.98, 1.03, 1],
+              opacity: [0, 1, 1, 1, 1, 1, 1],
+            }}
+            transition={{
+              delay: T.ACT1_END,
+              duration: 1.2,
+              times: [0, 0.4, 0.5, 0.65, 0.78, 0.9, 1],
+              ease: "easeOut",
+            }}
+            style={{ transformOrigin: "center" }}
+          >
+            <img
+              src={logoAsset.url}
+              alt="WellnessCareConnect"
+              draggable={false}
+              className="h-full w-full select-none object-contain"
+              style={{ filter: `drop-shadow(0 10px 22px rgba(0,0,0,0.35))` }}
+            />
+
+            {/* light sweep clipped to logo bounds */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 overflow-hidden"
+              style={{
+                WebkitMaskImage: `url(${logoAsset.url})`,
+                maskImage: `url(${logoAsset.url})`,
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+              }}
+            >
+              <motion.span
+                className="absolute top-0 h-full"
+                style={{
+                  width: "28%",
+                  background:
+                    "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0) 100%)",
+                  transform: "rotate(-20deg)",
+                }}
+                initial={{ left: "-40%", opacity: 0 }}
+                animate={{ left: "110%", opacity: [0, 1, 1, 0] }}
+                transition={{
+                  delay: T.ACT2_END + 0.35,
+                  duration: 0.45,
+                  ease: "easeInOut",
+                  times: [0, 0.1, 0.9, 1],
+                }}
+              />
+            </span>
+          </motion.div>
+        </div>
+
+        {/* ── ACT 4: wordmark letter cascade ─────────────────── */}
+        <div className="mt-6 flex flex-col items-center" style={{ minHeight: 80 }}>
+          <Wordmark startDelay={T.ACT3_END} />
+
+          {/* slogan */}
+          <motion.div
+            style={{
+              color: MIST,
+              fontSize: 10,
+              fontWeight: 600,
+              textTransform: "uppercase",
+            }}
+            initial={{ opacity: 0, letterSpacing: "0.35em" }}
+            animate={{ opacity: 1, letterSpacing: "0.18em" }}
+            transition={{ delay: T.ACT3_END + 0.35, duration: 0.4, ease: "easeOut" }}
+            className="mt-3"
+          >
+            Every Health Matters
+          </motion.div>
+
+          {/* progress shimmer */}
+          <div
+            className="relative mt-3 overflow-hidden"
+            style={{ width: 64, height: 2, background: "rgba(255,255,255,0.12)", borderRadius: 2 }}
+          >
+            <motion.span
+              className="absolute top-0 h-full"
+              style={{ width: 24, background: ORANGE, borderRadius: 2 }}
+              initial={{ left: "-30%" }}
+              animate={{ left: "110%" }}
+              transition={{ delay: T.ACT3_END + 0.4, duration: 0.55, ease: "easeInOut" }}
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ── ACT 5: mist exhale ─────────────────────────────────── */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{ background: MIST }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: T.ACT4_END + 0.05, duration: 0.35, ease: "easeIn" }}
+      />
+    </div>
+  );
+}
+
+function Wordmark({ startDelay }: { startDelay: number }) {
+  // "WellnessCareConnect" with "Care" in orange
+  const parts: Array<{ text: string; color: string }> = [
+    { text: "Wellness", color: WHITE },
+    { text: "Care", color: ORANGE },
+    { text: "Connect", color: WHITE },
+  ];
+  let index = 0;
+  return (
+    <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "0.01em", display: "flex" }}>
+      {parts.map((p, pi) => (
+        <span key={pi} style={{ display: "inline-flex" }}>
+          {p.text.split("").map((ch) => {
+            const i = index++;
+            return (
+              <motion.span
+                key={`${pi}-${i}`}
+                style={{ color: p.color, display: "inline-block" }}
+                initial={{ y: 14, opacity: 0, filter: "blur(4px)" }}
+                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                transition={{
+                  delay: startDelay + i * 0.022,
+                  duration: 0.35,
+                  ease: "easeOut",
+                }}
+              >
+                {ch}
+              </motion.span>
+            );
+          })}
+        </span>
+      ))}
     </div>
   );
 }
