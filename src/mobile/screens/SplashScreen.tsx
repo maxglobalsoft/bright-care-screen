@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "framer-motion";
-import logoAsset from "@/assets/wcc-logo-v2.png.asset.json";
+import emblemAsset from "@/assets/wcc-emblem.png.asset.json";
 
 // ── palette (explicit hex, no tokens) ─────────────────────────────
 const NIGHT = "#23291F";
 const DAWN = "#3C4F3D";
-const SAGE = "#567257";
 const ORANGE = "#E8912D";
 const MIST = "#F3F6F2";
 const WHITE = "#FFFFFF";
@@ -24,7 +23,18 @@ const T = {
 const ECG_PATH =
   "M0,80 L60,80 L80,80 L95,72 L110,88 L125,80 L160,80 L180,80 L188,80 L192,20 L198,140 L204,50 L210,80 L230,80 L260,80 L280,72 L295,88 L310,80 L340,80 L390,80";
 
-type Mote = { id: number; fromX: number; fromY: number; size: number; color: string; delay: number };
+// Letter shadow — the "pinhole" pocket behind each letterform
+const LETTER_SHADOW =
+  "0 2px 10px rgba(0,0,0,0.55), 0 0 2px rgba(0,0,0,0.35)";
+
+type Mote = {
+  id: number;
+  fromX: number;
+  fromY: number;
+  size: number;
+  color: string;
+  delay: number;
+};
 
 export function SplashScreen() {
   const navigate = useNavigate();
@@ -78,9 +88,26 @@ export function SplashScreen() {
           transition={{ duration: 0.6 }}
           className="flex flex-col items-center gap-4"
         >
-          <img src={logoAsset.url} alt="WellnessCareConnect" style={{ width: "55%", maxWidth: 220 }} />
-          <div style={{ color: WHITE, fontSize: 18, fontWeight: 700 }}>
-            Wellness<span style={{ color: ORANGE }}>Care</span>Connect
+          <img
+            src={emblemAsset.url}
+            alt="WellnessCareConnect"
+            style={{
+              width: "45%",
+              maxWidth: 180,
+              filter: "drop-shadow(0 10px 28px rgba(0,0,0,0.45))",
+            }}
+          />
+          <div
+            style={{
+              fontSize: 20,
+              fontWeight: 800,
+              letterSpacing: "0.01em",
+              textShadow: LETTER_SHADOW,
+            }}
+          >
+            <span style={{ color: WHITE }}>Wellness</span>
+            <span style={{ color: ORANGE }}>Care</span>
+            <span style={{ color: WHITE }}>Connect</span>
           </div>
         </motion.div>
       </div>
@@ -95,6 +122,17 @@ export function SplashScreen() {
       role="button"
       aria-label="Skip splash"
     >
+      {/* ── EDGE VIGNETTE (static) ───────────────────────────── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(20,25,18,0) 45%, rgba(20,25,18,0.5) 100%)",
+          zIndex: 1,
+        }}
+      />
+
       {/* ── ACT 2: dawn bloom flood from spike center ─────────── */}
       <motion.div
         aria-hidden
@@ -108,6 +146,7 @@ export function SplashScreen() {
           marginTop: -20,
           borderRadius: "50%",
           background: DAWN,
+          zIndex: 2,
         }}
         initial={{ scale: 0, opacity: 1 }}
         animate={{ scale: 60 }}
@@ -119,7 +158,13 @@ export function SplashScreen() {
         aria-hidden
         viewBox="0 0 390 160"
         className="pointer-events-none absolute left-0 right-0"
-        style={{ top: "50%", transform: "translateY(-50%)", width: "100%", height: 160 }}
+        style={{
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "100%",
+          height: 160,
+          zIndex: 3,
+        }}
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
         transition={{ delay: T.ACT1_END, duration: 0.3 }}
@@ -132,7 +177,7 @@ export function SplashScreen() {
           strokeWidth={3}
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ filter: "blur(12px)", opacity: 0.35 }}
+          style={{ filter: "blur(12px)", opacity: 0.5 }}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: T.ACT1_END, ease: "easeInOut" }}
@@ -153,7 +198,9 @@ export function SplashScreen() {
         <motion.circle
           r={3.5}
           fill={WHITE}
-          style={{ filter: `drop-shadow(0 0 6px ${ORANGE})` }}
+          style={{
+            filter: `drop-shadow(0 0 4px ${ORANGE}) drop-shadow(0 0 6px ${ORANGE})`,
+          }}
           initial={{ cx: 0, cy: 80, opacity: 1 }}
           animate={{ cx: 390, cy: 80, opacity: [1, 1, 0] }}
           transition={{ duration: T.ACT1_END, ease: "easeInOut", times: [0, 0.9, 1] }}
@@ -163,6 +210,7 @@ export function SplashScreen() {
       {/* ── ACT 2–5: composition (heart + motes + wordmark) ─── */}
       <motion.div
         className="absolute inset-0 flex flex-col items-center justify-center"
+        style={{ zIndex: 4 }}
         initial={{ scale: 1 }}
         animate={{ scale: 1.035 }}
         transition={{ delay: T.ACT4_END, duration: 0.4, ease: "easeOut" }}
@@ -194,11 +242,67 @@ export function SplashScreen() {
           />
         ))}
 
-        {/* heart logo wrapper */}
+        {/* heart emblem wrapper */}
         <div
           className="relative flex items-center justify-center"
-          style={{ width: "55%", aspectRatio: "1/1", marginTop: "-8%" }}
+          style={{ width: "45%", aspectRatio: "1/1", marginTop: "-8%" }}
         >
+          {/* LIGHT POOL — soft spotlight lifting the heart off DAWN bg */}
+          <motion.span
+            aria-hidden
+            className="pointer-events-none absolute rounded-full"
+            style={{
+              left: "50%",
+              top: "50%",
+              width: "170%",
+              height: "170%",
+              marginLeft: "-85%",
+              marginTop: "-85%",
+              background:
+                "radial-gradient(circle, rgba(243,246,242,0.14) 0%, rgba(243,246,242,0) 70%)",
+              zIndex: 0,
+            }}
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{
+              opacity: [0, 1, 1, 1.03, 1, 1.03, 1],
+              scale: [1, 1, 1, 1.03, 1, 1.03, 1],
+            }}
+            transition={{
+              delay: T.ACT1_END,
+              duration: 1.2,
+              times: [0, 0.375, 0.5, 0.65, 0.78, 0.9, 1],
+              ease: "easeOut",
+            }}
+          />
+
+          {/* GROUND SHADOW — anchors the heart to the scene */}
+          <motion.span
+            aria-hidden
+            className="pointer-events-none absolute"
+            style={{
+              left: "50%",
+              bottom: "-4%",
+              width: "55%",
+              height: 14,
+              marginLeft: "-27.5%",
+              background: "rgba(0,0,0,0.35)",
+              borderRadius: "50%",
+              filter: "blur(18px)",
+              zIndex: 0,
+            }}
+            initial={{ opacity: 0, scaleX: 1 }}
+            animate={{
+              opacity: [0, 1, 1, 1, 1, 1, 1],
+              scaleX: [1, 1, 1, 1.06, 1, 1.06, 1],
+            }}
+            transition={{
+              delay: T.ACT1_END,
+              duration: 1.2,
+              times: [0, 0.4, 0.5, 0.65, 0.78, 0.9, 1],
+              ease: "easeOut",
+            }}
+          />
+
           {/* echo rings (Act 3) */}
           {[0, 0.14].map((d, i) => (
             <motion.span
@@ -207,10 +311,11 @@ export function SplashScreen() {
               className="pointer-events-none absolute rounded-full"
               style={{
                 inset: 0,
-                border: `1.5px solid ${ORANGE}`,
+                border: `2px solid ${ORANGE}`,
+                zIndex: 1,
               }}
               initial={{ scale: 1, opacity: 0 }}
-              animate={{ scale: 1.9, opacity: [0, 0.45, 0] }}
+              animate={{ scale: 1.9, opacity: [0, 0.6, 0] }}
               transition={{
                 delay: T.ACT2_END + d,
                 duration: 0.5,
@@ -223,6 +328,7 @@ export function SplashScreen() {
           {/* heart born + double-thump */}
           <motion.div
             className="relative h-full w-full"
+            style={{ zIndex: 2 }}
             initial={{ scale: 0.2, opacity: 0 }}
             animate={{
               scale: [0.2, 1.06, 1, 1.05, 0.98, 1.03, 1],
@@ -234,14 +340,15 @@ export function SplashScreen() {
               times: [0, 0.4, 0.5, 0.65, 0.78, 0.9, 1],
               ease: "easeOut",
             }}
-            style={{ transformOrigin: "center" }}
           >
             <img
-              src={logoAsset.url}
+              src={emblemAsset.url}
               alt="WellnessCareConnect"
               draggable={false}
               className="h-full w-full select-none object-contain"
-              style={{ filter: `drop-shadow(0 10px 22px rgba(0,0,0,0.35))` }}
+              style={{
+                filter: "drop-shadow(0 10px 28px rgba(0,0,0,0.45))",
+              }}
             />
 
             {/* light sweep clipped to logo bounds */}
@@ -249,8 +356,8 @@ export function SplashScreen() {
               aria-hidden
               className="pointer-events-none absolute inset-0 overflow-hidden"
               style={{
-                WebkitMaskImage: `url(${logoAsset.url})`,
-                maskImage: `url(${logoAsset.url})`,
+                WebkitMaskImage: `url(${emblemAsset.url})`,
+                maskImage: `url(${emblemAsset.url})`,
                 WebkitMaskRepeat: "no-repeat",
                 maskRepeat: "no-repeat",
                 WebkitMaskSize: "contain",
@@ -264,7 +371,7 @@ export function SplashScreen() {
                 style={{
                   width: "28%",
                   background:
-                    "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0) 100%)",
+                    "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.34) 50%, rgba(255,255,255,0) 100%)",
                   transform: "rotate(-20deg)",
                 }}
                 initial={{ left: "-40%", opacity: 0 }}
@@ -291,6 +398,7 @@ export function SplashScreen() {
               fontSize: 10,
               fontWeight: 600,
               textTransform: "uppercase",
+              textShadow: LETTER_SHADOW,
             }}
             initial={{ opacity: 0, letterSpacing: "0.35em" }}
             animate={{ opacity: 1, letterSpacing: "0.18em" }}
@@ -320,7 +428,7 @@ export function SplashScreen() {
       <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-0"
-        style={{ background: MIST }}
+        style={{ background: MIST, zIndex: 5 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: T.ACT4_END + 0.05, duration: 0.35, ease: "easeIn" }}
@@ -346,7 +454,11 @@ function Wordmark({ startDelay }: { startDelay: number }) {
             return (
               <motion.span
                 key={`${pi}-${i}`}
-                style={{ color: p.color, display: "inline-block" }}
+                style={{
+                  color: p.color,
+                  display: "inline-block",
+                  textShadow: LETTER_SHADOW,
+                }}
                 initial={{ y: 14, opacity: 0, filter: "blur(4px)" }}
                 animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
                 transition={{
