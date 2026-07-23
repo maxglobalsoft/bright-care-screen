@@ -4,8 +4,8 @@ import { useReducedMotion } from "framer-motion";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
+// Hard cap so we never trap the user if the video truly fails to load.
 const HARD_TIMEOUT_MS = 20000;
-const STALL_MS = 3500;
 
 export function SplashScreen() {
   const navigate = useNavigate();
@@ -21,42 +21,37 @@ export function SplashScreen() {
   };
 
   useEffect(() => {
+    // Absolute safety net only — do NOT shorten normal playback.
     const hardT = window.setTimeout(goHome, HARD_TIMEOUT_MS);
 
     if (reduced) {
-      const t = window.setTimeout(goHome, 1600);
+      const t = window.setTimeout(goHome, 1800);
       return () => {
         clearTimeout(hardT);
         clearTimeout(t);
       };
     }
 
-    let firstFrame = false;
-    const stallT = window.setTimeout(() => {
-      if (!firstFrame) {
-        setPosterOnly(true);
-        window.setTimeout(goHome, 1400);
-      }
-    }, STALL_MS);
-
+    // Force playback from the very beginning of the film.
     const v = videoRef.current;
-    const onPlaying = () => {
-      firstFrame = true;
-      clearTimeout(stallT);
-    };
-    v?.addEventListener("playing", onPlaying);
+    if (v) {
+      try {
+        v.currentTime = 0;
+      } catch {
+        /* noop */
+      }
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    }
 
-    return () => {
-      clearTimeout(hardT);
-      clearTimeout(stallT);
-      v?.removeEventListener("playing", onPlaying);
-    };
+    return () => clearTimeout(hardT);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduced]);
 
   const handleError = () => {
+    // Only fall back if the video genuinely cannot play.
     setPosterOnly(true);
-    window.setTimeout(goHome, 1400);
+    window.setTimeout(goHome, 1600);
   };
 
   const fillStyle: React.CSSProperties = {
@@ -84,7 +79,6 @@ export function SplashScreen() {
           preload="auto"
           onEnded={goHome}
           onError={handleError}
-          onStalled={handleError}
           className="absolute inset-0 h-full w-full"
           style={fillStyle}
         />
