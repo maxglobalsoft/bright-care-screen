@@ -139,20 +139,8 @@ export function SplashScreen() {
           {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
         </motion.button>
       )}
-      {!posterOnly && soundBlocked && (
-        <motion.button
-          type="button"
-          aria-label="Start splash with sound"
-          onClick={startWithSound}
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: [1, 1.035, 1] }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 1.2, repeat: Infinity, repeatType: "loop" }}
-          className="absolute left-1/2 top-1/2 z-10 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/45 bg-black/30 text-white shadow-[0_20px_42px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md"
-        >
-          <Volume2 size={26} />
-        </motion.button>
-      )}
+      {null}
+
     </div>
   );
 }
