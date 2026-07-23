@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "./TopBar";
-import { SearchBar } from "./SearchBar";
 import { PromoCard } from "./PromoCard";
 import { SpecialtiesRow } from "./SpecialtiesRow";
 import { ConsultOptions } from "./ConsultOptions";
@@ -53,7 +52,6 @@ export function HomeScreen() {
       >
         <style>{`.wcc-scroll::-webkit-scrollbar{display:none}`}</style>
         <TopBar shadow={scrolled} />
-        <SearchBar />
         <QuickActions />
         <PromoCard />
         <SpecialtiesRow />

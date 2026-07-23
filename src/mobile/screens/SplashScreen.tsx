@@ -1,20 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { motion, useReducedMotion } from "framer-motion";
-import { Volume2, VolumeX } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
-const SKIP_GATE_MS = 1500;
-const HARD_TIMEOUT_MS = 12000;
-const STALL_MS = 2500;
+const HARD_TIMEOUT_MS = 20000;
+const STALL_MS = 3500;
 
 export function SplashScreen() {
   const navigate = useNavigate();
   const reduced = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [canSkip, setCanSkip] = useState(false);
-  const [muted, setMuted] = useState(true);
   const [posterOnly, setPosterOnly] = useState(!!reduced);
   const doneRef = useRef(false);
 
@@ -25,13 +21,11 @@ export function SplashScreen() {
   };
 
   useEffect(() => {
-    const skipT = window.setTimeout(() => setCanSkip(true), SKIP_GATE_MS);
     const hardT = window.setTimeout(goHome, HARD_TIMEOUT_MS);
 
     if (reduced) {
-      const t = window.setTimeout(goHome, 1200);
+      const t = window.setTimeout(goHome, 1600);
       return () => {
-        clearTimeout(skipT);
         clearTimeout(hardT);
         clearTimeout(t);
       };
@@ -41,7 +35,7 @@ export function SplashScreen() {
     const stallT = window.setTimeout(() => {
       if (!firstFrame) {
         setPosterOnly(true);
-        window.setTimeout(goHome, 1200);
+        window.setTimeout(goHome, 1400);
       }
     }, STALL_MS);
 
@@ -53,7 +47,6 @@ export function SplashScreen() {
     v?.addEventListener("playing", onPlaying);
 
     return () => {
-      clearTimeout(skipT);
       clearTimeout(hardT);
       clearTimeout(stallT);
       v?.removeEventListener("playing", onPlaying);
@@ -61,22 +54,9 @@ export function SplashScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduced]);
 
-  const handleContainerTap = () => {
-    if (!canSkip) return;
-    goHome();
-  };
-
   const handleError = () => {
     setPosterOnly(true);
-    window.setTimeout(goHome, 1200);
-  };
-
-  const toggleSound = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = !v.muted;
-    setMuted(v.muted);
+    window.setTimeout(goHome, 1400);
   };
 
   const fillStyle: React.CSSProperties = {
@@ -85,13 +65,7 @@ export function SplashScreen() {
   };
 
   return (
-    <div
-      className="relative h-full w-full overflow-hidden"
-      style={{ background: "#000" }}
-      onClick={handleContainerTap}
-      role="button"
-      aria-label="Splash — tap to skip after intro"
-    >
+    <div className="relative h-full w-full overflow-hidden" style={{ background: "#000" }}>
       {posterOnly ? (
         <img
           src={posterAsset.url}
@@ -114,56 +88,6 @@ export function SplashScreen() {
           className="absolute inset-0 h-full w-full"
           style={fillStyle}
         />
-      )}
-
-      {canSkip && !posterOnly && (
-        <div
-          className="pointer-events-none absolute right-4 flex items-center gap-2 z-10"
-          style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
-        >
-          <motion.button
-            type="button"
-            onClick={toggleSound}
-            whileTap={{ scale: 0.94 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="pointer-events-auto inline-flex items-center justify-center rounded-full"
-            style={{
-              width: 30,
-              height: 30,
-              background: "rgba(35,41,31,0.35)",
-              color: "#FFFFFF",
-              backdropFilter: "blur(6px)",
-            }}
-            aria-label={muted ? "Unmute" : "Mute"}
-          >
-            {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-          </motion.button>
-          <motion.button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              goHome();
-            }}
-            whileTap={{ scale: 0.94 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="pointer-events-auto inline-flex items-center justify-center rounded-full"
-            style={{
-              height: 30,
-              padding: "0 12px",
-              background: "rgba(35,41,31,0.35)",
-              color: "#FFFFFF",
-              fontSize: 12,
-              fontWeight: 600,
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            Skip ›
-          </motion.button>
-        </div>
       )}
     </div>
   );
