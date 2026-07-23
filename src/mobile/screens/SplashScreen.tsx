@@ -5,7 +5,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
-const MIST = "#F3F6F2";
+const BG = "#ABA29A";
 const SKIP_GATE_MS = 1500;
 const HARD_TIMEOUT_MS = 12000;
 const STALL_MS = 2500;
