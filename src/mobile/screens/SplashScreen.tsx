@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { Volume2, VolumeX } from "lucide-react";
+import webmAsset from "@/assets/wcc-splash.webm.asset.json";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
@@ -12,6 +14,8 @@ export function SplashScreen() {
   const reduced = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [posterOnly, setPosterOnly] = useState(!!reduced);
+  const [soundOn, setSoundOn] = useState(true);
+  const [soundBlocked, setSoundBlocked] = useState(false);
   const doneRef = useRef(false);
 
   const goHome = () => {
@@ -37,11 +41,22 @@ export function SplashScreen() {
     if (v) {
       try {
         v.currentTime = 0;
+        v.muted = false;
+        v.defaultMuted = false;
+        v.volume = 1;
+        v.load();
       } catch {
         /* noop */
       }
       const p = v.play();
-      if (p && typeof p.catch === "function") p.catch(() => {});
+      if (p && typeof p.catch === "function") {
+        p.catch(() => {
+          setSoundBlocked(true);
+          v.muted = true;
+          setSoundOn(false);
+          void v.play().catch(() => {});
+        });
+      }
     }
 
     return () => clearTimeout(hardT);
@@ -54,7 +69,31 @@ export function SplashScreen() {
     window.setTimeout(goHome, 1600);
   };
 
-  const fillStyle: React.CSSProperties = {
+  const toggleSound = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    const next = !soundOn;
+    v.muted = !next;
+    v.volume = next ? 1 : 0;
+    setSoundOn(next);
+    if (next) {
+      setSoundBlocked(false);
+      void v.play().catch(() => setSoundBlocked(true));
+    }
+  };
+
+  const startWithSound = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = false;
+    v.defaultMuted = false;
+    v.volume = 1;
+    setSoundOn(true);
+    setSoundBlocked(false);
+    void v.play().catch(() => setSoundBlocked(true));
+  };
+
+  const fillStyle: CSSProperties = {
     objectFit: "cover",
     objectPosition: "center",
   };
@@ -71,17 +110,48 @@ export function SplashScreen() {
       ) : (
         <video
           ref={videoRef}
-          src={videoAsset.url}
           poster={posterAsset.url}
           autoPlay
-          muted
+          muted={false}
           playsInline
           preload="auto"
           onEnded={goHome}
           onError={handleError}
+          onVolumeChange={(e) => setSoundOn(!(e.currentTarget.muted || e.currentTarget.volume === 0))}
           className="absolute inset-0 h-full w-full"
           style={fillStyle}
-        />
+        >
+          <source src={webmAsset.url} type="video/webm" />
+          <source src={videoAsset.url} type="video/mp4" />
+        </video>
+      )}
+      {!posterOnly && (
+        <motion.button
+          type="button"
+          aria-label={soundOn ? "Turn splash sound off" : "Turn splash sound on"}
+          onClick={toggleSound}
+          initial={{ opacity: 0, scale: 0.9, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.35 }}
+          className="absolute right-3 z-10 grid h-10 w-10 place-items-center rounded-full border border-white/35 bg-black/25 text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.7)] backdrop-blur-md"
+          style={{ top: "max(12px, env(safe-area-inset-top))" }}
+        >
+          {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
+        </motion.button>
+      )}
+      {!posterOnly && soundBlocked && (
+        <motion.button
+          type="button"
+          aria-label="Start splash with sound"
+          onClick={startWithSound}
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: [1, 1.035, 1] }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 1.2, repeat: Infinity, repeatType: "loop" }}
+          className="absolute left-1/2 top-1/2 z-10 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/45 bg-black/30 text-white shadow-[0_20px_42px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md"
+        >
+          <Volume2 size={26} />
+        </motion.button>
       )}
     </div>
   );
