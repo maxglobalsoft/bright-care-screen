@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
+import webmAsset from "@/assets/wcc-splash.webm.asset.json";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
@@ -92,7 +93,7 @@ export function SplashScreen() {
     void v.play().catch(() => setSoundBlocked(true));
   };
 
-  const fillStyle: React.CSSProperties = {
+  const fillStyle: CSSProperties = {
     objectFit: "cover",
     objectPosition: "center",
   };
@@ -109,7 +110,6 @@ export function SplashScreen() {
       ) : (
         <video
           ref={videoRef}
-          src={videoAsset.url}
           poster={posterAsset.url}
           autoPlay
           muted={false}
@@ -120,7 +120,10 @@ export function SplashScreen() {
           onVolumeChange={(e) => setSoundOn(!(e.currentTarget.muted || e.currentTarget.volume === 0))}
           className="absolute inset-0 h-full w-full"
           style={fillStyle}
-        />
+        >
+          <source src={webmAsset.url} type="video/webm" />
+          <source src={videoAsset.url} type="video/mp4" />
+        </video>
       )}
       {!posterOnly && (
         <motion.button
