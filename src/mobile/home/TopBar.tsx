@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,48 +11,62 @@ export function TopBar({ shadow }: { shadow: boolean }) {
   const reduce = useReducedMotion();
   const navigate = useNavigate();
   const [beat, setBeat] = useState(0);
+  const [focused, setFocused] = useState(false);
   return (
     <div
-      className={`sticky top-0 z-20 flex h-[68px] items-center gap-2 bg-white px-4 pb-3 pt-2 transition-shadow duration-300 ${
+      className={`sticky top-0 z-20 flex h-[76px] items-center gap-2 bg-white px-3 pb-3 pt-2 transition-shadow duration-300 ${
         shadow ? "shadow-[0_4px_12px_-8px_rgba(0,0,0,0.15)]" : ""
       }`}
     >
       <button
         type="button"
         onClick={() => setBeat((n) => n + 1)}
-        className="flex min-w-0 flex-1 items-center gap-2 text-left"
+        aria-label="WellnessCareConnect"
+        className="shrink-0"
       >
         <motion.img
           src={logoAsset.url}
-          alt="Wellness Care Connect logo"
-          className="h-12 w-auto shrink-0 object-contain"
+          alt="WellnessCareConnect logo"
+          className="h-[60px] w-[60px] object-contain"
           animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.12, 0.97, 1.06, 1] }}
           transition={{ duration: 0.7 }}
           key={beat}
         />
-        <div className="flex min-w-0 flex-1 flex-col items-start justify-center">
-          <span
-            className="font-sora block w-full truncate font-bold leading-tight tracking-tight text-[#23291F]"
-            style={{ fontSize: "clamp(13px, 3.8vw, 16px)" }}
-          >
-            Wellness <span className="text-[#E8912D]">Care</span> Connect
-          </span>
-          <span
-            className="font-sora block w-full truncate font-bold leading-tight tracking-[0.12em] text-[#567257]"
-            style={{ fontSize: "clamp(8px, 2.2vw, 10px)" }}
-          >
-            EVERY HEALTH MATTERS
-          </span>
-        </div>
       </button>
-      <div className="flex shrink-0 items-center gap-2">
+
+      <div
+        onClick={() => navigate({ to: "/doctors" })}
+        className={`flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-[14px] border bg-[--color-wcc-mist] px-3 py-2.5 transition-all duration-300 ${
+          focused
+            ? "border-[--color-wcc-sage] shadow-[0_0_0_3px_rgba(86,114,87,0.18)]"
+            : "border-transparent"
+        }`}
+      >
+        <Search
+          size={18}
+          className={`shrink-0 transition-all duration-300 ${focused ? "translate-x-[3px] text-[--color-wcc-green-deep]" : "text-[--color-wcc-sage]"}`}
+        />
+        <input
+          type="text"
+          placeholder="Search doctors, symptoms"
+          onFocus={() => {
+            setFocused(true);
+            navigate({ to: "/doctors" });
+          }}
+          onBlur={() => setFocused(false)}
+          readOnly
+          className="min-w-0 flex-1 cursor-pointer bg-transparent text-[13px] text-[--color-wcc-ink] outline-none placeholder:text-[--color-wcc-muted]"
+        />
+      </div>
+
+      <div className="flex shrink-0 items-center gap-1.5">
         <motion.button
           type="button"
           aria-label="Notifications"
           onClick={() => toast.info(`${user.notifications} new notifications`, { description: "You have upcoming appointments and reminders." })}
           whileHover={reduce ? undefined : { scale: 1.06, y: -1 }}
-          whileTap={reduce ? undefined : { scale: 0.94 }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          whileTap={reduce ? undefined : { scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full"
         >
           <motion.span
@@ -76,8 +90,8 @@ export function TopBar({ shadow }: { shadow: boolean }) {
           aria-label="Profile"
           onClick={() => navigate({ to: "/profile" })}
           whileHover={reduce ? undefined : { scale: 1.06 }}
-          whileTap={reduce ? undefined : { scale: 0.9 }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          whileTap={reduce ? undefined : { scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="h-9 w-9 shrink-0 cursor-pointer overflow-hidden rounded-full"
         >
           <Img src={user.avatar!} alt="You" wrapperClassName="h-full w-full" rounded="rounded-full" />
@@ -86,4 +100,3 @@ export function TopBar({ shadow }: { shadow: boolean }) {
     </div>
   );
 }
-
