@@ -1,478 +1,163 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "framer-motion";
-import emblemAsset from "@/assets/wcc-emblem.png.asset.json";
+import { Volume2, VolumeX } from "lucide-react";
+import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
+import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
-// ── palette (explicit hex, no tokens) ─────────────────────────────
-const NIGHT = "#23291F";
-const DAWN = "#3C4F3D";
-const ORANGE = "#E8912D";
 const MIST = "#F3F6F2";
-const WHITE = "#FFFFFF";
-
-// ── timeline (seconds) ────────────────────────────────────────────
-const T = {
-  ACT1_END: 0.6,
-  ACT2_END: 1.2,
-  ACT3_END: 1.8,
-  ACT4_END: 2.4,
-  ACT5_END: 2.8,
-};
-
-// ECG spike is at exact horizontal center (x=195 of 390)
-const ECG_PATH =
-  "M0,80 L60,80 L80,80 L95,72 L110,88 L125,80 L160,80 L180,80 L188,80 L192,20 L198,140 L204,50 L210,80 L230,80 L260,80 L280,72 L295,88 L310,80 L340,80 L390,80";
-
-// Letter shadow — the "pinhole" pocket behind each letterform
-const LETTER_SHADOW =
-  "0 2px 10px rgba(0,0,0,0.55), 0 0 2px rgba(0,0,0,0.35)";
-
-type Mote = {
-  id: number;
-  fromX: number;
-  fromY: number;
-  size: number;
-  color: string;
-  delay: number;
-};
+const SKIP_GATE_MS = 1500;
+const HARD_TIMEOUT_MS = 12000;
+const STALL_MS = 2500;
 
 export function SplashScreen() {
   const navigate = useNavigate();
   const reduced = useReducedMotion();
-  const [skipped, setSkipped] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [canSkip, setCanSkip] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [posterOnly, setPosterOnly] = useState(!!reduced);
+  const doneRef = useRef(false);
 
-  const motes = useMemo<Mote[]>(() => {
-    const arr: Mote[] = [];
-    for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.5;
-      const dist = 260 + Math.random() * 140;
-      arr.push({
-        id: i,
-        fromX: Math.cos(angle) * dist,
-        fromY: Math.sin(angle) * dist,
-        size: 3 + Math.random() * 3,
-        color: i % 2 === 0 ? ORANGE : MIST,
-        delay: Math.random() * 0.25,
-      });
-    }
-    return arr;
-  }, []);
-
-  useEffect(() => {
-    const total = reduced ? 1200 : T.ACT5_END * 1000;
-    const skipT = setTimeout(() => setCanSkip(true), 1200);
-    const navT = setTimeout(() => navigate({ to: "/home" }), total);
-    return () => {
-      clearTimeout(skipT);
-      clearTimeout(navT);
-    };
-  }, [navigate, reduced]);
-
-  const handleSkip = () => {
-    if (!canSkip || skipped) return;
-    setSkipped(true);
-    navigate({ to: "/home" });
+  const goHome = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    navigate({ to: "/home", replace: true });
   };
 
-  // ── reduced motion fallback ────────────────────────────────────
-  if (reduced) {
-    return (
-      <div
-        className="relative flex h-full w-full items-center justify-center"
-        style={{ background: DAWN }}
-      >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-4"
-        >
-          <img
-            src={emblemAsset.url}
-            alt="WellnessCareConnect"
-            style={{
-              width: "45%",
-              maxWidth: 180,
-              filter: "drop-shadow(0 10px 28px rgba(0,0,0,0.45))",
-            }}
-          />
-          <div
-            style={{
-              fontSize: 20,
-              fontWeight: 800,
-              letterSpacing: "0.01em",
-              textShadow: LETTER_SHADOW,
-            }}
-          >
-            <span style={{ color: WHITE }}>Wellness</span>
-            <span style={{ color: ORANGE }}>Care</span>
-            <span style={{ color: WHITE }}>Connect</span>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const skipT = window.setTimeout(() => setCanSkip(true), SKIP_GATE_MS);
+    const hardT = window.setTimeout(goHome, HARD_TIMEOUT_MS);
+
+    if (reduced) {
+      const t = window.setTimeout(goHome, 1200);
+      return () => {
+        clearTimeout(skipT);
+        clearTimeout(hardT);
+        clearTimeout(t);
+      };
+    }
+
+    // Stall watchdog: if first frame never arrives
+    let firstFrame = false;
+    const stallT = window.setTimeout(() => {
+      if (!firstFrame) {
+        setPosterOnly(true);
+        window.setTimeout(goHome, 1200);
+      }
+    }, STALL_MS);
+
+    const v = videoRef.current;
+    const onPlaying = () => {
+      firstFrame = true;
+      clearTimeout(stallT);
+    };
+    v?.addEventListener("playing", onPlaying);
+
+    return () => {
+      clearTimeout(skipT);
+      clearTimeout(hardT);
+      clearTimeout(stallT);
+      v?.removeEventListener("playing", onPlaying);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduced]);
+
+  const handleContainerTap = () => {
+    if (!canSkip) return;
+    goHome();
+  };
+
+  const handleError = () => {
+    setPosterOnly(true);
+    window.setTimeout(goHome, 1200);
+  };
+
+  const toggleSound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  };
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden"
-      style={{ background: NIGHT }}
-      onClick={handleSkip}
+      className="relative h-full w-full overflow-hidden flex items-center justify-center"
+      style={{ background: MIST }}
+      onClick={handleContainerTap}
       role="button"
-      aria-label="Skip splash"
+      aria-label="Splash — tap to skip after intro"
     >
-      {/* ── EDGE VIGNETTE (static) ───────────────────────────── */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(20,25,18,0) 45%, rgba(20,25,18,0.5) 100%)",
-          zIndex: 1,
-        }}
-      />
-
-      {/* ── ACT 2: dawn bloom flood from spike center ─────────── */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute"
-        style={{
-          left: "50%",
-          top: "50%",
-          width: 40,
-          height: 40,
-          marginLeft: -20,
-          marginTop: -20,
-          borderRadius: "50%",
-          background: DAWN,
-          zIndex: 2,
-        }}
-        initial={{ scale: 0, opacity: 1 }}
-        animate={{ scale: 60 }}
-        transition={{ delay: T.ACT1_END, duration: 0.45, ease: "easeOut" }}
-      />
-
-      {/* ── ACT 1: ECG heartbeat line ─────────────────────────── */}
-      <motion.svg
-        aria-hidden
-        viewBox="0 0 390 160"
-        className="pointer-events-none absolute left-0 right-0"
-        style={{
-          top: "50%",
-          transform: "translateY(-50%)",
-          width: "100%",
-          height: 160,
-          zIndex: 3,
-        }}
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{ delay: T.ACT1_END, duration: 0.3 }}
-      >
-        {/* glow duplicate */}
-        <motion.path
-          d={ECG_PATH}
-          fill="none"
-          stroke={ORANGE}
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ filter: "blur(12px)", opacity: 0.5 }}
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: T.ACT1_END, ease: "easeInOut" }}
+      {posterOnly ? (
+        <img
+          src={posterAsset.url}
+          alt="WellnessCareConnect"
+          className="max-h-full max-w-full object-contain"
         />
-        {/* main line */}
-        <motion.path
-          d={ECG_PATH}
-          fill="none"
-          stroke={ORANGE}
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: T.ACT1_END, ease: "easeInOut" }}
+      ) : (
+        <video
+          ref={videoRef}
+          src={videoAsset.url}
+          poster={posterAsset.url}
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          onEnded={goHome}
+          onError={handleError}
+          onStalled={handleError}
+          className="h-full w-full"
+          style={{ objectFit: "contain", background: MIST }}
         />
-        {/* leading tip dot */}
-        <motion.circle
-          r={3.5}
-          fill={WHITE}
-          style={{
-            filter: `drop-shadow(0 0 4px ${ORANGE}) drop-shadow(0 0 6px ${ORANGE})`,
-          }}
-          initial={{ cx: 0, cy: 80, opacity: 1 }}
-          animate={{ cx: 390, cy: 80, opacity: [1, 1, 0] }}
-          transition={{ duration: T.ACT1_END, ease: "easeInOut", times: [0, 0.9, 1] }}
-        />
-      </motion.svg>
+      )}
 
-      {/* ── ACT 2–5: composition (heart + motes + wordmark) ─── */}
-      <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center"
-        style={{ zIndex: 4 }}
-        initial={{ scale: 1 }}
-        animate={{ scale: 1.035 }}
-        transition={{ delay: T.ACT4_END, duration: 0.4, ease: "easeOut" }}
-      >
-        {/* motes converging */}
-        {motes.map((m) => (
-          <motion.span
-            key={m.id}
-            aria-hidden
-            className="pointer-events-none absolute rounded-full"
+      {canSkip && !posterOnly && (
+        <div className="pointer-events-none absolute bottom-4 right-4 flex items-center gap-2 z-10">
+          <motion.button
+            type="button"
+            onClick={toggleSound}
+            whileTap={{ scale: 0.94 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="pointer-events-auto inline-flex items-center justify-center rounded-full"
             style={{
-              left: "50%",
-              top: "42%",
-              width: m.size,
-              height: m.size,
-              backgroundColor: m.color,
-              marginLeft: -m.size / 2,
-              marginTop: -m.size / 2,
-              boxShadow: `0 0 6px ${m.color}`,
+              width: 30,
+              height: 30,
+              background: "rgba(35,41,31,0.35)",
+              color: "#FFFFFF",
+              backdropFilter: "blur(6px)",
             }}
-            initial={{ x: m.fromX, y: m.fromY, opacity: 0 }}
-            animate={{ x: 0, y: 0, opacity: [0, 0.8, 0] }}
-            transition={{
-              delay: T.ACT1_END + 0.05 + m.delay,
-              duration: 0.5,
-              ease: "easeIn",
-              times: [0, 0.5, 1],
-            }}
-          />
-        ))}
-
-        {/* heart emblem wrapper */}
-        <div
-          className="relative flex items-center justify-center"
-          style={{ width: "45%", aspectRatio: "1/1", marginTop: "-8%" }}
-        >
-          {/* LIGHT POOL — soft spotlight lifting the heart off DAWN bg */}
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute rounded-full"
-            style={{
-              left: "50%",
-              top: "50%",
-              width: "170%",
-              height: "170%",
-              marginLeft: "-85%",
-              marginTop: "-85%",
-              background:
-                "radial-gradient(circle, rgba(243,246,242,0.14) 0%, rgba(243,246,242,0) 70%)",
-              zIndex: 0,
-            }}
-            initial={{ opacity: 0, scale: 1 }}
-            animate={{
-              opacity: [0, 1, 1, 1.03, 1, 1.03, 1],
-              scale: [1, 1, 1, 1.03, 1, 1.03, 1],
-            }}
-            transition={{
-              delay: T.ACT1_END,
-              duration: 1.2,
-              times: [0, 0.375, 0.5, 0.65, 0.78, 0.9, 1],
-              ease: "easeOut",
-            }}
-          />
-
-          {/* GROUND SHADOW — anchors the heart to the scene */}
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute"
-            style={{
-              left: "50%",
-              bottom: "-4%",
-              width: "55%",
-              height: 14,
-              marginLeft: "-27.5%",
-              background: "rgba(0,0,0,0.35)",
-              borderRadius: "50%",
-              filter: "blur(18px)",
-              zIndex: 0,
-            }}
-            initial={{ opacity: 0, scaleX: 1 }}
-            animate={{
-              opacity: [0, 1, 1, 1, 1, 1, 1],
-              scaleX: [1, 1, 1, 1.06, 1, 1.06, 1],
-            }}
-            transition={{
-              delay: T.ACT1_END,
-              duration: 1.2,
-              times: [0, 0.4, 0.5, 0.65, 0.78, 0.9, 1],
-              ease: "easeOut",
-            }}
-          />
-
-          {/* echo rings (Act 3) */}
-          {[0, 0.14].map((d, i) => (
-            <motion.span
-              key={i}
-              aria-hidden
-              className="pointer-events-none absolute rounded-full"
-              style={{
-                inset: 0,
-                border: `2px solid ${ORANGE}`,
-                zIndex: 1,
-              }}
-              initial={{ scale: 1, opacity: 0 }}
-              animate={{ scale: 1.9, opacity: [0, 0.6, 0] }}
-              transition={{
-                delay: T.ACT2_END + d,
-                duration: 0.5,
-                ease: "easeOut",
-                times: [0, 0.2, 1],
-              }}
-            />
-          ))}
-
-          {/* heart born + double-thump */}
-          <motion.div
-            className="relative h-full w-full"
-            style={{ zIndex: 2 }}
-            initial={{ scale: 0.2, opacity: 0 }}
-            animate={{
-              scale: [0.2, 1.06, 1, 1.05, 0.98, 1.03, 1],
-              opacity: [0, 1, 1, 1, 1, 1, 1],
-            }}
-            transition={{
-              delay: T.ACT1_END,
-              duration: 1.2,
-              times: [0, 0.4, 0.5, 0.65, 0.78, 0.9, 1],
-              ease: "easeOut",
-            }}
+            aria-label={muted ? "Unmute" : "Mute"}
           >
-            <img
-              src={emblemAsset.url}
-              alt="WellnessCareConnect"
-              draggable={false}
-              className="h-full w-full select-none object-contain"
-              style={{
-                filter: "drop-shadow(0 10px 28px rgba(0,0,0,0.45))",
-              }}
-            />
-
-            {/* light sweep clipped to logo bounds */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 overflow-hidden"
-              style={{
-                WebkitMaskImage: `url(${emblemAsset.url})`,
-                maskImage: `url(${emblemAsset.url})`,
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                WebkitMaskSize: "contain",
-                maskSize: "contain",
-                WebkitMaskPosition: "center",
-                maskPosition: "center",
-              }}
-            >
-              <motion.span
-                className="absolute top-0 h-full"
-                style={{
-                  width: "28%",
-                  background:
-                    "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.34) 50%, rgba(255,255,255,0) 100%)",
-                  transform: "rotate(-20deg)",
-                }}
-                initial={{ left: "-40%", opacity: 0 }}
-                animate={{ left: "110%", opacity: [0, 1, 1, 0] }}
-                transition={{
-                  delay: T.ACT2_END + 0.35,
-                  duration: 0.45,
-                  ease: "easeInOut",
-                  times: [0, 0.1, 0.9, 1],
-                }}
-              />
-            </span>
-          </motion.div>
-        </div>
-
-        {/* ── ACT 4: wordmark letter cascade ─────────────────── */}
-        <div className="mt-6 flex flex-col items-center" style={{ minHeight: 80 }}>
-          <Wordmark startDelay={T.ACT3_END} />
-
-          {/* slogan */}
-          <motion.div
+            {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+          </motion.button>
+          <motion.button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goHome();
+            }}
+            whileTap={{ scale: 0.94 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="pointer-events-auto inline-flex items-center justify-center rounded-full"
             style={{
-              color: MIST,
-              fontSize: 10,
+              height: 30,
+              padding: "0 12px",
+              background: "rgba(35,41,31,0.35)",
+              color: "#FFFFFF",
+              fontSize: 12,
               fontWeight: 600,
-              textTransform: "uppercase",
-              textShadow: LETTER_SHADOW,
+              backdropFilter: "blur(6px)",
             }}
-            initial={{ opacity: 0, letterSpacing: "0.35em" }}
-            animate={{ opacity: 1, letterSpacing: "0.18em" }}
-            transition={{ delay: T.ACT3_END + 0.35, duration: 0.4, ease: "easeOut" }}
-            className="mt-3"
           >
-            Every Health Matters
-          </motion.div>
-
-          {/* progress shimmer */}
-          <div
-            className="relative mt-3 overflow-hidden"
-            style={{ width: 64, height: 2, background: "rgba(255,255,255,0.12)", borderRadius: 2 }}
-          >
-            <motion.span
-              className="absolute top-0 h-full"
-              style={{ width: 24, background: ORANGE, borderRadius: 2 }}
-              initial={{ left: "-30%" }}
-              animate={{ left: "110%" }}
-              transition={{ delay: T.ACT3_END + 0.4, duration: 0.55, ease: "easeInOut" }}
-            />
-          </div>
+            Skip ›
+          </motion.button>
         </div>
-      </motion.div>
-
-      {/* ── ACT 5: mist exhale ─────────────────────────────────── */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: MIST, zIndex: 5 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: T.ACT4_END + 0.05, duration: 0.35, ease: "easeIn" }}
-      />
-    </div>
-  );
-}
-
-function Wordmark({ startDelay }: { startDelay: number }) {
-  // "WellnessCareConnect" with "Care" in orange
-  const parts: Array<{ text: string; color: string }> = [
-    { text: "Wellness", color: WHITE },
-    { text: "Care", color: ORANGE },
-    { text: "Connect", color: WHITE },
-  ];
-  let index = 0;
-  return (
-    <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "0.01em", display: "flex" }}>
-      {parts.map((p, pi) => (
-        <span key={pi} style={{ display: "inline-flex" }}>
-          {p.text.split("").map((ch) => {
-            const i = index++;
-            return (
-              <motion.span
-                key={`${pi}-${i}`}
-                style={{
-                  color: p.color,
-                  display: "inline-block",
-                  textShadow: LETTER_SHADOW,
-                }}
-                initial={{ y: 14, opacity: 0, filter: "blur(4px)" }}
-                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                transition={{
-                  delay: startDelay + i * 0.022,
-                  duration: 0.35,
-                  ease: "easeOut",
-                }}
-              >
-                {ch}
-              </motion.span>
-            );
-          })}
-        </span>
-      ))}
+      )}
     </div>
   );
 }
