@@ -79,72 +79,48 @@ export function SplashScreen() {
     setMuted(v.muted);
   };
 
-  const backdropStyle: React.CSSProperties = {
-    filter: "blur(28px) saturate(1.1) brightness(0.9)",
-    transform: "scale(1.15)",
+  const fillStyle: React.CSSProperties = {
     objectFit: "cover",
     objectPosition: "center",
   };
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden flex items-center justify-center"
+      className="relative h-full w-full overflow-hidden"
       style={{ background: "#000" }}
       onClick={handleContainerTap}
       role="button"
       aria-label="Splash — tap to skip after intro"
     >
       {posterOnly ? (
-        <>
-          <img
-            src={posterAsset.url}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full pointer-events-none"
-            style={backdropStyle}
-          />
-          <img
-            src={posterAsset.url}
-            alt="WellnessCareConnect"
-            className="relative h-full w-full"
-            style={{ objectFit: "contain", objectPosition: "center" }}
-          />
-        </>
+        <img
+          src={posterAsset.url}
+          alt="WellnessCareConnect"
+          className="absolute inset-0 h-full w-full"
+          style={fillStyle}
+        />
       ) : (
-        <>
-          {/* LAYER 1 — ambient blurred backdrop */}
-          <video
-            src={videoAsset.url}
-            poster={posterAsset.url}
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            tabIndex={-1}
-            className="absolute inset-0 h-full w-full pointer-events-none"
-            style={backdropStyle}
-          />
-          {/* LAYER 2 — the film */}
-          <video
-            ref={videoRef}
-            src={videoAsset.url}
-            poster={posterAsset.url}
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            onEnded={goHome}
-            onError={handleError}
-            onStalled={handleError}
-            className="relative h-full w-full"
-            style={{ objectFit: "contain", objectPosition: "center" }}
-          />
-        </>
+        <video
+          ref={videoRef}
+          src={videoAsset.url}
+          poster={posterAsset.url}
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          onEnded={goHome}
+          onError={handleError}
+          onStalled={handleError}
+          className="absolute inset-0 h-full w-full"
+          style={fillStyle}
+        />
       )}
 
       {canSkip && !posterOnly && (
-        <div className="pointer-events-none absolute bottom-4 right-4 flex items-center gap-2 z-10">
+        <div
+          className="pointer-events-none absolute right-4 flex items-center gap-2 z-10"
+          style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}
+        >
           <motion.button
             type="button"
             onClick={toggleSound}
