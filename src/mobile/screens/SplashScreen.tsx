@@ -5,7 +5,6 @@ import { Volume2, VolumeX } from "lucide-react";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
-const BG = "#ABA29A";
 const SKIP_GATE_MS = 1500;
 const HARD_TIMEOUT_MS = 12000;
 const STALL_MS = 2500;
@@ -38,7 +37,6 @@ export function SplashScreen() {
       };
     }
 
-    // Stall watchdog: if first frame never arrives
     let firstFrame = false;
     const stallT = window.setTimeout(() => {
       if (!firstFrame) {
@@ -81,36 +79,68 @@ export function SplashScreen() {
     setMuted(v.muted);
   };
 
+  const backdropStyle: React.CSSProperties = {
+    filter: "blur(28px) saturate(1.1) brightness(0.9)",
+    transform: "scale(1.15)",
+    objectFit: "cover",
+    objectPosition: "center",
+  };
+
   return (
     <div
       className="relative h-full w-full overflow-hidden flex items-center justify-center"
-      style={{ background: BG }}
+      style={{ background: "#000" }}
       onClick={handleContainerTap}
       role="button"
       aria-label="Splash — tap to skip after intro"
     >
       {posterOnly ? (
-        <img
-          src={posterAsset.url}
-          alt="WellnessCareConnect"
-          className="h-full w-full"
-          style={{ objectFit: "contain", objectPosition: "center" }}
-        />
+        <>
+          <img
+            src={posterAsset.url}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full pointer-events-none"
+            style={backdropStyle}
+          />
+          <img
+            src={posterAsset.url}
+            alt="WellnessCareConnect"
+            className="relative h-full w-full"
+            style={{ objectFit: "contain", objectPosition: "center" }}
+          />
+        </>
       ) : (
-        <video
-          ref={videoRef}
-          src={videoAsset.url}
-          poster={posterAsset.url}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          onEnded={goHome}
-          onError={handleError}
-          onStalled={handleError}
-          className="h-full w-full"
-          style={{ objectFit: "contain", objectPosition: "center", background: BG }}
-        />
+        <>
+          {/* LAYER 1 — ambient blurred backdrop */}
+          <video
+            src={videoAsset.url}
+            poster={posterAsset.url}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            tabIndex={-1}
+            className="absolute inset-0 h-full w-full pointer-events-none"
+            style={backdropStyle}
+          />
+          {/* LAYER 2 — the film */}
+          <video
+            ref={videoRef}
+            src={videoAsset.url}
+            poster={posterAsset.url}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            onEnded={goHome}
+            onError={handleError}
+            onStalled={handleError}
+            className="relative h-full w-full"
+            style={{ objectFit: "contain", objectPosition: "center" }}
+          />
+        </>
       )}
 
       {canSkip && !posterOnly && (
