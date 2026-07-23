@@ -5,7 +5,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import videoAsset from "@/assets/wcc-splash.mp4.asset.json";
 import posterAsset from "@/assets/wcc-splash-poster.png.asset.json";
 
-const MIST = "#F3F6F2";
+const BG = "#ABA29A";
 const SKIP_GATE_MS = 1500;
 const HARD_TIMEOUT_MS = 12000;
 const STALL_MS = 2500;
@@ -84,7 +84,7 @@ export function SplashScreen() {
   return (
     <div
       className="relative h-full w-full overflow-hidden flex items-center justify-center"
-      style={{ background: MIST }}
+      style={{ background: BG }}
       onClick={handleContainerTap}
       role="button"
       aria-label="Splash — tap to skip after intro"
@@ -94,7 +94,7 @@ export function SplashScreen() {
           src={posterAsset.url}
           alt="WellnessCareConnect"
           className="h-full w-full"
-          style={{ objectFit: "cover", objectPosition: "center" }}
+          style={{ objectFit: "contain", objectPosition: "center" }}
         />
       ) : (
         <video
@@ -109,7 +109,7 @@ export function SplashScreen() {
           onError={handleError}
           onStalled={handleError}
           className="h-full w-full"
-          style={{ objectFit: "cover", objectPosition: "center", background: MIST }}
+          style={{ objectFit: "contain", objectPosition: "center", background: BG }}
         />
       )}
 
