@@ -21,10 +21,10 @@ export function TopBar({ shadow }: { shadow: boolean }) {
 
   return (
     <div
-      className={`sticky top-0 z-20 flex items-center gap-2 bg-white px-3 pb-3 pt-2 transition-shadow duration-300 ${
+      className={`sticky top-0 z-20 flex items-start gap-2 bg-white px-3 pb-1 pt-0 transition-shadow duration-300 ${
         shadow ? "shadow-[0_4px_12px_-8px_rgba(0,0,0,0.15)]" : ""
       }`}
-      style={{ minHeight: 96 }}
+      style={{ minHeight: 124 }}
     >
       <button
         type="button"
@@ -35,16 +35,16 @@ export function TopBar({ shadow }: { shadow: boolean }) {
         <motion.img
           src={logoAsset.url}
           alt="WellnessCareConnect — Every health matters"
-          className="h-[84px] w-[84px] object-contain"
+          className="h-[126px] w-[152px] object-contain object-left-top"
           animate={reduce || beat === 0 ? { scale: 1 } : { scale: [1, 1.12, 0.97, 1.06, 1] }}
           transition={{ duration: 0.7 }}
           key={beat}
         />
       </button>
 
-      <div className="flex-1" />
+      <div className="min-w-0 flex-1" />
 
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="flex shrink-0 items-center gap-1 pt-4">
         <motion.button
           type="button"
           aria-label="Search"

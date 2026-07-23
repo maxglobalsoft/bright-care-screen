@@ -3,24 +3,12 @@ import type { ReactNode } from "react";
 export function PhoneViewport({ children, hideNotch = true }: { children: ReactNode; hideNotch?: boolean }) {
   return (
     <>
-      {/* MOBILE: full-bleed shell, no bezel */}
-      <div className="phone-shell-mobile md:hidden">
-        <div className="relative h-full w-full overflow-hidden bg-white" style={{ minWidth: 0, minHeight: 0 }}>
-          {children}
-        </div>
-      </div>
-
-      {/* DESKTOP: decorative bezel showcase, portrait phone locked via calc/min */}
-      <div className="hidden md:flex min-h-screen w-full items-center justify-center bg-[#EFEFEC] p-6">
+      <div className="phone-shell-stage">
         <div
-          className="relative rounded-[3rem] bg-neutral-900 p-[10px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]"
-          style={{
-            width: "min(390px, calc((100dvh - 3rem) * 0.4621))",
-            height: "min(844px, calc(100dvh - 3rem))",
-          }}
+          className="phone-shell-device"
         >
           <div
-            className="relative h-full w-full overflow-hidden rounded-[2.5rem] bg-white"
+            className="phone-shell-screen"
             style={{ minWidth: 0, minHeight: 0 }}
           >
             {hideNotch ? null : (

@@ -43,7 +43,6 @@ export function HomeScreen() {
 
   return (
     <div className="relative flex h-full w-full flex-col bg-white">
-      <div className="h-11 shrink-0" />
       <div
         ref={scrollRef}
         className="wcc-scroll relative min-h-0 flex-1 overflow-y-auto pb-24"
