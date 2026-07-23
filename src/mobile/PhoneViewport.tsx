@@ -27,8 +27,8 @@ export function PhoneViewport({ children, hideNotch = true }: { children: ReactN
               <div className="pointer-events-none absolute left-1/2 top-2 z-30 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-neutral-900" />
             )}
             {children}
-            <div className="pointer-events-none absolute bottom-2 left-1/2 z-30 h-[5px] w-[130px] -translate-x-1/2 rounded-full bg-neutral-900/80" />
           </div>
+
         </div>
       </div>
     </>
