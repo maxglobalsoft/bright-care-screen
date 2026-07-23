@@ -94,7 +94,7 @@ export function SplashScreen() {
           src={posterAsset.url}
           alt="WellnessCareConnect"
           className="h-full w-full"
-          style={{ objectFit: "cover", objectPosition: "center" }}
+          style={{ objectFit: "contain", objectPosition: "center" }}
         />
       ) : (
         <video
@@ -109,7 +109,7 @@ export function SplashScreen() {
           onError={handleError}
           onStalled={handleError}
           className="h-full w-full"
-          style={{ objectFit: "cover", objectPosition: "center", background: BG }}
+          style={{ objectFit: "contain", objectPosition: "center", background: BG }}
         />
       )}
 
