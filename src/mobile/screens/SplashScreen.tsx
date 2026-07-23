@@ -84,7 +84,7 @@ export function SplashScreen() {
   return (
     <div
       className="relative h-full w-full overflow-hidden flex items-center justify-center"
-      style={{ background: MIST }}
+      style={{ background: BG }}
       onClick={handleContainerTap}
       role="button"
       aria-label="Splash — tap to skip after intro"
@@ -109,7 +109,7 @@ export function SplashScreen() {
           onError={handleError}
           onStalled={handleError}
           className="h-full w-full"
-          style={{ objectFit: "cover", objectPosition: "center", background: MIST }}
+          style={{ objectFit: "cover", objectPosition: "center", background: BG }}
         />
       )}
 
